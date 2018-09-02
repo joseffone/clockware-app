@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes, timestamp) => {
     const Clients = sequelize.define('clients', {
             id: {
                 type: DataTypes.INTEGER,
@@ -28,11 +28,12 @@ module.exports = (sequelize, DataTypes) => {
             },
             created_at: {
                 type: DataTypes.DATE,
-                defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+                allowNull: false,
+                defaultValue: DataTypes.NOW
             },
             updated_at: {
                 type: DataTypes.DATE,
-                defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+                defaultValue: DataTypes.NOW
             }
         },
         {
