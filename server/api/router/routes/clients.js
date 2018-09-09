@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import ClientsController from '../../controllers/clients'
 

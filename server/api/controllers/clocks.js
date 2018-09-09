@@ -6,10 +6,10 @@ controller.getItems = (req, res) => {
 
     const filter = req.query;
         
-    controller.db.clients.findAll({where: filter, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.clocks.findAll({where: filter, paranoid: false})
+    .then(clock => {
+        if (clock.length !== 0) {
+            res.status(200).json(clock);
         } else {
             res.status(404).json(
                 {
@@ -30,10 +30,10 @@ controller.getItemById = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.clocks.findAll({where: {id: id}, paranoid: false})
+    .then(clock => {
+        if (clock.length !== 0) {
+            res.status(200).json(clock);
         } else {
             res.status(404).json(
                 {
@@ -52,20 +52,18 @@ controller.getItemById = (req, res) => {
 
 controller.createItem = (req, res) => {
 
-    const firstName = req.body.first_name;
-    const lastName = req.body.last_name;
-    const email = req.body.email;
+    const clockType = req.body.clock_type;
+    const hoursOfRepair = req.body.hours_of_repair;
 
-    controller.db.clients.findOrCreate(
+    controller.db.clocks.findOrCreate(
     {
-        where: {email: email},
+        where: {clock_type: clockType},
         defaults: {
-            first_name: firstName,
-            last_name: lastName
+            hours_of_repair: hoursOfRepair
         }
     })
-    .then(newClient => {
-        res.status(201).json(newClient);
+    .then(newClock => {
+        res.status(201).json(newClock);
 
     })
     .catch(err => {
@@ -81,9 +79,9 @@ controller.updateItem = (req, res) => {
     const id = req.params.id;
     const attributes = controller.db.coverage.primaryKeyAttributes;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
+    controller.db.clocks.findAll({where: {id: id}, paranoid: false})
+    .then(clock => {
+        if (clock.length !== 0) {
       
             for (const key in req.body) {
                 const attrCounter = attributes.filter(function(attr){
@@ -91,11 +89,11 @@ controller.updateItem = (req, res) => {
                 }).length;
 
                 if (attrCounter == 0) {
-                    client[0].setDataValue(key, req.body[key]);
+                    clock[0].setDataValue(key, req.body[key]);
                 }
             }
             
-            return client[0].save({ paranoid: false });
+            return clock[0].save({ paranoid: false });
         } else {
             res.status(404).json(
                 {
@@ -104,8 +102,8 @@ controller.updateItem = (req, res) => {
             );
         }
     })
-    .then (client => {
-        res.status(200).json(client);
+    .then (clock => {
+        res.status(200).json(clock);
     })
     .catch(err => {
         res.status(500).json(
@@ -119,9 +117,9 @@ controller.deleteItem = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.destroy({where: {id: id}})
-    .then(deletedClient => {
-        if (deletedClient === 1) {
+    controller.db.clocks.destroy({where: {id: id}})
+    .then(deletedClock => {
+        if (deletedClock === 1) {
             res.status(200).json(
                 {
                     message: "Entry deleted successfully"

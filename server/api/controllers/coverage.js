@@ -6,10 +6,10 @@ controller.getItems = (req, res) => {
 
     const filter = req.query;
         
-    controller.db.clients.findAll({where: filter, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.coverage.findAll({where: filter, paranoid: false})
+    .then(con => {
+        if (con.length !== 0) {
+            res.status(200).json(con);
         } else {
             res.status(404).json(
                 {
@@ -30,10 +30,10 @@ controller.getItemById = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.coverage.findAll({where: {id: id}, paranoid: false})
+    .then(con => {
+        if (con.length !== 0) {
+            res.status(200).json(con);
         } else {
             res.status(404).json(
                 {
@@ -52,20 +52,18 @@ controller.getItemById = (req, res) => {
 
 controller.createItem = (req, res) => {
 
-    const firstName = req.body.first_name;
-    const lastName = req.body.last_name;
-    const email = req.body.email;
+    const agentID = req.body.agent_id;
+    const cityID = req.body.city_id;
 
-    controller.db.clients.findOrCreate(
+    controller.db.coverage.findOrCreate(
     {
-        where: {email: email},
-        defaults: {
-            first_name: firstName,
-            last_name: lastName
+        where: {
+            agent_id: agentID,
+            city_id: cityID
         }
     })
-    .then(newClient => {
-        res.status(201).json(newClient);
+    .then(newCon => {
+        res.status(201).json(newCon);
 
     })
     .catch(err => {
@@ -81,21 +79,21 @@ controller.updateItem = (req, res) => {
     const id = req.params.id;
     const attributes = controller.db.coverage.primaryKeyAttributes;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-      
+    controller.db.coverage.findAll({where: {id: id}, paranoid: false})
+    .then(con => {
+        if (con.length !== 0) {
+            
             for (const key in req.body) {
                 const attrCounter = attributes.filter(function(attr){
                     return attr == key;
                 }).length;
 
                 if (attrCounter == 0) {
-                    client[0].setDataValue(key, req.body[key]);
+                    con[0].setDataValue(key, req.body[key]);
                 }
             }
-            
-            return client[0].save({ paranoid: false });
+
+            return con[0].save({ paranoid: false });
         } else {
             res.status(404).json(
                 {
@@ -104,8 +102,8 @@ controller.updateItem = (req, res) => {
             );
         }
     })
-    .then (client => {
-        res.status(200).json(client);
+    .then (con => {
+        res.status(200).json(con);
     })
     .catch(err => {
         res.status(500).json(
@@ -119,9 +117,9 @@ controller.deleteItem = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.destroy({where: {id: id}})
-    .then(deletedClient => {
-        if (deletedClient === 1) {
+    controller.db.coverage.destroy({where: {id: id}})
+    .then(deletedCon => {
+        if (deletedCon === 1) {
             res.status(200).json(
                 {
                     message: "Entry deleted successfully"

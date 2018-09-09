@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
             },
             agent_id: {
                 type: DataTypes.INTEGER,
+                primaryKey: true,
+                allowNull: false,
                 references: {
                     model: 'agents',
                     key:   'id'
@@ -20,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
             },
             city_id: {
                 type: DataTypes.INTEGER,
+                primaryKey: true,
+                allowNull: false,
                 references: {
                     model: 'cities',
                     key:   'id'

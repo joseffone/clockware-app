@@ -6,10 +6,10 @@ controller.getItems = (req, res) => {
 
     const filter = req.query;
         
-    controller.db.clients.findAll({where: filter, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.marks.findAll({where: filter, paranoid: false})
+    .then(mark => {
+        if (mark.length !== 0) {
+            res.status(200).json(mark);
         } else {
             res.status(404).json(
                 {
@@ -30,10 +30,10 @@ controller.getItemById = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.marks.findAll({where: {id: id}, paranoid: false})
+    .then(mark => {
+        if (mark.length !== 0) {
+            res.status(200).json(mark);
         } else {
             res.status(404).json(
                 {
@@ -52,20 +52,18 @@ controller.getItemById = (req, res) => {
 
 controller.createItem = (req, res) => {
 
-    const firstName = req.body.first_name;
-    const lastName = req.body.last_name;
-    const email = req.body.email;
+    const markName = req.body.mark_name;
+    const markValue = req.body.mark_value;
 
-    controller.db.clients.findOrCreate(
+    controller.db.marks.findOrCreate(
     {
-        where: {email: email},
+        where: {mark_name: markName},
         defaults: {
-            first_name: firstName,
-            last_name: lastName
+            mark_value: markValue
         }
     })
-    .then(newClient => {
-        res.status(201).json(newClient);
+    .then(newMark => {
+        res.status(201).json(newMark);
 
     })
     .catch(err => {
@@ -81,9 +79,9 @@ controller.updateItem = (req, res) => {
     const id = req.params.id;
     const attributes = controller.db.coverage.primaryKeyAttributes;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
+    controller.db.marks.findAll({where: {id: id}, paranoid: false})
+    .then(mark => {
+        if (mark.length !== 0) {
       
             for (const key in req.body) {
                 const attrCounter = attributes.filter(function(attr){
@@ -91,11 +89,11 @@ controller.updateItem = (req, res) => {
                 }).length;
 
                 if (attrCounter == 0) {
-                    client[0].setDataValue(key, req.body[key]);
+                    mark[0].setDataValue(key, req.body[key]);
                 }
             }
             
-            return client[0].save({ paranoid: false });
+            return mark[0].save({ paranoid: false });
         } else {
             res.status(404).json(
                 {
@@ -104,8 +102,8 @@ controller.updateItem = (req, res) => {
             );
         }
     })
-    .then (client => {
-        res.status(200).json(client);
+    .then (mark => {
+        res.status(200).json(mark);
     })
     .catch(err => {
         res.status(500).json(
@@ -119,9 +117,9 @@ controller.deleteItem = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.destroy({where: {id: id}})
-    .then(deletedClient => {
-        if (deletedClient === 1) {
+    controller.db.marks.destroy({where: {id: id}})
+    .then(deletedMark => {
+        if (deletedMark === 1) {
             res.status(200).json(
                 {
                     message: "Entry deleted successfully"

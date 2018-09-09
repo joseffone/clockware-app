@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             client_id: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 references: {
                     model: 'clients',
                     key:   'id'
@@ -20,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             clock_id: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 references: {
                     model: 'clocks',
                     key:   'id'
@@ -29,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             city_id: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 references: {
                     model: 'cities',
                     key:   'id'
@@ -38,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             agent_id: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 references: {
                     model: 'agents',
                     key:   'id'
@@ -55,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             status: {
                 type: DataTypes.ENUM,
-                default:'in progress',
+                defaultValue:'in progress',
                 values: ['in progress', 'completed']
             },
             note: {

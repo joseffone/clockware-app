@@ -6,10 +6,10 @@ controller.getItems = (req, res) => {
 
     const filter = req.query;
         
-    controller.db.clients.findAll({where: filter, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.cities.findAll({where: filter, paranoid: false})
+    .then(city => {
+        if (city.length !== 0) {
+            res.status(200).json(city);
         } else {
             res.status(404).json(
                 {
@@ -30,10 +30,10 @@ controller.getItemById = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.cities.findAll({where: {id: id}, paranoid: false})
+    .then(city => {
+        if (city.length !== 0) {
+            res.status(200).json(city);
         } else {
             res.status(404).json(
                 {
@@ -52,20 +52,11 @@ controller.getItemById = (req, res) => {
 
 controller.createItem = (req, res) => {
 
-    const firstName = req.body.first_name;
-    const lastName = req.body.last_name;
-    const email = req.body.email;
+    const cityName = req.body.city_name;
 
-    controller.db.clients.findOrCreate(
-    {
-        where: {email: email},
-        defaults: {
-            first_name: firstName,
-            last_name: lastName
-        }
-    })
-    .then(newClient => {
-        res.status(201).json(newClient);
+    controller.db.cities.findOrCreate({where: {city_name: cityName}})
+    .then(newCity => {
+        res.status(201).json(newCity);
 
     })
     .catch(err => {
@@ -81,9 +72,9 @@ controller.updateItem = (req, res) => {
     const id = req.params.id;
     const attributes = controller.db.coverage.primaryKeyAttributes;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
+    controller.db.cities.findAll({where: {id: id}, paranoid: false})
+    .then(city => {
+        if (city.length !== 0) {
       
             for (const key in req.body) {
                 const attrCounter = attributes.filter(function(attr){
@@ -91,11 +82,11 @@ controller.updateItem = (req, res) => {
                 }).length;
 
                 if (attrCounter == 0) {
-                    client[0].setDataValue(key, req.body[key]);
+                    city[0].setDataValue(key, req.body[key]);
                 }
             }
             
-            return client[0].save({ paranoid: false });
+            return city[0].save({ paranoid: false });
         } else {
             res.status(404).json(
                 {
@@ -104,8 +95,8 @@ controller.updateItem = (req, res) => {
             );
         }
     })
-    .then (client => {
-        res.status(200).json(client);
+    .then (city => {
+        res.status(200).json(city);
     })
     .catch(err => {
         res.status(500).json(
@@ -119,9 +110,9 @@ controller.deleteItem = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.destroy({where: {id: id}})
-    .then(deletedClient => {
-        if (deletedClient === 1) {
+    controller.db.cities.destroy({where: {id: id}})
+    .then(deletedCity => {
+        if (deletedCity === 1) {
             res.status(200).json(
                 {
                     message: "Entry deleted successfully"

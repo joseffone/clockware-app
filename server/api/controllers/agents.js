@@ -6,10 +6,10 @@ controller.getItems = (req, res) => {
 
     const filter = req.query;
         
-    controller.db.clients.findAll({where: filter, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.agents.findAll({where: filter, paranoid: false})
+    .then(agent => {
+        if (agent.length !== 0) {
+            res.status(200).json(agent);
         } else {
             res.status(404).json(
                 {
@@ -30,10 +30,10 @@ controller.getItemById = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
-            res.status(200).json(client);
+    controller.db.agents.findAll({where: {id: id}, paranoid: false})
+    .then(agent => {
+        if (agent.length !== 0) {
+            res.status(200).json(agent);
         } else {
             res.status(404).json(
                 {
@@ -54,18 +54,20 @@ controller.createItem = (req, res) => {
 
     const firstName = req.body.first_name;
     const lastName = req.body.last_name;
-    const email = req.body.email;
+    const markID = req.body.mark_id;
 
-    controller.db.clients.findOrCreate(
+    controller.db.agents.findOrCreate(
     {
-        where: {email: email},
-        defaults: {
+        where: {
             first_name: firstName,
             last_name: lastName
+        },
+        defaults: {
+            mark_id: markID
         }
     })
-    .then(newClient => {
-        res.status(201).json(newClient);
+    .then(newAgent => {
+        res.status(201).json(newAgent);
 
     })
     .catch(err => {
@@ -81,21 +83,21 @@ controller.updateItem = (req, res) => {
     const id = req.params.id;
     const attributes = controller.db.coverage.primaryKeyAttributes;
 
-    controller.db.clients.findAll({where: {id: id}, paranoid: false})
-    .then(client => {
-        if (client.length !== 0) {
+    controller.db.agents.findAll({where: {id: id}, paranoid: false})
+    .then(agent => {
+        if (agent.length !== 0) {
       
             for (const key in req.body) {
-                const attrCounter = attributes.filter(function(attr){
+                 const attrCounter = attributes.filter(function(attr){
                     return attr == key;
                 }).length;
 
                 if (attrCounter == 0) {
-                    client[0].setDataValue(key, req.body[key]);
+                    agent[0].setDataValue(key, req.body[key]);
                 }
             }
             
-            return client[0].save({ paranoid: false });
+            return agent[0].save({ paranoid: false });
         } else {
             res.status(404).json(
                 {
@@ -104,8 +106,8 @@ controller.updateItem = (req, res) => {
             );
         }
     })
-    .then (client => {
-        res.status(200).json(client);
+    .then (agent => {
+        res.status(200).json(agent);
     })
     .catch(err => {
         res.status(500).json(
@@ -119,9 +121,9 @@ controller.deleteItem = (req, res) => {
     
     const id = req.params.id;
 
-    controller.db.clients.destroy({where: {id: id}})
-    .then(deletedClient => {
-        if (deletedClient === 1) {
+    controller.db.agents.destroy({where: {id: id}})
+    .then(deletedAgent => {
+        if (deletedAgent === 1) {
             res.status(200).json(
                 {
                     message: "Entry deleted successfully"
