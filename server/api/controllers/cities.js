@@ -70,7 +70,7 @@ controller.createItem = (req, res) => {
 controller.updateItem = (req, res) => {
 
     const id = req.params.id;
-    const attributes = controller.db.coverage.primaryKeyAttributes;
+    const attributes = Object.keys(controller.db.cities.rawAttributes);
 
     controller.db.cities.findAll({where: {id: id}, paranoid: false})
     .then(city => {
@@ -78,10 +78,10 @@ controller.updateItem = (req, res) => {
       
             for (const key in req.body) {
                 const attrCounter = attributes.filter(function(attr){
-                    return attr == key;
+                    return attr === key;
                 }).length;
 
-                if (attrCounter == 0) {
+                if (attrCounter !== 0) {
                     city[0].setDataValue(key, req.body[key]);
                 }
             }
@@ -100,7 +100,7 @@ controller.updateItem = (req, res) => {
     })
     .catch(err => {
         res.status(500).json(
-            {error: err.message}
+            {error: err}
         )
     });
 

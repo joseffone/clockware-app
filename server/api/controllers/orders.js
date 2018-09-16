@@ -91,7 +91,7 @@ controller.createItem = (req, res) => {
 controller.updateItem = (req, res) => {
 
     const id = req.params.id;
-    const attributes = controller.db.coverage.primaryKeyAttributes;
+    const attributes = Object.keys(controller.db.orders.rawAttributes);
 
     controller.db.orders.findAll({where: {id: id}, paranoid: false})
     .then(order => {
@@ -99,10 +99,10 @@ controller.updateItem = (req, res) => {
       
             for (const key in req.body) {
                 const attrCounter = attributes.filter(function(attr){
-                    return attr == key;
+                    return attr === key;
                 }).length;
 
-                if (attrCounter == 0) {
+                if (attrCounter !== 0) {
                     order[0].setDataValue(key, req.body[key]);
                 }
             }
@@ -121,7 +121,7 @@ controller.updateItem = (req, res) => {
     })
     .catch(err => {
         res.status(500).json(
-            {error: err.message}
+            {error: err}
         )
     });
 

@@ -26,6 +26,6 @@ db.agents = require('../models/agents')(sequelize, Sequelize);
 db.cities = require('../models/cities')(sequelize, Sequelize);
 db.coverage = require('../models/coverage')(sequelize, Sequelize);
 db.orders = require('../models/orders')(sequelize, Sequelize);
-
+db.users = require('../models/users')(sequelize, Sequelize);
 
 module.exports = db;

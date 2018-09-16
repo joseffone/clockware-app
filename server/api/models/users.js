@@ -1,21 +1,13 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-    const Clients = sequelize.define('clients', {
+    const Users = sequelize.define('users', {
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
                 allowNull: false,
                 unique: true
-            },
-            first_name: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            last_name: {
-                type: DataTypes.STRING,
-                allowNull: false
             },
             email: {
                 type: DataTypes.STRING,
@@ -24,6 +16,13 @@ module.exports = (sequelize, DataTypes) => {
                 validate: {
                     notEmpty: true,
                     isEmail: true
+                }
+            },
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true
                 }
             },
             created_at: {
@@ -43,5 +42,5 @@ module.exports = (sequelize, DataTypes) => {
             paranoid: true
         }
     );
-    return Clients;
+    return Users;
 };
