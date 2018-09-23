@@ -8,7 +8,8 @@ const routes = [
     require('./routes/agents'),
     require('./routes/coverage'),
     require('./routes/orders'),
-    require('./routes/users')
+    require('./routes/users'),
+    require('./routes/keys')
 ];
 
 module.exports = (app, db) => {

@@ -1,6 +1,7 @@
 'use strict'
 
 import UsersController from '../../controllers/users'
+import authorize from '../../middlewares/authorize'
 
 module.exports = (app, db) => {
 
@@ -9,7 +10,7 @@ module.exports = (app, db) => {
     app.get('/user/:id', UsersController.getItemById);
     app.post('/user/signup', UsersController.createItem);
     app.post('/user/login', UsersController.checkItem);
-    app.patch('/user/:id', UsersController.updateItem);
-    app.delete('/user/:id', UsersController.deleteItem);
+    app.patch('/user/:id', authorize, UsersController.updateItem);
+    app.delete('/user/:id', authorize, UsersController.deleteItem);
 
 };
