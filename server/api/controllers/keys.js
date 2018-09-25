@@ -9,6 +9,8 @@ controller.updateItem =  (req, res) => {
     .then(async key => {
         if (key.length !== 0) {
             if (key[0].refresh_token === req.body.refresh_token) {
+                const decoded = jwt.verify(req.body.refresh_token, process.env.JWT_REFRESH_KEY);
+                req.userData = decoded;
                 await controller.db.users.findAll({where: {id: req.params.userId}})
                 .then(user => {
                     const accessToken = jwt.sign(
@@ -51,6 +53,7 @@ controller.updateItem =  (req, res) => {
                 return;
             }
         }
+
         res.status(401).json(
             {
                 message: "Refreshing failed"
