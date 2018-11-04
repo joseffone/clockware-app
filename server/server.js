@@ -1,8 +1,8 @@
-import 'dotenv/config';
-import bodyParser from 'body-parser';
-import express from 'express';
-import db from './api/config/db';
-import router from './api/router/router';
+import "dotenv/config";
+import bodyParser from "body-parser";
+import express from "express";
+import db from "./api/util/db";
+import router from "./api/router/router";
 
 const app = express();
 
@@ -47,16 +47,17 @@ app.listen(app.get('port'), () => {
     .authenticate()
     .then(() => {
       console.log('Connection has been established successfully.');
+        return db.sequelize
+          .sync()
+          .then(() => {
+            console.log('Data has been synchronized successfully.');
+          })
+          .catch(err => {
+            console.error('Synchronization failed:', err);
+          });
     })
     .catch(err => {
       console.error('Unable to connect to the database:', err);
     });
-  db.sequelize
-    .sync()
-    .then(() => {
-      console.log('Data has been synchronized successfully.');
-    })
-    .catch(err => {
-      console.error('Synchronization failed:', err);
-    });
+  
 });  

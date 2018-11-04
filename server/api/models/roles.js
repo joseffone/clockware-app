@@ -1,7 +1,7 @@
 "use strict";
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("marks", {
+    return sequelize.define("roles", {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -9,17 +9,10 @@ export default (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
-        mark_name: {
+        role: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
-        },
-        mark_value: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                isInt: true
-            }
         },
         created_at: {
             type: DataTypes.DATE,
@@ -33,7 +26,6 @@ export default (sequelize, DataTypes) => {
     }, {
         underscored: true,
         freezeTableName: true,
-        timestamps: true,
-        paranoid: true
+        timestamps: true
     });
 };

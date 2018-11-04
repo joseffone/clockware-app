@@ -1,7 +1,7 @@
 "use strict";
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("coverage", {
+    return sequelize.define("permissions", {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -9,27 +9,41 @@ export default (sequelize, DataTypes) => {
             allowNull: false,
             unique: true
         },
-        agent_id: {
+        role_id: {
             type: DataTypes.INTEGER,
-            primaryKey: true,
             allowNull: false,
             references: {
-                model: "agents",
+                model: "roles",
                 key:   "id"
             },
             onDelete: "cascade",
             onUpdate: "cascade"
         },
-        city_id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            allowNull: false,
-            references: {
-                model: "cities",
-                key:   "id"
-            },
-            onDelete: "cascade",
-            onUpdate: "cascade"
+        model: {
+            type: DataTypes.ENUM,
+            defaultValue:"permissions",
+            values: [
+                "users",
+                "roles",
+                "permissions",
+                "keys",
+                "clocks",
+                "cities",
+                "marks",
+                "agents",
+                "coverage",
+                "orders"
+            ]
+        },
+        action: {
+            type: DataTypes.ENUM,
+            defaultValue:"read",
+            values: [
+                "read",
+                "create",
+                "update",
+                "delete"
+            ]
         },
         created_at: {
             type: DataTypes.DATE,
@@ -43,7 +57,6 @@ export default (sequelize, DataTypes) => {
     }, {
         underscored: true,
         freezeTableName: true,
-        timestamps: true,
-        paranoid: true
+        timestamps: true
     });
 };

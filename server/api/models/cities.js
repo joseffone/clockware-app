@@ -1,35 +1,32 @@
-'use strict'
+"use strict";
 
-module.exports = (sequelize, DataTypes) => {
-    const Cities = sequelize.define('cities', {
-            id: {
-                type: DataTypes.INTEGER,
-                primaryKey: true,
-                autoIncrement: true,
-                allowNull: false,
-                unique: true
-            },
-            city_name: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                unique: true
-            },
-            created_at: {
-                type: DataTypes.DATE,
-                allowNull: false,
-                defaultValue: DataTypes.NOW
-            },
-            updated_at: {
-                type: DataTypes.DATE,
-                defaultValue: DataTypes.NOW
-            }
+export default (sequelize, DataTypes) => {
+    return sequelize.define("cities", {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false,
+            unique: true
         },
-        {
-            underscored: true,
-            freezeTableName: true,
-            timestamps: true,
-            paranoid: true
+        city_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
         }
-    );
-    return Cities;
+    }, {
+        underscored: true,
+        freezeTableName: true,
+        timestamps: true,
+        paranoid: true
+    });
 };
