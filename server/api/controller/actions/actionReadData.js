@@ -5,22 +5,16 @@ import errorWrapper from "../../helpers/errorWrapper";
 export default (db, modelName) => {
     return (req, res) => {
 
-        let filter = {
-            id: req.params.id 
-        };
+        let queryParams = {};
+        queryParams.where = {id: req.params.id};
+        queryParams.paranoid = false;
 
         let errorMessage = "No valid entry found for provided ID";
 
-        if (filter.id === undefined) {
-            filter = {
-                ...req.query
-            };
+        if (queryParams.where.id === undefined) {
+            queryParams = {...req.query};
             errorMessage = "No entries found";
         }
-
-        let queryParams = {};
-        queryParams.where = filter;
-        queryParams.paranoid = false;
     
         db[modelName].findAll(queryParams)
             .then((fetchedElems) => {

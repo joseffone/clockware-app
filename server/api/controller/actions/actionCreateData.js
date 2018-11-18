@@ -3,6 +3,7 @@
 import "dotenv/config";
 import bcrypt from "bcrypt";
 import errorWrapper from "../../helpers/errorWrapper";
+import checkOrder from "../../helpers/ordersChecker";
 
 export default (db, modelName) => {
     return (req, res) => {
@@ -73,16 +74,33 @@ export default (db, modelName) => {
 
             queryParams.defaults.password = hash;
 
-            db[modelName].findOrCreate(queryParams)
-                .then((createdElem) => {
-                    if (createdElem[0].password) {
-                        createdElem[0].password = "secret";
-                    }
-                    res.status(201).json(createdElem);
-                })
-                .catch((err) => {
-                    errorWrapper(err, res, null);
-                });
+            db.sequelize.transaction({
+                isolationLevel: db.Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
+            }, (t) => {
+                return checkOrder(db, modelName, {...queryParams.where}, t)
+                    .then((t) => {
+                        queryParams.transaction = t;
+                        return db[modelName].findOrCreate(queryParams)
+                            .then((createdElem) => {
+                                if (createdElem[0].password) {
+                                    createdElem[0].password = "secret";
+                                }
+                                return createdElem;
+                            }, {transaction: t});
+                    }, (orders) => {
+                        const message = "Unable to create order";
+                        if (!orders) {
+                            message = "Request contains invalid data";
+                        }
+                        const error = new Error(message);
+                        error.status = 404;
+                        throw error;
+                    });      
+            }).then((createdElem) => {
+                res.status(201).json(createdElem);
+            }).catch((err) => {
+                errorWrapper(err, res, null);
+            });
 
         });   
     };

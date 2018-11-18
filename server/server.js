@@ -1,13 +1,13 @@
 import "dotenv/config";
 import bodyParser from "body-parser";
 import express from "express";
-import db from "./api/util/db";
+import db from "./api/config/db";
 import router from "./api/router/router";
 
 const app = express();
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.use((req, res, next) => {
    res.header("Access-Control-Allow-Origin", "*");

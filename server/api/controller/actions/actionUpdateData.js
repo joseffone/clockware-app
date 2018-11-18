@@ -7,16 +7,12 @@ import errorWrapper from "../../helpers/errorWrapper";
 export default (db, modelName) => {
     return (req, res) => {
 
-        let filter = {
-            id: req.params.id 
-        };
+        let queryParams = {};
+        queryParams.where = {id: req.params.id};
+        queryParams.paranoid = false;
 
         const attributes = Object.keys(db[modelName].rawAttributes);
         let errorMessage = "No valid entry found for provided ID";
-
-        let queryParams = {};
-        queryParams.where = filter;
-        queryParams.paranoid = false;
 
         bcrypt.hash(req.body.password, +process.env.BCRYPT_SALT_ROUNDS, (err, hash) => {
 
@@ -31,7 +27,7 @@ export default (db, modelName) => {
                     if (fetchedElem.length !== 0) {
                         for (const key in req.body) {
 
-                            const attrCounter = attributes.filter(function (attr) {
+                            const attrCounter = attributes.filter((attr) => {
                                 return attr === key;
                             }).length;
 

@@ -7,6 +7,8 @@ export default (userId, action, modelName, db) => {
                 let roleId = undefined;
                 let clientRoleId = undefined;
                 if (user.length === 0) {
+                    //user is not defined; set roles by default
+                    //the roles are assumed to be initially created and stored in the database
                     await db.roles.findAll({
                         where: {
                             role: ["user", "client"]
@@ -14,8 +16,11 @@ export default (userId, action, modelName, db) => {
                         .then((role) => {
                             role.forEach(element => {
                                 if (element.role === "user") {
+                                    //get user role id to use it for reaching data by default
+                                    //also it is used to create users whith client status
                                     roleId = element.id;
                                 } else {
+                                    //get client role id to provide it as default role id while creating clients by unsigned user
                                     clientRoleId = element.id;
                                 }
                             });
@@ -24,8 +29,10 @@ export default (userId, action, modelName, db) => {
                             reject(err);
                         });
                 } else {
+                    //user exists so get its role id
                     roleId = user[0].role_id;
                 }
+                //check if there is permission to perform the action
                 return db.permissions.findAll({
                     where: {
                         role_id: roleId,

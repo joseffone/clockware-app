@@ -5,18 +5,19 @@ import errorWrapper from "../../helpers/errorWrapper";
 export default (db, modelName) => {
     return (req, res) => {
 
-        let filter = {
-            id: req.params.id 
-        };
+        let queryParams = {};
+        queryParams.where = {id: req.params.id};
+        queryParams.paranoid = true;
     
         let successMessage = "Entry deleted successfully";
         let errorMessage = "No valid entry found for provided ID";
         
         if (modelName === "keys") {
             successMessage = "Logout successfully";
+            queryParams.paranoid = false;
         }
 
-        db[modelName].destroy({where: filter})
+        db[modelName].destroy(queryParams)
             .then((delCount) => {
                 if (delCount === 1) {
                     res.status(200).json({
