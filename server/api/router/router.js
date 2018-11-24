@@ -1,6 +1,7 @@
 "use strict";
 
 import verifyUser from "../middlewares/verifyAccessToken";
+import checkFreeAgents from "../middlewares/checkFreeAgents";
 import controller from "../controller/controller";
 
 export default (app, db) => {
@@ -54,6 +55,7 @@ export default (app, db) => {
 
     //AGENTS
     app.get("/agents", verifyUser, controller.readData(db, "agents"));
+    app.get("/freeagents", verifyUser, checkFreeAgents(db), controller.readData(db, "agents"));
     app.get("/agent/:id", verifyUser, controller.readData(db, "agents"));
     app.post("/agent", verifyUser, controller.createData(db, "agents"));
     app.patch("/agent/:id", verifyUser, controller.updateData(db, "agents"));

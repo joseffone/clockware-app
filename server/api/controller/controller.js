@@ -2,7 +2,6 @@
 
 import errorWrapper from "../helpers/errorWrapper";
 import checkAccess from "../helpers/dataAccessChecker";
-import checkOrder from "../../helpers/ordersChecker";
 import actionLoginUser from "./actions/actionLoginUser";
 import actionRefreshTokens from "./actions/actionRefreshTokens";
 import actionReadData from "./actions/actionReadData";
@@ -58,11 +57,6 @@ export default {
     refreshTokens: (db) => {
         return (req, res) => {
             actionRefreshTokens(db)(req, res);
-        };
-    },
-    getFreeAgents: (db) => {
-        return (req, res) => {
-
         };
     }
 };

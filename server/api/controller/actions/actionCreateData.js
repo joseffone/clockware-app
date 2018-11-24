@@ -74,10 +74,13 @@ export default (db, modelName) => {
 
             queryParams.defaults.password = hash;
 
+            //checking and creating orders must be performed within one transaction with serializable isolation level
+            //so other users can not create and update orders until current transaction is completed
+            //this is needed to avoid data inconsistency
             db.sequelize.transaction({
                 isolationLevel: db.Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
             }, (t) => {
-                return checkOrder(db, modelName, {...queryParams.where}, t)
+                return checkOrder(db, modelName, {...queryParams.where}, t, false)
                     .then((t) => {
                         queryParams.transaction = t;
                         return db[modelName].findOrCreate(queryParams)
@@ -88,11 +91,11 @@ export default (db, modelName) => {
                                 return createdElem;
                             }, {transaction: t});
                     }, (orders) => {
-                        const message = "Unable to create order";
+                        let errMessage = "Unable to create order with provided time interval";
                         if (!orders) {
-                            message = "Request contains invalid data";
+                            errMessage = "Request contains invalid data";
                         }
-                        const error = new Error(message);
+                        const error = new Error(errMessage);
                         error.status = 404;
                         throw error;
                     });      
