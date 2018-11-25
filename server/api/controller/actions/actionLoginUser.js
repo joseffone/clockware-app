@@ -19,7 +19,7 @@ export default (db) => {
                         key[0].setDataValue("refresh_token", refreshToken);
                         return key[0].save();
                     }
-                    errorWrapper(null, res, "Authentication failed");
+                    return;
                 }).then(() => {
                     res.status(200).json({
                         message: "Authentication successful",
