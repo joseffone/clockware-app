@@ -55,7 +55,8 @@ export default (db, dataObj) => {
                 defaults:{
                     first_name: dataObj.defaultAdmin.first_name,
                     last_name: dataObj.defaultAdmin.last_name,
-                    password: hash
+                    password: hash,
+                    role_id: rolesIds["admin"]
                 }})
                 .then((user) => {
                     console.log("User " + user[0].email + " with admin status created");

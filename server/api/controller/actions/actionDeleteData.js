@@ -7,14 +7,12 @@ export default (db, modelName) => {
 
         let queryParams = {};
         queryParams.where = {id: req.params.id};
-        queryParams.paranoid = true;
     
         let successMessage = "Entry deleted successfully";
         let errorMessage = "No valid entry found for provided ID";
         
         if (modelName === "keys") {
             successMessage = "Logout successfully";
-            queryParams.paranoid = false;
         }
 
         db[modelName].destroy(queryParams)

@@ -36,7 +36,6 @@ export default (sequelize, DataTypes) => {
     }, {
         underscored: true,
         freezeTableName: true,
-        timestamps: true,
-        paranoid: true
+        timestamps: true
     });
 };
