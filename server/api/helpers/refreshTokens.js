@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import tokensController from "./tokensController";
+import tokensController from './tokensController';
 
 export default (db, refreshToken) => {
     return new Promise((resolve, reject) => {

@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import "dotenv/config";
-import bcrypt from "bcrypt";
-import errorWrapper from "../../helpers/errorWrapper";
-import checkOrder from "../../helpers/ordersChecker";
+import 'dotenv/config';
+import bcrypt from 'bcrypt';
+import errorWrapper from '../../helpers/errorWrapper';
+import checkOrder from '../../helpers/ordersChecker';
 
 export default (db, modelName) => {
     return (req, res) => {
@@ -13,7 +13,7 @@ export default (db, modelName) => {
         queryParams.paranoid = false;
 
         const attributes = Object.keys(db[modelName].rawAttributes);
-        let errMessage = "No valid entry found for provided ID";
+        let errMessage = 'No valid entry found for provided ID';
 
         bcrypt.hash(req.body.password, +process.env.BCRYPT_SALT_ROUNDS, (err, hash) => {
 
@@ -41,7 +41,7 @@ export default (db, modelName) => {
                                 }).length;
     
                                 if (attrCounter !== 0) {
-                                    if (key === "password") {
+                                    if (key === 'password') {
                                         fetchedElem[0].setDataValue(key, hash);
                                     } else {
                                         fetchedElem[0].setDataValue(key, req.body[key]);
@@ -54,9 +54,9 @@ export default (db, modelName) => {
                                 .then((t) => {
                                     return fetchedElem[0].save({paranoid: false, transaction: t});
                                 }, (orders) => {
-                                    errMessage = "Unable to update order with provided time interval";
+                                    errMessage = 'Unable to update order with provided time interval';
                                     if (!orders) {
-                                        errMessage = "Request contains invalid data";
+                                        errMessage = 'Request contains invalid data';
                                     }
                                     const error = new Error(errMessage);
                                     error.status = 404;
@@ -71,7 +71,7 @@ export default (db, modelName) => {
                     }, {transaction: t});
             }).then ((updatedElem) => {
                 if (updatedElem.password) {
-                    updatedElem.password = "secret";
+                    updatedElem.password = 'secret';
                 }
                 res.status(200).json(updatedElem);
             }).catch((err) => {

@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import bcrypt from "bcrypt";
-import tokensController from "./tokensController";
+import bcrypt from 'bcrypt';
+import tokensController from './tokensController';
 
 export default (db, dataObj) => {
     return new Promise((resolve, reject) => {

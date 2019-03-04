@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("orders", {
+    return sequelize.define('orders', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -13,41 +13,41 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "users",
-                key:   "id"
+                model: 'users',
+                key:   'id'
             },
-            onDelete: "no action",
-            onUpdate: "cascade"
+            onDelete: 'no action',
+            onUpdate: 'cascade'
         },
         clock_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "clocks",
-                key:   "id"
+                model: 'clocks',
+                key:   'id'
             },
-            onDelete: "no action",
-            onUpdate: "cascade"
+            onDelete: 'no action',
+            onUpdate: 'cascade'
         },
         city_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "cities",
-                key:   "id"
+                model: 'cities',
+                key:   'id'
             },
-            onDelete: "no action",
-            onUpdate: "cascade"
+            onDelete: 'no action',
+            onUpdate: 'cascade'
         },
         agent_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "agents",
-                key:   "id"
+                model: 'agents',
+                key:   'id'
             },
-            onDelete: "no action",
-            onUpdate: "cascade"
+            onDelete: 'no action',
+            onUpdate: 'cascade'
         },
         start_date: {
             type: DataTypes.DATE,

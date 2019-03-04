@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("marks", {
+    return sequelize.define('marks', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,

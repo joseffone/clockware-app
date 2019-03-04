@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import errorWrapper from "../../helpers/errorWrapper";
+import errorWrapper from '../../helpers/errorWrapper';
 
 export default (db, modelName) => {
     return (req, res) => {
@@ -8,11 +8,11 @@ export default (db, modelName) => {
         let queryParams = {};
         queryParams.where = {id: req.params.id};
     
-        let successMessage = "Entry deleted successfully";
-        let errorMessage = "No valid entry found for provided ID";
+        let successMessage = 'Entry deleted successfully';
+        let errorMessage = 'No valid entry found for provided ID';
         
-        if (modelName === "keys") {
-            successMessage = "Logout successfully";
+        if (modelName === 'keys') {
+            successMessage = 'Logout successfully';
         }
 
         db[modelName].destroy(queryParams)

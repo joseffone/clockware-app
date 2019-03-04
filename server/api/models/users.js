@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("users", {
+    return sequelize.define('users', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -36,11 +36,11 @@ export default (sequelize, DataTypes) => {
         role_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: "roles",
-                key: "id"
+                model: 'roles',
+                key: 'id'
             },
-            onDelete: "set null",
-            onUpdate: "cascade"
+            onDelete: 'set null',
+            onUpdate: 'cascade'
         },
         created_at: {
             type: DataTypes.DATE,

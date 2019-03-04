@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 export default (err, res, customMessage) => {
     if (!err) {
@@ -8,9 +8,9 @@ export default (err, res, customMessage) => {
             }
         });
     }
-    if (err.name === "TokenExpiredError" ||
-        err.name === "JsonWebTokenError" ||
-        err.name === "NotBeforeError") {
+    if (err.name === 'TokenExpiredError' ||
+        err.name === 'JsonWebTokenError' ||
+        err.name === 'NotBeforeError') {
         return res.status(404).json({
             error: {
                 message: customMessage,

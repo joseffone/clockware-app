@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("roles", {
+    return sequelize.define('roles', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,

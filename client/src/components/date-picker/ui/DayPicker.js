@@ -22,7 +22,7 @@ const dayPicker = (props) => {
     }
 
     return (
-        <Table attached celled textAlign='center' style={{width: '280px', height: '240px'}}>
+        <Table unstackable attached celled textAlign='center' style={{width: '21em', height: '18em'}}>
             <Table.Header>
                 <Table.Row>
                     {weekDays.map((wDay) => {
@@ -30,7 +30,7 @@ const dayPicker = (props) => {
                             <Table.HeaderCell 
                                 key={wDay} 
                                 content={wDay} 
-                                style={{padding: 0, width: '40px', height: '40px'}}
+                                style={{padding: 0, width: '3em', height: '3em'}}
                             />
                         );
                     })}

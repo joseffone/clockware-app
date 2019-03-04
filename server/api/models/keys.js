@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("keys", {
+    return sequelize.define('keys', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -14,11 +14,11 @@ export default (sequelize, DataTypes) => {
             allowNull: false,
             unique: true,
             references: {
-                model: "users",
-                key:   "id"
+                model: 'users',
+                key:   'id'
             },
-            onDelete: "cascade",
-            onUpdate: "cascade"
+            onDelete: 'cascade',
+            onUpdate: 'cascade'
         },
         refresh_token: {
             type: DataTypes.STRING,

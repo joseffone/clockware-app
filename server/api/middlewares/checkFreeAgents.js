@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import freeAgentsChecker from "../helpers/freeAgentsChecker";
-import errorWrapper from "../helpers/errorWrapper";
+import freeAgentsChecker from '../helpers/freeAgentsChecker';
+import errorWrapper from '../helpers/errorWrapper';
 
 export default (db) => {
     return (req, res, next) => {
@@ -16,7 +16,7 @@ export default (db) => {
                 req.query = {where: {id: freeAgentsIds}};
                 next();
             }, (err) => {
-                errorWrapper(err, res, "No free agents available");
+                errorWrapper(err, res, 'No free agents available');
             });
 
     };

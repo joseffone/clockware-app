@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 export default (db, modelName, dataObj, transaction, flag) => {
     return new Promise((resolve, reject) => {
 
-        if (modelName !== "orders") {
+        if (modelName !== 'orders') {
             return resolve(transaction);
         }
         

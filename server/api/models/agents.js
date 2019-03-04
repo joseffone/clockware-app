@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("agents", {
+    return sequelize.define('agents', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -28,11 +28,11 @@ export default (sequelize, DataTypes) => {
         mark_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: "marks",
-                key:   "id"
+                model: 'marks',
+                key:   'id'
             },
-            onDelete: "set null",
-            onUpdate: "cascade"
+            onDelete: 'set null',
+            onUpdate: 'cascade'
         },
         created_at: {
             type: DataTypes.DATE,

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 export default (db, dataObj) => {
     return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ export default (db, dataObj) => {
                     {eхpiration_date: {[db.Sequelize.Op.gte]: dataObj.start_date}}
                 ]
             },
-            group: ["agent_id"]
+            group: ['agent_id']
         }).then((orders) => {
             if (orders.length !== 0) {
                 //overlapped orders exist so get and return an array with corresponding agents ids

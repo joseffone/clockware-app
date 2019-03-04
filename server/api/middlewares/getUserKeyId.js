@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-import errorWrapper from "../helpers/errorWrapper";
+import errorWrapper from '../helpers/errorWrapper';
 
 export default (db) => {
     return (req, res, next) => {
 
-        let errorMessage = "No valid entry found for provided ID";
+        let errorMessage = 'No valid entry found for provided ID';
         let queryParams = {};
         queryParams.where = {user_id: req.userData.id};
    

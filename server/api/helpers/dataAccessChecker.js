@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 export default (userId, action, modelName, db) => {
     return new Promise((resolve, reject) => {
@@ -11,11 +11,11 @@ export default (userId, action, modelName, db) => {
                     //the roles are assumed to be initially created and stored in the database
                     await db.roles.findAll({
                         where: {
-                            role: ["user", "client"]
+                            role: ['user', 'client']
                         }})
                         .then((role) => {
                             role.forEach(element => {
-                                if (element.role === "user") {
+                                if (element.role === 'user') {
                                     //get user role id to use it for reaching data by default
                                     //also it is used to create users whith client status
                                     roleId = element.id;

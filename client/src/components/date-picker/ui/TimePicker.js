@@ -57,7 +57,7 @@ const timePicker = (props) => {
     }
 
     return (
-        <Table attached celled textAlign='center' style={{width: '280px', height: '240px'}}>
+        <Table unstackable attached celled textAlign='center' style={{width: '21em', height: '18em'}}>
             <Table.Body>
                 {rows}
             </Table.Body>

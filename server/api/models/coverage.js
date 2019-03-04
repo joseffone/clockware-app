@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("coverage", {
+    return sequelize.define('coverage', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -14,22 +14,22 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             allowNull: false,
             references: {
-                model: "agents",
-                key:   "id"
+                model: 'agents',
+                key:   'id'
             },
-            onDelete: "cascade",
-            onUpdate: "cascade"
+            onDelete: 'cascade',
+            onUpdate: 'cascade'
         },
         city_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             allowNull: false,
             references: {
-                model: "cities",
-                key:   "id"
+                model: 'cities',
+                key:   'id'
             },
-            onDelete: "cascade",
-            onUpdate: "cascade"
+            onDelete: 'cascade',
+            onUpdate: 'cascade'
         },
         created_at: {
             type: DataTypes.DATE,

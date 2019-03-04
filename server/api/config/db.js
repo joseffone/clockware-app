@@ -1,17 +1,17 @@
-"use strict";
+'use strict';
 
-import "dotenv/config";
-import Sequelize from "sequelize";
-import Users from "../models/users";
-import Roles from "../models/roles";
-import Permissions from "../models/permissions";
-import Keys from "../models/keys";
-import Clocks from "../models/clocks";
-import Marks from "../models/marks";
-import Agents from "../models/agents";
-import Cities from "../models/cities";
-import Coverage from "../models/coverage";
-import Orders from "../models/orders";
+import 'dotenv/config';
+import Sequelize from 'sequelize';
+import Users from '../models/users';
+import Roles from '../models/roles';
+import Permissions from '../models/permissions';
+import Keys from '../models/keys';
+import Clocks from '../models/clocks';
+import Marks from '../models/marks';
+import Agents from '../models/agents';
+import Cities from '../models/cities';
+import Coverage from '../models/coverage';
+import Orders from '../models/orders';
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,

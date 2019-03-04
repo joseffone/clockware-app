@@ -1,19 +1,19 @@
-"use strict";
+'use strict';
 
-import "dotenv/config";
-import bcrypt from "bcrypt";
+import 'dotenv/config';
+import bcrypt from 'bcrypt';
 
 export default (db, dataObj) => {
     return new Promise(async (resolve, reject) => {
 
         let rolesIds = {};
 
-        console.log("Default roles creating...")
+        console.log('Default roles creating...')
 
         for (const role of dataObj.defaultRoles) {
-            await db["roles"].findOrCreate({where: {role: role}})
+            await db['roles'].findOrCreate({where: {role: role}})
                 .then((role) => {
-                    console.log("[" + role[0].role + "] role created");
+                    console.log('[' + role[0].role + '] role created');
                     rolesIds[role[0].role] = role[0].id;
                 })
                 .catch((err) => {
@@ -21,18 +21,18 @@ export default (db, dataObj) => {
                 });
         }
 
-        console.log("Default permissions setting...")
+        console.log('Default permissions setting...')
         for (const modelKey in dataObj.defaultPermissions) {
             for (const roleKey in dataObj.defaultPermissions[modelKey]) {
                 for (const action of dataObj.defaultPermissions[modelKey][roleKey]) {
-                    await db["permissions"].findOrCreate({
+                    await db['permissions'].findOrCreate({
                         where: {
                             role_id: rolesIds[roleKey],
                             model: modelKey,
                             action: action
                         }})
                         .then((permission) => {
-                            console.log("Permission ID: " + permission[0].id + ", role: " + roleKey + ", model: " + modelKey + ", action: " + action + ";");
+                            console.log('Permission ID: ' + permission[0].id + ', role: ' + roleKey + ', model: ' + modelKey + ', action: ' + action + ';');
                         })
                         .catch((err) => {
                             reject(err);
@@ -41,14 +41,14 @@ export default (db, dataObj) => {
             }
         }
 
-        console.log("Default admin user creating...")
+        console.log('Default admin user creating...')
         bcrypt.hash(dataObj.defaultAdmin.password, +process.env.BCRYPT_SALT_ROUNDS, async (err, hash) => {
             
             if(err) {
                 return reject(err);
             }
             
-            await db["users"].findOrCreate({
+            await db['users'].findOrCreate({
                 where: {
                     email: dataObj.defaultAdmin.email
                 },
@@ -56,10 +56,10 @@ export default (db, dataObj) => {
                     first_name: dataObj.defaultAdmin.first_name,
                     last_name: dataObj.defaultAdmin.last_name,
                     password: hash,
-                    role_id: rolesIds["admin"]
+                    role_id: rolesIds['admin']
                 }})
                 .then((user) => {
-                    console.log("User " + user[0].email + " with admin status created");
+                    console.log('User ' + user[0].email + ' with admin status created');
                     resolve();
                 })
                 .catch((err) => {

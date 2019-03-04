@@ -10,11 +10,14 @@ class DatePicker extends Component {
     state = {
         dateContext: moment(),
         isDatePickerOpen: false,
+        isMouseOverDatePicker: false,
         showDays: true,
         showHours: false,
         showMinutes: false,
-        value: null
+        value: ''
     }
+
+    inputFieldRef = React.createRef();
 
     onDayClickHandler = (event, dateContext) => {
         dateContext.set('date', +event.currentTarget.textContent);
@@ -142,19 +145,25 @@ class DatePicker extends Component {
 
         return (
             <Popup
+                hideOnScroll
                 open={this.state.isDatePickerOpen}
                 trigger={
                     <Input
+                        ref={this.inputFieldRef}
                         iconPosition='left' 
                         icon='calendar alternate outline' 
                         placeholder='Date Time'
                         value={this.state.value}
                         onKeyPress={(event) => event.preventDefault()}
-                        onClick={() => this.setState({isDatePickerOpen: !this.state.isDatePickerOpen})}
+                        onFocus={() => this.setState({isDatePickerOpen: true})}
+                        onBlur={() => !this.state.isMouseOverDatePicker ? this.setState({isDatePickerOpen: false}) : null}
                     />
                 }
-                on='click'
-                style={{padding: 0, border: 0}}>
+                style={{padding: 0, border: 0}}
+                onMouseOver={() => this.setState({isMouseOverDatePicker: true})}
+                onMouseOut={() => this.setState({isMouseOverDatePicker: false})}
+                onClick={() => this.inputFieldRef.current.focus()}
+            >
                 {currentNavBar}
                 {currentPicker}
             </Popup>

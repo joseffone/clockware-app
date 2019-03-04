@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default (sequelize, DataTypes) => {
-    return sequelize.define("permissions", {
+    return sequelize.define('permissions', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -13,36 +13,36 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "roles",
-                key:   "id"
+                model: 'roles',
+                key:   'id'
             },
-            onDelete: "cascade",
-            onUpdate: "cascade"
+            onDelete: 'cascade',
+            onUpdate: 'cascade'
         },
         model: {
             type: DataTypes.ENUM,
-            defaultValue:"permissions",
+            defaultValue:'permissions',
             values: [
-                "users",
-                "roles",
-                "permissions",
-                "keys",
-                "clocks",
-                "cities",
-                "marks",
-                "agents",
-                "coverage",
-                "orders"
+                'users',
+                'roles',
+                'permissions',
+                'keys',
+                'clocks',
+                'cities',
+                'marks',
+                'agents',
+                'coverage',
+                'orders'
             ]
         },
         action: {
             type: DataTypes.ENUM,
-            defaultValue:"read",
+            defaultValue:'read',
             values: [
-                "read",
-                "create",
-                "update",
-                "delete"
+                'read',
+                'create',
+                'update',
+                'delete'
             ]
         },
         created_at: {

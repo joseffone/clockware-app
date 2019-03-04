@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import errorWrapper from "../../helpers/errorWrapper";
+import errorWrapper from '../../helpers/errorWrapper';
 
 export default (db, modelName) => {
     return (req, res) => {
@@ -9,11 +9,11 @@ export default (db, modelName) => {
         queryParams.where = {id: req.params.id};
         queryParams.paranoid = false;
 
-        let errorMessage = "No valid entry found for provided ID";
+        let errorMessage = 'No valid entry found for provided ID';
 
         if (queryParams.where.id === undefined) {
             queryParams = {...req.query};
-            errorMessage = "No entries found";
+            errorMessage = 'No entries found';
         }
     
         db[modelName].findAll(queryParams)
@@ -21,7 +21,7 @@ export default (db, modelName) => {
                 if (fetchedElems.length !== 0) {
                     if (fetchedElems[0].password) {
                         fetchedElems.forEach((element) => {
-                            element.password = "secret";
+                            element.password = 'secret';
                         });
                     }
                     res.status(200).json(fetchedElems);

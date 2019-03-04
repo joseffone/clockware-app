@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import "dotenv/config";
-import jwt from "jsonwebtoken";
+import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 
 export default {
     getTokens: (dataObj) => {
@@ -10,7 +10,7 @@ export default {
                 if (err) {
                     return reject(err);
                 }
-                jwt.sign(dataObj, process.env.JWT_REFRESH_KEY, {expiresIn: "24h"}, (err, refreshToken) => {
+                jwt.sign(dataObj, process.env.JWT_REFRESH_KEY, {expiresIn: '24h'}, (err, refreshToken) => {
                     if (err) {
                         return reject(err);
                     }
@@ -38,5 +38,11 @@ export default {
                 return resolve(decoded);
             });
         });
+    },
+    getExpTime: (token) => {
+        return jwt.decode(token).exp;
+    },
+    getIatTime: (token) => {
+        return jwt.decode(token).iat;
     }
 };
