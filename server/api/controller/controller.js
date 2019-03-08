@@ -12,7 +12,7 @@ import actionDeleteData from './actions/actionDeleteData';
 export default {
     readData: (db, modelName) => {
         return (req, res) => {
-            checkAccess(req.userData.id, 'read', modelName, db).then(() => {
+            checkAccess(req.userData, 'read', modelName, db).then(() => {
                 actionReadData(db, modelName)(req, res);
             }, (err) => {
                 errorWrapper(err, res, 'No access to READ data');
@@ -21,7 +21,7 @@ export default {
     },
     createData: (db, modelName) => {
         return (req, res) => {
-            checkAccess(req.userData.id, 'create', modelName, db).then((clientRoleId) => {
+            checkAccess(req.userData, 'create', modelName, db).then((clientRoleId) => {
                 if (clientRoleId) {
                     req.body.role_id = clientRoleId;
                 }
@@ -33,7 +33,7 @@ export default {
     },
     updateData: (db, modelName) => {
         return (req, res) => {
-            checkAccess(req.userData.id, 'update', modelName, db).then(() => {
+            checkAccess(req.userData, 'update', modelName, db).then(() => {
                 actionUpdateData(db, modelName)(req, res);
             }, (err) => {
                 errorWrapper(err, res, 'No access to UPDATE data');
@@ -42,7 +42,7 @@ export default {
     },
     deleteData: (db, modelName) => {
         return (req, res) => {
-            checkAccess(req.userData.id, 'delete', modelName, db).then(() => {
+            checkAccess(req.userData, 'delete', modelName, db).then(() => {
                 actionDeleteData(db, modelName)(req, res);
             }, (err) => {
                 errorWrapper(err, res, 'No access to DELETE data');

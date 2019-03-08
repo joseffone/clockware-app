@@ -7,17 +7,19 @@ export default (db, refreshToken) => {
         tokensController.checkRefreshToken(refreshToken)
             .then((decoded) => {
                 db.keys.findAll({where: {
-                    user_id: decoded.id}
+                    user_id: decoded.userData.id}
                 }).then((key) => {
                     if (key.length !== 0) {
                         if (key[0].refresh_token === refreshToken) {
                             return tokensController.getTokens({
-                                id: decoded.id,
-                                email: decoded.email,
-                                first_name: decoded.first_name,
-                                last_name: decoded.last_name
+                                userData: {
+                                    ...decoded.userData,
+                                    permissions: [
+                                        ...decoded.userData.permissions
+                                    ]
+                                }
                             }).then(({accessToken, refreshToken}) => {
-                                let userId = decoded.id;
+                                let userId = decoded.userData.id;
                                 resolve({userId, accessToken, refreshToken});
                             }, (err) => {
                                 reject(err);

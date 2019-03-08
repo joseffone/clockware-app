@@ -21,7 +21,7 @@ export default (sequelize, DataTypes) => {
             onUpdate: 'cascade'
         },
         refresh_token: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(3000),
             allowNull: false
         },
         created_at: {
