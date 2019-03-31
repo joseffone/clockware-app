@@ -24,6 +24,7 @@ class NavBar extends Component {
                     name='authTrigger'
                     content={
                         <Button
+                            as='a'
                             inverted
                             content='Log in'
                         />

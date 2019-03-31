@@ -23,7 +23,7 @@ const dateNavBar = (props) => {
     }
 
     return (
-        <Table unstackable attached='top' textAlign='center' style={{height: '3em'}}>
+        <Table unstackable attached='top' textAlign='center' style={{width: '21em', height: '3em'}}>
             <Table.Body>
                 <Table.Row>
                     <Table.Cell 

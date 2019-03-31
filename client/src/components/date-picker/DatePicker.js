@@ -3,7 +3,7 @@ import moment from 'moment';
 import DayPicker from './ui/DayPicker';
 import TimePicker from './ui/TimePicker';
 import DateNavBar from './ui/DateNavBar';
-import { Popup, Input } from 'semantic-ui-react';
+import { Popup, Modal, Input } from 'semantic-ui-react';
 
 class DatePicker extends Component {
 
@@ -54,7 +54,8 @@ class DatePicker extends Component {
             dateContext: dateContext,
             showDays: true,
             showHours: false,
-            showMinutes: false
+            showMinutes: false,
+            value: dateContext.format('DD-MM-YYYY HH:mm')
         });
     }
 
@@ -64,16 +65,19 @@ class DatePicker extends Component {
             dateContext: dateContext,
             showDays: true,
             showHours: false,
-            showMinutes: false
+            showMinutes: false,
+            value: dateContext.format('DD-MM-YYYY HH:mm')
         });
     }
 
     onNavBarDayClickHandler = (event, dateContext) => {
+        this.inputFieldRef.current.focus();
         this.setState({
             dateContext: dateContext,
             showDays: true,
             showHours: false,
-            showMinutes: false
+            showMinutes: false,
+            value: dateContext.format('DD-MM-YYYY HH:mm')
         });
     }
 
@@ -82,18 +86,24 @@ class DatePicker extends Component {
             dateContext: dateContext,
             showDays: true,
             showHours: false,
-            showMinutes: false
+            showMinutes: false,
+            value: dateContext.format('DD-MM-YYYY HH:mm')
         });
     }
 
     onNavBarMonthChangeHandler = (event, dateContext) => {
+        this.inputFieldRef.current.focus();
         dateContext.set('month', event.currentTarget.textContent);
         this.setState({
-            dateContext: dateContext
+            dateContext: dateContext,
+            value: dateContext.format('DD-MM-YYYY HH:mm')
         });
     }
 
     render() {
+
+        let inputTrigger = null;
+        let currentConfig = null;
         let currentPicker = null;
         let currentNavBar = null;
 
@@ -110,6 +120,7 @@ class DatePicker extends Component {
                 clicked={this.onDayClickHandler} 
             />;
         }
+
         if (this.state.showHours) {
             currentNavBar = <DateNavBar 
                 withDay 
@@ -126,6 +137,7 @@ class DatePicker extends Component {
                 clicked={this.onHoursClickHandler} 
             />;
         }
+
         if (this.state.showMinutes) {
             currentNavBar = <DateNavBar 
                 withDay 
@@ -143,31 +155,54 @@ class DatePicker extends Component {
             />;
         }
 
-        return (
-            <Popup
-                hideOnScroll
-                open={this.state.isDatePickerOpen}
-                trigger={
-                    <Input
-                        ref={this.inputFieldRef}
-                        iconPosition='left' 
-                        icon='calendar alternate outline' 
-                        placeholder='Date Time'
-                        value={this.state.value}
-                        onKeyPress={(event) => event.preventDefault()}
-                        onFocus={() => this.setState({isDatePickerOpen: true})}
-                        onBlur={() => !this.state.isMouseOverDatePicker ? this.setState({isDatePickerOpen: false}) : null}
-                    />
-                }
-                style={{padding: 0, border: 0}}
-                onMouseOver={() => this.setState({isMouseOverDatePicker: true})}
-                onMouseOut={() => this.setState({isMouseOverDatePicker: false})}
-                onClick={() => this.inputFieldRef.current.focus()}
-            >
-                {currentNavBar}
-                {currentPicker}
-            </Popup>
+        inputTrigger = (
+            <Input
+                ref={this.inputFieldRef}
+                fluid={this.props.fluid}
+                disabled={this.props.disabled}
+                iconPosition='left' 
+                icon='calendar alternate outline' 
+                placeholder='Date Time'
+                error={this.props.error}
+                value={this.state.value}
+                onChange={this.props.changed}
+                onKeyPress={(event) => event.preventDefault()}
+                onFocus={() => this.setState({isDatePickerOpen: true})}
+                onBlur={() => !this.state.isMouseOverDatePicker ? this.setState({isDatePickerOpen: false}) : null}
+            />
         );
+
+        if (this.props.mobile) {
+            currentConfig = (
+                <Modal
+                    open={this.state.isDatePickerOpen}
+                    trigger={inputTrigger}
+                    style={{width: '21em', background: 'none'}}
+                    onMouseOver={() => this.setState({isMouseOverDatePicker: true})}
+                    onMouseOut={() => this.setState({isMouseOverDatePicker: false})}
+                    onClick={() => !this.state.showMinutes ? this.inputFieldRef.current.focus() : null}
+                >
+                    {currentNavBar}
+                    {currentPicker}
+                </Modal>
+            );        
+        } else {
+            currentConfig = (
+                <Popup
+                    open={this.state.isDatePickerOpen}
+                    trigger={inputTrigger}
+                    style={{padding: 0, border: 0}}
+                    onMouseOver={() => this.setState({isMouseOverDatePicker: true})}
+                    onMouseOut={() => this.setState({isMouseOverDatePicker: false})}
+                    onClick={() => !this.state.showMinutes ? this.inputFieldRef.current.focus() : null}
+                >
+                    {currentNavBar}
+                    {currentPicker}
+                </Popup>
+            );
+        }
+
+        return currentConfig;
     };
 };
 

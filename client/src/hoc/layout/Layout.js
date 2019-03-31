@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Grid, Segment } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { Segment, Container } from 'semantic-ui-react';
 import NavBar from '../../components/navbar/NavBar';
 
 class Layout extends Component {
@@ -8,19 +9,42 @@ class Layout extends Component {
             <React.Fragment>
                 <NavBar fixed='top' />
                 <Segment
-                    loading={false}
+                    loading={this.props.isLoading}
                     style={{
-                        border: 0, 
+                        margin: 0,
+                        padding: 0,
+                        border: 0,
+                        borderRadius: 0, 
                         boxShadow: 'none', 
-                        marginTop: '4.603em', 
-                        minHeight: '100%'
+                        paddingTop: '3.603em',
+                        height: '100%'
                     }}
                 >
                     {this.props.children}
                 </Segment>
+                <Segment
+                        inverted
+                        style={{
+                            margin: 0,
+                            padding: 0,
+                            border: 0,
+                            borderRadius: 0, 
+                            boxShadow: 'none'
+                        }}
+                    >
+                        <Container textAlign='center'>
+                            © 2019 Clockwise Clockware. All rights reserved.
+                        </Container>
+                    </Segment>
             </React.Fragment>
         );
     }
 }
 
-export default Layout;
+const mapStateToProps = state => {
+    return {
+        isLoading: state.auth.isLoading || state.admin.isLoading || state.client.isLoading
+    }
+}
+
+export default connect(mapStateToProps)(Layout);
