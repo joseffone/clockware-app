@@ -163,7 +163,6 @@ class DatePicker extends Component {
                 iconPosition='left' 
                 icon='calendar alternate outline' 
                 placeholder='Date Time'
-                error={this.props.error}
                 value={this.state.value}
                 onChange={this.props.changed}
                 onKeyPress={(event) => event.preventDefault()}

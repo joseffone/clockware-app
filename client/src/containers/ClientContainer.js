@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Container } from 'semantic-ui-react';
-import DatePicker from '../components/date-picker/DatePicker';
-import InputForm from '../components/input-form/InputForm';
-import { getFormConfig } from '../util/util';
+import InputForm from '../components/input-form';
 
 class ClientContainer extends Component {
     render () {
@@ -14,9 +12,7 @@ class ClientContainer extends Component {
             >
                 <Grid.Column>
                     {/*<h1>This is Client Container!</h1>*/}
-                    {/*<DatePicker mobile fluid error />*/}
-                    {<InputForm model={'users'} />}
-                    {/*<Container>{JSON.stringify(getFormConfig('agents'))}</Container>*/}
+                    {<InputForm model={'orders'} />}
                 </Grid.Column>
             </Grid>
         );

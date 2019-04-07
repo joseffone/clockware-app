@@ -1,6 +1,6 @@
 import React from 'react';
 import {Input, TextArea, Select} from 'semantic-ui-react';
-import DatePicker from '../../date-picker/DatePicker';
+import DatePicker from '../../date-picker';
 
 const InputField = (props) => {
     switch (props.elementType) {
@@ -8,14 +8,13 @@ const InputField = (props) => {
             return (
                 <Input 
                     type={props.inputType} 
-                    readOnly
                     fluid 
                     disabled={props.disabled}
+                    readOnly={props.readOnly}
                     icon={props.icon}
                     iconPosition={props.iconPosition}
                     placeholder={props.placeholder}
                     value={props.value}
-                    error={props.error}
                     onChange={props.changed}
                 />
             );
@@ -38,7 +37,6 @@ const InputField = (props) => {
                     placeholder={props.placeholder}
                     options={props.options}
                     value={props.value}
-                    error={props.error}
                     onChange={props.changed}
                  />
             );
@@ -49,8 +47,7 @@ const InputField = (props) => {
                     fluid
                     mobile={props.mobile}
                     disabled={props.disabled}
-                    error={props.error}
-                    onChange={props.changed}
+                    changed={props.changed}
                 />
             );
             break;

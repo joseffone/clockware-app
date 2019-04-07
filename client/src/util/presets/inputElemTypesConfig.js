@@ -19,7 +19,8 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false
+            isValid: false,
+            touched: false
         };
     },
     textArea: (config) => {
@@ -35,7 +36,8 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false
+            isValid: false,
+            touched: false
         };
     },
     password: (config) => {
@@ -55,7 +57,8 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false
+            isValid: false,
+            touched: false
         };
     },
     email: (config) => {
@@ -76,7 +79,8 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false
+            isValid: false,
+            touched: false
         };
     },
     select: (config) => {
@@ -91,7 +95,8 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false
+            isValid: false,
+            touched: false
         };
     },
     dateTime: (config) => {
@@ -105,7 +110,8 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false
+            isValid: false,
+            touched: false
         };
     }
 };

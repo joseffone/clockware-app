@@ -235,10 +235,7 @@ const formTypesConfig = {
         }),
         note: configElem.textArea({
             label: 'Note',
-            placeholder: 'Enter Notes',
-            restrictions: {
-                requared: true
-            }
+            placeholder: 'Enter Notes'
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
