@@ -1,38 +1,18 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
-import { getFormConfig, rewriteObjectProps, validateInput } from '../../util';
+import { refreshInpFormState, changeInpFormState } from '../../store/actions';
 
 class InputForm extends Component {
-
-    state = {}
-
-    onFormOpenHandler = () => {
-        this.setState({
-            fields: {
-                ...getFormConfig(this.props.model)
-            }
-        });
-    }
-
-    onInputChangeHandler = (event, formFieldKey) => {
-        const updatedFields = rewriteObjectProps(this.state.fields, {
-            [formFieldKey]: rewriteObjectProps(this.state.fields[formFieldKey], {
-                value: event.target.value,
-                isValid: validateInput(event.target.value || '', this.state.fields[formFieldKey].config.restrictions),
-                touched: true
-            })
-        });
-        this.setState({fields: updatedFields});
-    }
 
     render () {
 
         const formFieldsArray = [];
-        for (let key in this.state.fields) {
+        for (const key in this.props.forms[this.props.model]) {
             formFieldsArray.push({
                 key: key,
-                ...this.state.fields[key]
+                ...this.props.forms[this.props.model][key]
             });
         }
 
@@ -40,7 +20,7 @@ class InputForm extends Component {
             <Modal 
                 trigger={<Button>Get Form!</Button>}
                 size='tiny'
-                onOpen={this.onFormOpenHandler}
+                onOpen={() => this.props.onFormOpenHandler(this.props.model)}
             >
                 <Modal.Header>
                     {this.props.update ?
@@ -52,7 +32,7 @@ class InputForm extends Component {
                         {formFieldsArray.map(formField => (
                             <Form.Field
                                 error={!formField.isValid && formField.touched}
-                                onBlur={(event) => this.onInputChangeHandler(event, formField.key)}
+                                onBlur={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key)}
                             >
                                 <label>{formField.config.label}</label> 
                                 <InputField 
@@ -65,8 +45,8 @@ class InputForm extends Component {
                                     iconPosition={formField.config.iconPosition}
                                     placeholder={formField.config.placeholder}
                                     value={formField.value}
-                                    mobile={this.state.isMobile}
-                                    changed={(event) => this.onInputChangeHandler(event, formField.key)}
+                                    mobile={this.props.mobile}
+                                    changed={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key)}
                                 />
                             </Form.Field>
                         ))}
@@ -77,17 +57,27 @@ class InputForm extends Component {
                                 <Form.Field>
                                 <Button as='a' basic fluid>Cancel</Button>
                                 </Form.Field>
-                            
-                            
+                                
                         </Form.Group>
                     </Form>
-    
                 </Modal.Content>
-
             </Modal>
         );
     }
 }
 
-export default InputForm;
+const mapStateToProps = state => {
+    return {
+        forms: state.forms
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onFormOpenHandler: (model) => dispatch(refreshInpFormState(model)),
+        onInputChangeHandler: (event, model, formFieldKey) => dispatch(changeInpFormState(event, model, formFieldKey))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(InputForm);
 

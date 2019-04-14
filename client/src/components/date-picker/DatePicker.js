@@ -3,7 +3,7 @@ import moment from 'moment';
 import DayPicker from './ui/DayPicker';
 import TimePicker from './ui/TimePicker';
 import DateNavBar from './ui/DateNavBar';
-import { Popup, Modal, Input } from 'semantic-ui-react';
+import { Grid, Popup, Modal, Input } from 'semantic-ui-react';
 
 class DatePicker extends Component {
 
@@ -176,13 +176,20 @@ class DatePicker extends Component {
                 <Modal
                     open={this.state.isDatePickerOpen}
                     trigger={inputTrigger}
-                    style={{width: '21em', background: 'none'}}
+                    style={{height: '100%', width: '21em', background: 'none'}}
                     onMouseOver={() => this.setState({isMouseOverDatePicker: true})}
                     onMouseOut={() => this.setState({isMouseOverDatePicker: false})}
                     onClick={() => !this.state.showMinutes ? this.inputFieldRef.current.focus() : null}
                 >
-                    {currentNavBar}
-                    {currentPicker}
+                    <Grid
+                        verticalAlign='middle' 
+                        style={{height: '100%'}}
+                    >   
+                        <Grid.Column>
+                            {currentNavBar}
+                            {currentPicker}
+                        </Grid.Column>
+                    </Grid>
                 </Modal>
             );        
         } else {

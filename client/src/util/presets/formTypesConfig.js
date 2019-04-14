@@ -32,7 +32,8 @@ const formTypesConfig = {
         }),
         mark_id: configElem.select({
             label: 'Mark',
-            placeholder: 'Select mark'
+            placeholder: 'Select mark',
+            source: 'marks'
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
@@ -137,11 +138,13 @@ const formTypesConfig = {
         }),
         agent_id: configElem.select({
             label: 'Agent',
-            placeholder: 'Select Agent'
+            placeholder: 'Select Agent',
+            source: 'agents'
         }),
         city_id: configElem.select({
             label: 'City',
-            placeholder: 'Select City'
+            placeholder: 'Select City',
+            source: 'cities'
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
@@ -213,19 +216,23 @@ const formTypesConfig = {
         }),
         user_id: configElem.select({
             label: 'Client',
-            placeholder: 'Select Client'
+            placeholder: 'Select Client',
+            source: 'users'
         }),
         clock_id: configElem.select({
             label: 'Clock Type',
-            placeholder: 'Select Clock Type'
+            placeholder: 'Select Clock Type',
+            source: 'clocks'
         }),
         city_id: configElem.select({
             label: 'City',
-            placeholder: 'Select City'
+            placeholder: 'Select City',
+            source: 'cities'
         }),
         agent_id: configElem.select({
             label: 'Agent',
-            placeholder: 'Select Agent'
+            placeholder: 'Select Agent',
+            source: 'agents'
         }),
         start_date: configElem.dateTime({
             label: 'Start Date'
@@ -298,15 +305,85 @@ const formTypesConfig = {
         }),
         role_id: configElem.select({
             label: 'User Role',
-            placeholder: 'Select User Role'
+            placeholder: 'Select User Role',
+            source: 'roles'
         }),
         model: configElem.select({
             label: 'Register',
-            placeholder: 'Select Register'
+            placeholder: 'Select Register',
+            options : [
+                {
+                    key: 'users',
+                    text: 'Users',
+                    value: 'users'
+                },
+                {
+                    key: 'roles',
+                    text: 'Roles',
+                    value: 'roles'
+                },
+                {
+                    key: 'permissions',
+                    text: 'Permissions',
+                    value: 'permissions'
+                },
+                {
+                    key: 'clocks',
+                    text: 'Clocks',
+                    value: 'clocks'
+                },
+                {
+                    key: 'cities',
+                    text: 'Cities',
+                    value: 'cities'
+                },
+                {
+                    key: 'marks',
+                    text: 'Marks',
+                    value: 'marks'
+                },
+                {
+                    key: 'agents',
+                    text: 'Agents',
+                    value: 'agents'
+                },
+                {
+                    key: 'coverage',
+                    text: 'Coverage',
+                    value: 'coverage'
+                },
+                {
+                    key: 'orders',
+                    text: 'Orders',
+                    value: 'orders'
+                }
+            ]
         }),
         action: configElem.select({
             label: 'Action Type',
-            placeholder: 'Select Action Type'
+            placeholder: 'Select Action Type',
+            options: [
+                {
+                    key: 'read',
+                    text: 'READ',
+                    value: 'read'
+                },
+                {
+                    key: 'create',
+                    text: 'CREATE',
+                    value: 'create'
+                },
+                {
+                    key: 'update',
+                    text: 'UPDATE',
+                    value: 'update'
+                },
+                {
+                    key: 'delete',
+                    text: 'DELETE',
+                    value: 'delete'
+                }
+            ]
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',

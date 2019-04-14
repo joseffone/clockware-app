@@ -12,7 +12,7 @@ class ClientContainer extends Component {
             >
                 <Grid.Column>
                     {/*<h1>This is Client Container!</h1>*/}
-                    {<InputForm model={'orders'} />}
+                    {<InputForm model={'orders'} mobile/>}
                 </Grid.Column>
             </Grid>
         );

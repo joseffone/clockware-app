@@ -1,4 +1,4 @@
-import * as actionTypes from '../actions/action-types/actionTypes';
+import * as actionTypes from '../actions/action-types';
 
 const initState = {
     isLoading: false
