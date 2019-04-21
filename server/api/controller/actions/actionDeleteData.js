@@ -15,6 +15,11 @@ export default (db, modelName) => {
             successMessage = 'Logout successfully';
         }
 
+        if (queryParams.where.id === undefined) {
+            queryParams.where = {...req.query};
+            errorMessage = 'No entries found';
+        }
+
         db[modelName].destroy(queryParams)
             .then((delCount) => {
                 if (delCount === 1) {

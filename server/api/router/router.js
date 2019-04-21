@@ -13,6 +13,7 @@ export default (app, db) => {
     app.post('/signup', verifyUser, controller.createData(db, 'users'));
     app.patch('/user/:id', verifyUser, controller.updateData(db, 'users'));
     app.delete('/user/:id', verifyUser, controller.deleteData(db, 'users'));
+    app.delete('/users', verifyUser, controller.deleteData(db, 'users'));
 
     //KEYS
     app.get('/refresh', controller.refreshTokens(db));
@@ -25,6 +26,7 @@ export default (app, db) => {
     app.post('/role', verifyUser, controller.createData(db, 'roles'));
     app.patch('/role/:id', verifyUser, controller.updateData(db, 'roles'));
     app.delete('/role/:id', verifyUser, controller.deleteData(db, 'roles'));
+    app.delete('/roles', verifyUser, controller.deleteData(db, 'roles'));
 
     //PERMISSIONS
     app.get('/permissions', verifyUser, controller.readData(db, 'permissions'));
@@ -32,6 +34,7 @@ export default (app, db) => {
     app.post('/permission', verifyUser, controller.createData(db, 'permissions'));
     app.patch('/permission/:id', verifyUser, controller.updateData(db, 'permissions'));
     app.delete('/permission/:id', verifyUser, controller.deleteData(db, 'permissions'));
+    app.delete('/permissions', verifyUser, controller.deleteData(db, 'permissions'));
 
     //AGENTS
     app.get('/agents', verifyUser, controller.readData(db, 'agents'));
@@ -40,6 +43,7 @@ export default (app, db) => {
     app.post('/agent', verifyUser, controller.createData(db, 'agents'));
     app.patch('/agent/:id', verifyUser, controller.updateData(db, 'agents'));
     app.delete('/agent/:id', verifyUser, controller.deleteData(db, 'agents'));
+    app.delete('/agents', verifyUser, controller.deleteData(db, 'agents'));
 
     //MARKS
     app.get('/marks', verifyUser, controller.readData(db, 'marks'));
@@ -47,6 +51,7 @@ export default (app, db) => {
     app.post('/mark', verifyUser, controller.createData(db, 'marks'));
     app.patch('/mark/:id', verifyUser, controller.updateData(db, 'marks'));
     app.delete('/mark/:id', verifyUser, controller.deleteData(db, 'marks'));
+    app.delete('/marks', verifyUser, controller.deleteData(db, 'marks'));
     
     //CLOCKS
     app.get('/clocks', verifyUser, controller.readData(db, 'clocks'));
@@ -54,6 +59,7 @@ export default (app, db) => {
     app.post('/clock', verifyUser, controller.createData(db, 'clocks'));
     app.patch('/clock/:id', verifyUser, controller.updateData(db, 'clocks'));
     app.delete('/clock/:id', verifyUser, controller.deleteData(db, 'clocks'));
+    app.delete('/clocks', verifyUser, controller.deleteData(db, 'clocks'));
 
     //CITIES
     app.get('/cities', verifyUser, controller.readData(db, 'cities'));
@@ -61,6 +67,7 @@ export default (app, db) => {
     app.post('/city', verifyUser, controller.createData(db, 'cities'));
     app.patch('/city/:id', verifyUser, controller.updateData(db, 'cities'));
     app.delete('/city/:id', verifyUser, controller.deleteData(db, 'cities'));
+    app.delete('/cities', verifyUser, controller.deleteData(db, 'cities'));
 
     //COVERAGE
     app.get('/coverage', verifyUser, controller.readData(db, 'coverage'));
@@ -68,6 +75,7 @@ export default (app, db) => {
     app.post('/coverage', verifyUser, controller.createData(db, 'coverage'));
     app.patch('/coverage/:id', verifyUser, controller.updateData(db, 'coverage'));
     app.delete('/coverage/:id', verifyUser, controller.deleteData(db, 'coverage'));
+    app.delete('/coverage', verifyUser, controller.deleteData(db, 'coverage'));
 
     //ORDERS
     app.get('/orders', verifyUser, controller.readData(db, 'orders'));
@@ -75,5 +83,6 @@ export default (app, db) => {
     app.post('/order', verifyUser, controller.createData(db, 'orders'));
     app.patch('/order/:id', verifyUser, controller.updateData(db, 'orders'));
     app.delete('/order/:id', verifyUser, controller.deleteData(db, 'orders'));
+    app.delete('/orders', verifyUser, controller.deleteData(db, 'orders'));
 
 };

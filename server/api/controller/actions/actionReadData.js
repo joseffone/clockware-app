@@ -12,7 +12,7 @@ export default (db, modelName) => {
         let errorMessage = 'No valid entry found for provided ID';
 
         if (queryParams.where.id === undefined) {
-            queryParams = {...req.query};
+            queryParams.where = {...req.query};
             errorMessage = 'No entries found';
         }
     

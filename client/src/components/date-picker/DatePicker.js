@@ -3,7 +3,7 @@ import moment from 'moment';
 import DayPicker from './ui/DayPicker';
 import TimePicker from './ui/TimePicker';
 import DateNavBar from './ui/DateNavBar';
-import { Grid, Popup, Modal, Input } from 'semantic-ui-react';
+import { Grid, Popup, Modal, Input, Button, Container, Icon } from 'semantic-ui-react';
 
 class DatePicker extends Component {
 
@@ -44,6 +44,7 @@ class DatePicker extends Component {
         this.setState({
             dateContext: dateContext,
             isDatePickerOpen: false,
+            isMouseOverDatePicker: false,
             value: dateContext.format('DD-MM-YYYY HH:mm')
         });
     }
@@ -97,6 +98,13 @@ class DatePicker extends Component {
         this.setState({
             dateContext: dateContext,
             value: dateContext.format('DD-MM-YYYY HH:mm')
+        });
+    }
+
+    onCloseButtonHandler = () => {
+        this.setState({
+            isDatePickerOpen: false,
+            isMouseOverDatePicker: false
         });
     }
 
@@ -166,7 +174,8 @@ class DatePicker extends Component {
                 value={this.state.value}
                 onChange={this.props.changed}
                 onKeyPress={(event) => event.preventDefault()}
-                onFocus={() => this.setState({isDatePickerOpen: true})}
+                onClick={() => !this.state.isMouseOverDatePicker ? this.setState({isDatePickerOpen: true}) : null}
+                onFocus={() => !this.state.isMouseOverDatePicker ? this.setState({isDatePickerOpen: true}) : null}
                 onBlur={() => !this.state.isMouseOverDatePicker ? this.setState({isDatePickerOpen: false}) : null}
             />
         );
@@ -176,18 +185,44 @@ class DatePicker extends Component {
                 <Modal
                     open={this.state.isDatePickerOpen}
                     trigger={inputTrigger}
-                    style={{height: '100%', width: '21em', background: 'none'}}
+                    style={{
+                        height: '100%', 
+                        width: '21em',
+                        background: 'none', 
+                        boxShadow: 'none'
+                    }}
                     onMouseOver={() => this.setState({isMouseOverDatePicker: true})}
                     onMouseOut={() => this.setState({isMouseOverDatePicker: false})}
                     onClick={() => !this.state.showMinutes ? this.inputFieldRef.current.focus() : null}
                 >
                     <Grid
+                        textAlign='center'
                         verticalAlign='middle' 
-                        style={{height: '100%'}}
-                    >   
-                        <Grid.Column>
+                        style={{
+                            height: '100%',
+                            margin: 0,
+                            padding: 0
+                        }}
+                    >
+                        <Grid.Column style={{margin: 0, padding: 0}}>
                             {currentNavBar}
                             {currentPicker}
+                            <Container 
+                                textAlign='center' 
+                                style={{
+                                    width: '21em',
+                                    margin: 0, 
+                                    padding: '1em'
+                                }}
+                            >
+                                <Button 
+                                    color='red' 
+                                    circular 
+                                    inverted 
+                                    icon='close'
+                                    onClick={this.onCloseButtonHandler}
+                                />
+                            </Container> 
                         </Grid.Column>
                     </Grid>
                 </Modal>
