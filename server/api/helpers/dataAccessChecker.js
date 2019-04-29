@@ -32,7 +32,9 @@ export default (userData, action, modelName, db) => {
                             if (permission.length !== 0) {
                                 resolve(clientRoleId);
                             } else {
-                                reject();
+                                const error = new Error();
+                                error.status = 403;
+                                reject(error);
                             }
                         })
                         .catch((err) => {
@@ -48,7 +50,9 @@ export default (userData, action, modelName, db) => {
             }).length > 0) {
                 resolve();
             } else {
-                reject();
+                const error = new Error();
+                error.status = 403;
+                reject(error);
             }
         }
 

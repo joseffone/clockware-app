@@ -26,7 +26,9 @@ export default (db, refreshToken) => {
                             });
                         }
                     }
-                    reject();
+                    const error = new Error();
+                    error.status = 401;
+                    reject(error);
                 }).catch((err) => {
                     reject(err);
                 });

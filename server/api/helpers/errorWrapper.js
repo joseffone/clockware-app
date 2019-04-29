@@ -18,6 +18,20 @@ export default (err, res, customMessage) => {
             }
         });
     }
+    if (err.status === 401) {
+        return res.status(401).json({
+            error: {
+                message: customMessage
+            }
+        });
+    }
+    if (err.status === 403) {
+        return res.status(403).json({
+            error: {
+                message: customMessage
+            }
+        });
+    }
     return res.status(500).json({
         error: {
             message: err.message

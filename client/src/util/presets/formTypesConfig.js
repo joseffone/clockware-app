@@ -4,6 +4,7 @@ const formTypesConfig = {
     agents: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -37,18 +38,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -57,6 +61,7 @@ const formTypesConfig = {
     cities: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -70,18 +75,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -90,6 +98,7 @@ const formTypesConfig = {
     clocks: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -112,18 +121,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -132,6 +144,7 @@ const formTypesConfig = {
     coverage: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -148,18 +161,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -168,6 +184,7 @@ const formTypesConfig = {
     marks: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -190,18 +207,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -210,6 +230,7 @@ const formTypesConfig = {
     orders: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -246,18 +267,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -266,6 +290,7 @@ const formTypesConfig = {
     roles: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -279,18 +304,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -299,6 +327,7 @@ const formTypesConfig = {
     permissions: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -387,18 +416,21 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -407,6 +439,7 @@ const formTypesConfig = {
     users: {
         id: configElem.textField({
             label: 'ID',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
@@ -439,21 +472,34 @@ const formTypesConfig = {
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         updated_at: configElem.textField({
             label: 'UPDATED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
         deleted_at: configElem.textField({
             label: 'DELETED AT',
+            placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
+        })
+    },
+    authentication: {
+        email: configElem.email({
+            label: 'User E-Mail',
+            placeholder: 'Enter E-Mail Address'
+        }),
+        password: configElem.password({
+            label: 'Password',
+            placeholder: 'Enter Password'
         })
     }
 };

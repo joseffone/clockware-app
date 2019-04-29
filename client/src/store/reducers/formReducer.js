@@ -10,7 +10,7 @@ for (const key in formTypesConfig) {
 
 const formReducer = (state = initState, action) => {
     switch (action.type) {
-        
+
         case actionTypes.REFRESH_INPUT_FORM_STATE:
             return rewriteObjectProps(state, {
                 [action.model]: { ...getFormConfig(action.model) }
@@ -29,6 +29,7 @@ const formReducer = (state = initState, action) => {
 
         default:
             return state;
+            
     }
 };
 

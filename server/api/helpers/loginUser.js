@@ -2,6 +2,7 @@
 
 import bcrypt from 'bcrypt';
 import tokensController from './tokensController';
+import errorWrapper from './errorWrapper';
 
 export default (db, dataObj) => {
     return new Promise((resolve, reject) => {
@@ -15,7 +16,9 @@ export default (db, dataObj) => {
                         return reject(err);
                     }
                     if (!result) {
-                        return reject();
+                        const error = new Error();
+                        error.status = 401;
+                        return reject(error);
                     }
 
                     return db.permissions.findAll({where: {role_id: user[0].role_id}})

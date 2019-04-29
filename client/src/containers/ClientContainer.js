@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Container } from 'semantic-ui-react';
+import { Grid, Button, Container } from 'semantic-ui-react';
 import InputForm from '../components/input-form';
 
 class ClientContainer extends Component {
@@ -12,7 +12,17 @@ class ClientContainer extends Component {
             >
                 <Grid.Column>
                     {/*<h1>This is Client Container!</h1>*/}
-                    {<InputForm model={'orders'} mobile/>}
+                    {<InputForm 
+                        trigger={
+                            (props) => 
+                                <Button
+                                    icon='edit' 
+                                    {...props} 
+                                />
+                        }
+                        model='users'
+                        mobile={false}
+                    />}
                 </Grid.Column>
             </Grid>
         );
