@@ -1,8 +1,30 @@
 import React, { Component } from 'react';
+import { Grid, Button } from 'semantic-ui-react';
+import InputForm from '../components/input-form';
 
 class AdminContainer extends Component {
     render () {
-        return (<h1>This is Admin Container!</h1>);
+        return (
+            <Grid 
+                textAlign='center'
+                verticalAlign='middle' 
+                style={{height: '100%', widtn: '100%', margin: 0}}
+            >
+                <Grid.Column>
+                    {<InputForm 
+                        trigger={
+                            (props) => 
+                                <Button
+                                    icon='edit'
+                                    {...props}
+                                />
+                        }
+                        model='clocks'
+                        mobile={false}
+                    />}
+                </Grid.Column>
+            </Grid>
+        );
     }
 }
 

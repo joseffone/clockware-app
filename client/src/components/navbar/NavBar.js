@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Menu, Header, Button } from 'semantic-ui-react';
+import InputForm from '../input-form';
+import { logoutRequest } from '../../store/actions'
 
 class NavBar extends Component {
     render () {
@@ -21,13 +24,27 @@ class NavBar extends Component {
                 />
                 <Menu.Item
                     position='right'
-                    name='authTrigger'
                     content={
-                        <Button
-                            as='a'
-                            inverted
-                            content='Log in'
-                        />
+                        this.props.accessToken === null ?
+                            <InputForm 
+                                trigger={
+                                    (props) => 
+                                        <Button
+                                            as='a'
+                                            inverted
+                                            content='Log in'
+                                            {...props}
+                                        />
+                                }
+                                model='authentication'
+                            />
+                        :
+                            <Button 
+                                as='a'
+                                inverted
+                                content='Log out'
+                                onClick={() => this.props.onUserLogoutHandler(this.props.accessToken)}
+                            />
                     }
                 />
             </Menu>
@@ -35,4 +52,16 @@ class NavBar extends Component {
     }
 }
 
-export default NavBar;
+const mapStateToProps = state => {
+    return {
+        accessToken: state.auth.accessToken
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onUserLogoutHandler: (accessToken) => dispatch(logoutRequest(accessToken))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

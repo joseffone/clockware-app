@@ -464,7 +464,7 @@ const formTypesConfig = {
         }),
         password: configElem.password({
             label: 'Password',
-            placeholder: 'Enter Password'
+            placeholder: 'Enter Password (at least 8 symbols)'
         }),
         role_id: configElem.select({
             label: 'User Role',
@@ -499,7 +499,7 @@ const formTypesConfig = {
         }),
         password: configElem.password({
             label: 'Password',
-            placeholder: 'Enter Password'
+            placeholder: 'Enter Password (at least 5 symbols)'
         })
     }
 };

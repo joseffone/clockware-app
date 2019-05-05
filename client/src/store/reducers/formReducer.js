@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/action-types';
 import { getFormConfig, rewriteObjectProps, validateInput } from '../../util';
 import formTypesConfig from '../../util/presets/formTypesConfig';
 
-let initState = {};
+const initState = {};
 
 for (const key in formTypesConfig) {
     initState[key] = { ...getFormConfig(key) };

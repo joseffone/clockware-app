@@ -45,13 +45,38 @@ const authReducer = (state = initState, action) => {
             return rewriteObjectProps(state, {
                 accessToken: action.authData.access_token,
                 accessTokenIat: action.authData.access_token_iat,
-                accessTokenExp: action.authData.access_token_exp
+                accessTokenExp: action.authData.access_token_exp,
+                pathToAutoRedirect: '/admin'
             });
 
-        case actionTypes.LOGIN_FAILURE:
+        case actionTypes.REFRESH_TOKENS_FAILURE:
             return rewriteObjectProps(state, {
                 error: action.error,
+                accessToken: null,
+                accessTokenIat: null,
+                accessTokenExp: null,
                 pathToAutoRedirect: '/'
+            });
+        
+        case actionTypes.LOGOUT_REQUEST:
+            return rewriteObjectProps(state, {
+                error: null,
+                isLoading: true
+            });
+
+        case actionTypes.LOGOUT_SUCCESS:
+            return rewriteObjectProps(state, {
+                accessToken: null,
+                accessTokenIat: null,
+                accessTokenExp: null,
+                isLoading: false,
+                pathToAutoRedirect: '/'
+            });
+
+        case actionTypes.LOGOUT_FAILURE:
+            return rewriteObjectProps(state, {
+                error: action.error,
+                isLoading: false
             });
 
         default:

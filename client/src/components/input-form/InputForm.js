@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Form, Button } from 'semantic-ui-react';
+import { Modal, Form, Button, Message } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
-import { refreshInpFormState, changeInpFormState } from '../../store/actions';
+import { refreshInpFormState, changeInpFormState, loginRequest } from '../../store/actions';
 
 class InputForm extends Component {
 
     state = {
-        isModalOpen: false
+        isModalOpen: false,
+        isFormDataValid: true
     }
 
     onModalOpenHandler = () => {
@@ -15,23 +16,35 @@ class InputForm extends Component {
     }
 
     onModalCloseHandler = () => {
-        this.setState({isModalOpen: false});
+        this.setState({
+            isModalOpen: false,
+            isFormDataValid: true
+        });
     }
 
     onFormSubmitHandler = () => {
-        
+        if(this.state.isFormDataValid) {
+            if (this.props.model === 'authentication') {
+                return this.props.onUserLoginHandler({
+                    email: this.props.forms.authentication.email.value,
+                    password: this.props.forms.authentication.password.value
+                });
+            }
+        }
     }
 
     render () {
 
         const Trigger = this.props.trigger;
         const formFieldsArray = [];
+        let isFormDataValid = true;
 
         for (const key in this.props.forms[this.props.model]) {
             formFieldsArray.push({
                 key: key,
                 ...this.props.forms[this.props.model][key]
             });
+            isFormDataValid = isFormDataValid && this.props.forms[this.props.model][key].isValid;
         }
 
         return (
@@ -53,11 +66,16 @@ class InputForm extends Component {
                                 this.props.model.toUpperCase() + ': add entry'}
                 </Modal.Header>
                 <Modal.Content>
-                    <Form>
+                    <Form 
+                        loading={this.props.auth.isLoading}
+                        error={!this.state.isFormDataValid}
+                        onSubmit={this.onFormSubmitHandler}
+                    >
                         {formFieldsArray.map(formField => (
                             <Form.Field
                                 key={formField.key}
                                 error={!formField.isValid && formField.touched}
+                                onChange={() => this.setState({isFormDataValid: true})}
                                 onBlur={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key)}
                             >
                                 <label>{formField.config.label}</label> 
@@ -77,12 +95,18 @@ class InputForm extends Component {
                                 />
                             </Form.Field>
                         ))}
+                        <Message 
+                            error
+                            header={!this.state.isFormDataValid ? 'Validation error!' : null}
+                            content={!this.state.isFormDataValid ? 'Some fields are empty or contain invalid data. Check your inputs before submiting.' : null}
+                        />
                         <Form.Group widths='equal'>
                             <Form.Field>
                                 <Button 
                                     type='submit' 
                                     fluid 
                                     positive
+                                    onClick={() => this.setState({isFormDataValid: isFormDataValid})}
                                 >
                                     {this.props.model === 'authentication' ?
                                         'LOGIN' : this.props.update ? 'UPDATE' : 'ADD'}
@@ -107,14 +131,16 @@ class InputForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        forms: state.forms
+        forms: state.forms,
+        auth: state.auth
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onFormLoadHandler: (model) => dispatch(refreshInpFormState(model)),
-        onInputChangeHandler: (event, model, formFieldKey) => dispatch(changeInpFormState(event, model, formFieldKey))
+        onInputChangeHandler: (event, model, formFieldKey) => dispatch(changeInpFormState(event, model, formFieldKey)),
+        onUserLoginHandler: (loginDataObj) => dispatch(loginRequest(loginDataObj))
     };
 };
 

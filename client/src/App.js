@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import Layout from './hoc/layout/Layout';
+import Layout from './hoc/layout';
 import AdminContainer from './containers/AdminContainer';
 import ClientContainer from './containers/ClientContainer';
 

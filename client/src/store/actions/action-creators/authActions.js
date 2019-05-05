@@ -22,45 +22,16 @@ export const loginRequest = (loginDataObj) => {
         });
         loginUserService(loginDataObj)
             .then(response => {
-                //...
                 localStorage.setItem('refresh_token', response.data.refresh_token);
                 localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
+                localStorage.setItem('pathToAutoRedirect', '/admin');
                 dispatch(loginSuccess(response.data));
+                dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
+                dispatch(setRefreshTimeout(response.data.access_token, response.data.refresh_token_exp - response.data.refresh_token_iat));
             })
             .catch(error => {
                 dispatch(loginFailure(error));
-            });
-    };
-};
-
-export const logoutSuccess = () => {
-    return {
-        type: actionTypes.LOGOUT_SUCCESS
-    };
-};
-
-export const logoutFailure = () => {
-    return {
-        type: actionTypes.LOGOUT_FAILURE
-    };
-};
-
-export const logoutRequest = (accessToken) => {
-    return dispatch => {
-        dispatch({
-            type: actionTypes.LOGOUT_REQUEST
-        });
-        logoutUserService(accessToken)
-            .then(response => {
-                //...
-                localStorage.removeItem('refresh_token');
-                localStorage.removeItem('refresh_token_iat');
-                localStorage.removeItem('refresh_token_exp');
-                dispatch(logoutSuccess());
-            })
-            .catch(error => {
-                dispatch(logoutFailure(error));
             });
     };
 };
@@ -86,36 +57,77 @@ export const refreshTokensRequest = (refreshToken) => {
         });
         refreshTokensService(refreshToken)
             .then(response => {
-                //...
                 localStorage.setItem('refresh_token', response.data.refresh_token);
                 localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
+                localStorage.setItem('pathToAutoRedirect', '/admin');
                 dispatch(refreshTokensSuccess(response.data));
+                dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
+                dispatch(setRefreshTimeout(response.data.access_token, response.data.refresh_token_exp - response.data.refresh_token_iat));
             })
             .catch(error => {
+                clearTimeout(localStorage.getItem('accessTimeoutID'));
+                clearTimeout(localStorage.getItem('refreshTimeoutID'));
+                localStorage.clear();
                 dispatch(refreshTokensFailure(error));
+            });
+    };
+};
+
+export const logoutSuccess = () => {
+    return {
+        type: actionTypes.LOGOUT_SUCCESS
+    };
+};
+
+export const logoutFailure = () => {
+    return {
+        type: actionTypes.LOGOUT_FAILURE
+    };
+};
+
+export const logoutRequest = (accessToken) => {
+    return dispatch => {
+        dispatch({
+            type: actionTypes.LOGOUT_REQUEST
+        });
+        logoutUserService(accessToken)
+            .then(response => {
+                clearTimeout(localStorage.getItem('accessTimeoutID'));
+                clearTimeout(localStorage.getItem('refreshTimeoutID'));
+                localStorage.clear();
+                dispatch(logoutSuccess());
+            })
+            .catch(error => {
+                dispatch(logoutFailure(error));
             });
     };
 };
 
 export const setAccessTimeout = (refreshToken, delayInSec) => {
     return dispatch => {
-        setTimeout(
-            () => {
-                dispatch(refreshTokensRequest(refreshToken));
-            }, 
-            delayInSec*1000
+        localStorage.setItem(
+            'accessTimeoutID',
+            setTimeout(
+                () => {
+                    dispatch(refreshTokensRequest(refreshToken));
+                }, 
+                delayInSec*1000
+            )
         );
     };
 };
 
 export const setRefreshTimeout = (accessToken, delayInSec) => {
     return dispatch => {
-        setTimeout(
-            () => {
-                dispatch(logoutRequest(accessToken));
-            }, 
-            delayInSec*1000
+        localStorage.setItem(
+            'refreshTimeoutID',
+            setTimeout(
+                () => {
+                    dispatch(logoutRequest(accessToken));
+                }, 
+                delayInSec*1000
+            )
         );
     };
 };

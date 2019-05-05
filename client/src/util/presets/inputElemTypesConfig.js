@@ -19,7 +19,7 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false,
+            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,
             touched: false
         };
     },
@@ -36,7 +36,7 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false,
+            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,
             touched: false
         };
     },
@@ -53,11 +53,11 @@ const inputElemTypesConfig = {
                     requared: true,
                     disabled: config.restrictions ? config.restrictions.disabled : false,
                     readOnly: config.restrictions ? config.restrictions.readOnly : false,
-                    minLength: 8
+                    minLength: 5
                 }
             },
             value: '',
-            isValid: false,
+            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,
             touched: false
         };
     },
@@ -79,7 +79,7 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false,
+            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,
             touched: false
         };
     },
@@ -97,7 +97,7 @@ const inputElemTypesConfig = {
                 options: null
             },
             value: '',
-            isValid: false,
+            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,
             touched: false
         };
     },
@@ -112,7 +112,7 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: false,
+            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,
             touched: false
         };
     }

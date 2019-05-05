@@ -1,15 +1,31 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
+import { refreshTokensRequest } from '../../store/actions';
 import { Segment, Container } from 'semantic-ui-react';
-import NavBar from '../../components/navbar/NavBar';
+import NavBar from '../../components/navbar';
 
 class Layout extends Component {
+
+    componentDidMount () {
+        if (localStorage.getItem('pathToAutoRedirect')) {
+            this.props.onRefreshTokensHandler(localStorage.getItem('refresh_token'));
+            this.props.history.replace(localStorage.getItem('pathToAutoRedirect'));
+        }
+    }
+
+    componentDidUpdate (prevProps) {
+        if (prevProps.auth.pathToAutoRedirect !== this.props.auth.pathToAutoRedirect) {
+            this.props.history.replace(this.props.auth.pathToAutoRedirect);
+        }
+    }
+
     render () {
         return(
             <React.Fragment>
                 <NavBar fixed='top' />
                 <Segment
-                    loading={this.props.isLoading}
+                    loading={this.props.auth.isLoading}
                     style={{
                         margin: 0,
                         padding: 0,
@@ -43,8 +59,15 @@ class Layout extends Component {
 
 const mapStateToProps = state => {
     return {
-        isLoading: state.auth.isLoading || state.admin.isLoading || state.client.isLoading
+        auth: state.auth
     }
 }
 
-export default connect(mapStateToProps)(Layout);
+const mapDispatchToProps = dispatch => {
+    return {
+        onRefreshTokensHandler: (refreshToken) => dispatch(refreshTokensRequest(refreshToken))
+    };
+};
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));
