@@ -1,6 +1,6 @@
 import axios from './axios';
 
-const fetchDataService = (accessToken, model, id, queryString) => {
+const fetchDataService = (accessToken, model, id, queryString = '') => {
     let url;
 
     switch (model) {

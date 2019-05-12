@@ -42,3 +42,40 @@ export const validateInput = (value, restrictions) => {
 
     return isValid;
 };
+
+export const transformSelectOptions = (model, options) => {
+    switch (model) {
+
+        case 'marks':
+            return options.map((option) => {
+                return {
+                    key: option.id,
+                    text: option.mark_name + ' (' + option.mark_value + ')',
+                    value: option.id
+                };
+            });
+        
+        case 'cities':
+            return options.map((option) => {
+                return {
+                    key: option.id,
+                    text: option.city_name,
+                    value: option.id
+                };
+            });
+
+        case 'clocks':
+            return options.map((option) => {
+                return {
+                    key: option.id,
+                    text: option.clock_type + ' (' + option.hours_of_repair + 'h of repair)',
+                    value: option.id
+                };
+            });
+
+        
+
+        default:
+            return state;
+    }
+}
