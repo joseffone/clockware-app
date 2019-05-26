@@ -93,8 +93,8 @@ const inputElemTypesConfig = {
                     requared: true,
                     disabled: config.restrictions ? config.restrictions.disabled : false
                 },
-                source: null,
-                options: null
+                source: config.source || [],
+                options: config.options || []
             },
             value: '',
             isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,

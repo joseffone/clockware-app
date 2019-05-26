@@ -19,7 +19,7 @@ class AdminContainer extends Component {
                                     {...props}
                                 />
                         }
-                        model='clocks'
+                        model='agents'
                         mobile={false}
                     />}
                 </Grid.Column>

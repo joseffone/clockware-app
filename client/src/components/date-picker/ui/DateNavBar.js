@@ -17,7 +17,7 @@ const dateNavBar = (props) => {
                 selectable
                 content={dateContext.format('D')}
                 style={{cursor: 'pointer', padding: 0}}
-                onClick={(event) => props.dayClicked(event, dateContext)}
+                onClick={() => props.dayClicked(dateContext)}
             />
         );
     }
@@ -31,7 +31,7 @@ const dateNavBar = (props) => {
                         selectable
                         content={<Icon name='chevron left' />}
                         style={{cursor: 'pointer', padding: 0}}
-                        onClick={(event) => props.prevClicked(event, dateContext)}
+                        onClick={() => props.prevClicked(dateContext)}
                     />
                     {dayCell}
                     <Table.Cell 
@@ -46,8 +46,8 @@ const dateNavBar = (props) => {
                             />
                         }
                         style={{cursor: 'pointer', padding: 0}}
-                        onClick={(event) => props.monthClicked(event, dateContext)}
-                        onFocus={(event) => props.monthClicked(event, dateContext)}
+                        onClick={() => props.monthClicked(dateContext)}
+                        onFocus={() => props.monthClicked(dateContext)}
                     />
                     <Table.Cell 
                         width={2}
@@ -59,7 +59,7 @@ const dateNavBar = (props) => {
                         selectable
                         content={<Icon name='chevron right' />}
                         style={{cursor: 'pointer', padding: 0}}
-                        onClick={(event) => props.nextClicked(event, dateContext)}
+                        onClick={() => props.nextClicked(dateContext)}
                     />
                 </Table.Row>
             </Table.Body>

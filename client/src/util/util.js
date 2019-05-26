@@ -43,39 +43,64 @@ export const validateInput = (value, restrictions) => {
     return isValid;
 };
 
-export const transformSelectOptions = (model, options) => {
-    switch (model) {
+export const transformSelectOptions = (models, data) => {
+    switch (models[0]) {
 
         case 'marks':
-            return options.map((option) => {
+            return data[models[0]].map((item) => {
                 return {
-                    key: option.id,
-                    text: option.mark_name + ' (' + option.mark_value + ')',
-                    value: option.id
+                    key: item.id,
+                    text: `${item.mark_name} (${item.mark_value})`,
+                    value: item.id
                 };
             });
         
         case 'cities':
-            return options.map((option) => {
+            return data[models[0]].map((item) => {
                 return {
-                    key: option.id,
-                    text: option.city_name,
-                    value: option.id
+                    key: item.id,
+                    text: item.city_name,
+                    value: item.id
                 };
             });
 
         case 'clocks':
-            return options.map((option) => {
+            return data[models[0]].map((item) => {
                 return {
-                    key: option.id,
-                    text: option.clock_type + ' (' + option.hours_of_repair + 'h of repair)',
-                    value: option.id
+                    key: item.id,
+                    text: `${item.clock_type} (${item.hours_of_repair}h of repair)`,
+                    value: item.id
+                };
+            });
+        
+        case 'agents':
+            return data[models[0]].map((item) => {
+                return {
+                    key: item.id,
+                    text: `${item.nickname} - fullname: ${item.last_name} ${item.first_name} - raiting: ${data[models[1]].filter(id => id === item.mark_id).mark_name}`,
+                    value: item.id
+                };
+            });
+        
+        case 'users':
+            return data[models[0]].map((item) => {
+                return {
+                    key: item.id,
+                    text: `${item.email} - fullname: ${item.last_name} ${item.first_name} - role: ${data[models[1]].filter(id => id === item.role_id).role}`,
+                    value: item.id
                 };
             });
 
+        case 'roles':
+            return data[models[0]].map((item) => {
+                return {
+                    key: item.id,
+                    text: item.role,
+                    value: item.id
+                };
+            });
         
-
         default:
-            return state;
+            return [];
     }
 }

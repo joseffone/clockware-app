@@ -20,12 +20,15 @@ const formReducer = (state = initState, action) => {
             return rewriteObjectProps(state, {
                 [action.model]:  rewriteObjectProps(state[action.model], {
                     [action.formFieldKey]: rewriteObjectProps(state[action.model][action.formFieldKey], {
-                        value: action.event.target.value,
-                        isValid: validateInput(action.event.target.value || '', state[action.model][action.formFieldKey].config.restrictions),
+                        value: action.value || action.event.target.value,
+                        isValid: validateInput(action.value || action.event.target.value || '', state[action.model][action.formFieldKey].config.restrictions),
                         touched: true
                     })
                 })
             });
+
+        case actionTypes.SET_SELECT_OPTIONS:
+            return;
 
         default:
             return state;

@@ -4,16 +4,12 @@ import errorWrapper from '../../helpers/errorWrapper';
 
 export default (db, modelName) => {
     return (req, res) => {
-
+        
+        let errorMessage = 'No valid entry found for provided ID';
         let queryParams = {};
         queryParams.where = {id: req.params.id};
-        let errorMessage = 'No valid entry found for provided ID';
-        
-        if (modelName === 'keys') {
-            successMessage = 'Logout successfully';
-        }
 
-        if (!queryParams.where.id) {
+        if (!req.params.id) {
             queryParams.where = {...req.query.where};
             errorMessage = 'No entries found';
         }

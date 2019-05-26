@@ -1,11 +1,15 @@
 import axios from 'axios';
 
 const axiosInstance = (token) => {
-    return axios.create({
-        headers: {
+    let headers = {'Content-Type': 'application/json'};
+    if (token) {
+        headers = {
             'Content-Type': 'application/json',
             'Authorization': 'bearer ' + token
-        }
+        };
+    }
+    return axios.create({
+        headers
     });
 };
 

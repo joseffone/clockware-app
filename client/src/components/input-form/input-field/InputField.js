@@ -16,6 +16,7 @@ const InputField = (props) => {
                     placeholder={props.placeholder}
                     value={props.value}
                     onChange={props.changed}
+                    onBlur={props.blurred}
                 />
             );
             break;
@@ -26,6 +27,7 @@ const InputField = (props) => {
                     placeholder={props.placeholder}
                     value={props.value}
                     onChange={props.changed}
+                    onBlur={props.blurred}
                 />
             );
             break;
@@ -33,11 +35,12 @@ const InputField = (props) => {
             return (
                 <Select
                     fluid
+                    search
                     disabled={props.disabled}
                     placeholder={props.placeholder}
                     options={props.options}
-                    value={props.value}
                     onChange={props.changed}
+                    onBlur={props.blurred}
                  />
             );
             break;

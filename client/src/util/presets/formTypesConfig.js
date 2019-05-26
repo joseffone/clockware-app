@@ -34,7 +34,7 @@ const formTypesConfig = {
         mark_id: configElem.select({
             label: 'Mark',
             placeholder: 'Select mark',
-            source: 'marks'
+            source: ['marks']
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
@@ -152,12 +152,12 @@ const formTypesConfig = {
         agent_id: configElem.select({
             label: 'Agent',
             placeholder: 'Select Agent',
-            source: 'agents'
+            source: ['agents', 'marks']
         }),
         city_id: configElem.select({
             label: 'City',
             placeholder: 'Select City',
-            source: 'cities'
+            source: ['cities']
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',
@@ -238,22 +238,22 @@ const formTypesConfig = {
         user_id: configElem.select({
             label: 'Client',
             placeholder: 'Select Client',
-            source: 'users'
+            source: ['users', 'roles']
         }),
         clock_id: configElem.select({
             label: 'Clock Type',
             placeholder: 'Select Clock Type',
-            source: 'clocks'
+            source: ['clocks']
         }),
         city_id: configElem.select({
             label: 'City',
             placeholder: 'Select City',
-            source: 'cities'
+            source: ['cities']
         }),
         agent_id: configElem.select({
             label: 'Agent',
             placeholder: 'Select Agent',
-            source: 'agents'
+            source: ['agents', 'marks']
         }),
         start_date: configElem.dateTime({
             label: 'Start Date'
@@ -335,12 +335,12 @@ const formTypesConfig = {
         role_id: configElem.select({
             label: 'User Role',
             placeholder: 'Select User Role',
-            source: 'roles'
+            source: ['roles']
         }),
         model: configElem.select({
             label: 'Register',
             placeholder: 'Select Register',
-            options : [
+            options: [
                 {
                     key: 'users',
                     text: 'Users',
@@ -468,7 +468,8 @@ const formTypesConfig = {
         }),
         role_id: configElem.select({
             label: 'User Role',
-            placeholder: 'Select User Role'
+            placeholder: 'Select User Role',
+            source: ['roles']
         }),
         created_at: configElem.textField({
             label: 'CREATED AT',

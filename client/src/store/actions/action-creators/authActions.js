@@ -1,26 +1,26 @@
 import * as actionTypes from '../action-types';
 import { loginUserService, logoutUserService, refreshTokensService } from '../../../services/api';
 
-export const loginSuccess = (authDataObj) => {
+export const loginSuccess = (authData) => {
     return {
         type: actionTypes.LOGIN_SUCCESS,
-        authData: authDataObj
+        authData
     };
 };
 
 export const loginFailure = (error) => {
     return {
         type: actionTypes.LOGIN_FAILURE,
-        error: error
+        error
     };
 };
 
-export const loginRequest = (loginDataObj) => {
+export const loginRequest = (loginData) => {
     return dispatch => {
         dispatch({
             type: actionTypes.LOGIN_REQUEST
         });
-        loginUserService(loginDataObj)
+        loginUserService(loginData)
             .then(response => {
                 localStorage.setItem('refresh_token', response.data.refresh_token);
                 localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
@@ -36,17 +36,17 @@ export const loginRequest = (loginDataObj) => {
     };
 };
 
-export const refreshTokensSuccess = (authDataObj) => {
+export const refreshTokensSuccess = (authData) => {
     return {
         type: actionTypes.REFRESH_TOKENS_SUCCESS,
-        authData: authDataObj
+        authData
     };
 };
 
 export const refreshTokensFailure = (error) => {
     return {
         type: actionTypes.REFRESH_TOKENS_FAILURE,
-        error: error
+        error
     };
 };
 

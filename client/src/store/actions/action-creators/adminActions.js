@@ -1,18 +1,20 @@
 import * as actionTypes from '../action-types';
 import { fetchDataService, createDataService, updateDataService, deleteDataService } from '../../../services/api';
+import { setSelectOptions } from '../../actions';
 
 export const fetchDataSuccess = (model, fetchedData) => {
     return {
         type: actionTypes.FETCH_DATA_SUCCESS,
-        model: model,
-        fetchedData: fetchedData
+        model,
+        fetchedData
     };
 };
 
-export const fetchDataFailure = (error) => {
+export const fetchDataFailure = (model, error) => {
     return {
         type: actionTypes.FETCH_DATA_FAILURE,
-        error: error
+        model,
+        error
     };
 };
 
@@ -20,14 +22,14 @@ export const fetchDataRequest = (accessToken, model, id, queryString) => {
     return dispatch => {
         dispatch({
             type: actionTypes.FETCH_DATA_REQUEST,
-            model: model
+            model
         });
         fetchDataService(accessToken, model, id, queryString)
             .then(response => {
                 dispatch(fetchDataSuccess(model, response.data));
             })
             .catch(error => {
-                dispatch(fetchDataFailure(error));
+                dispatch(fetchDataFailure(model, error));
             });
     };
 };
@@ -35,15 +37,15 @@ export const fetchDataRequest = (accessToken, model, id, queryString) => {
 export const createDataSuccess = (model, createdData) => {
     return {
         type: actionTypes.CREATE_DATA_SUCCESS,
-        model: model,
-        createdData: createdData
+        model,
+        createdData
     };
 };
 
 export const createDataFailure = (error) => {
     return {
         type: actionTypes.CREATE_DATA_FAILURE,
-        error: error
+        error
     };
 };
 
@@ -51,7 +53,7 @@ export const createDataRequest = (accessToken, model, dataObj) => {
     return dispatch => {
         dispatch({
             type: actionTypes.CREATE_DATA_REQUEST,
-            model: model
+            model
         });
         createDataService(accessToken, model, dataObj)
             .then(response => {
@@ -66,15 +68,15 @@ export const createDataRequest = (accessToken, model, dataObj) => {
 export const updateDataSuccess = (model, updatedData) => {
     return {
         type: actionTypes.UPDATE_DATA_SUCCESS,
-        model: model,
-        updatedData: updatedData
+        model,
+        updatedData
     };
 };
 
 export const updateDataFailure = (error) => {
     return {
         type: actionTypes.UPDATE_DATA_FAILURE,
-        error: error
+        error
     };
 };
 
@@ -82,7 +84,7 @@ export const updateDataRequest = (accessToken, model, dataObj) => {
     return dispatch => {
         dispatch({
             type: actionTypes.UPDATE_DATA_REQUEST,
-            model: model
+            model
         });
         updateDataService(accessToken, model, dataObj)
             .then(response => {
@@ -97,15 +99,15 @@ export const updateDataRequest = (accessToken, model, dataObj) => {
 export const deleteDataSuccess = (model, deletedData) => {
     return {
         type: actionTypes.DELETE_DATA_SUCCESS,
-        model: model,
-        deletedData: deletedData
+        model,
+        deletedData
     };
 };
 
 export const deleteDataFailure = (error) => {
     return {
         type: actionTypes.DELETE_DATA_FAILURE,
-        error: error
+        error
     };
 };
 
@@ -113,7 +115,7 @@ export const deleteDataRequest = (accessToken, model, id, queryString) => {
     return dispatch => {
         dispatch({
             type: actionTypes.DELETE_DATA_REQUEST,
-            model: model
+            model
         });
         deleteDataService(accessToken, model, id, queryString)
             .then(response => {

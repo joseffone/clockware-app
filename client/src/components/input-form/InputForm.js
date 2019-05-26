@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Button, Message } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
-import { refreshInpFormState, changeInpFormState, loginRequest } from '../../store/actions';
+import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest } from '../../store/actions';
 
 class InputForm extends Component {
 
@@ -20,6 +20,17 @@ class InputForm extends Component {
             isModalOpen: false,
             isFormDataValid: true
         });
+    }
+
+    onFormLoadHandler = () => {
+        this.props.onFormRefreshStateHandler(this.props.model);
+        for (const key in this.props.forms[this.props.model]) {
+            if (this.props.forms[this.props.model][key].config.source) {
+                this.props.forms[this.props.model][key].config.source.forEach(src => {
+                    this.props.onFetchDataHandler(this.props.auth.accessToken, src);
+                });
+            }
+        }
     }
 
     onFormSubmitHandler = () => {
@@ -56,7 +67,7 @@ class InputForm extends Component {
                 }
                 size={this.props.model === 'authentication' ? 'mini' : 'tiny'}
                 open={this.state.isModalOpen}
-                onOpen={() => this.props.onFormLoadHandler(this.props.model)}
+                onOpen={this.onFormLoadHandler}
             >
                 <Modal.Header>
                     {this.props.model === 'authentication' ?
@@ -76,7 +87,6 @@ class InputForm extends Component {
                                 key={formField.key}
                                 error={!formField.isValid && formField.touched}
                                 onChange={() => this.setState({isFormDataValid: true})}
-                                onBlur={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key)}
                             >
                                 <label>{formField.config.label}</label> 
                                 <InputField 
@@ -91,7 +101,10 @@ class InputForm extends Component {
                                     placeholder={formField.config.placeholder}
                                     options={formField.config.options}
                                     value={formField.value}
-                                    changed={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key)}
+                                    changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
+                                    blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
+                                        value: formField.elementType === 'select' ? formField.value : null
+                                    })}
                                 />
                             </Form.Field>
                         ))}
@@ -132,15 +145,17 @@ class InputForm extends Component {
 const mapStateToProps = state => {
     return {
         forms: state.forms,
-        auth: state.auth
+        auth: state.auth,
+        dataStore: state.admin
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFormLoadHandler: (model) => dispatch(refreshInpFormState(model)),
-        onInputChangeHandler: (event, model, formFieldKey) => dispatch(changeInpFormState(event, model, formFieldKey)),
-        onUserLoginHandler: (loginDataObj) => dispatch(loginRequest(loginDataObj))
+        onFormRefreshStateHandler: (model) => dispatch(refreshInpFormState(model)),
+        onInputChangeHandler: (event, model, formFieldKey, { value }) => dispatch(changeInpFormState(event, model, formFieldKey, value)),
+        onUserLoginHandler: (loginData) => dispatch(loginRequest(loginData)),
+        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model))
     };
 };
 

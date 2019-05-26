@@ -2,10 +2,12 @@ import * as actionTypes from '../actions/action-types';
 import { rewriteObjectProps } from '../../util';
 import formTypesConfig from '../../util/presets/formTypesConfig';
 
-const initState = {};
+const initState = {
+    models: {}
+};
 
 for (const key in formTypesConfig) {
-    initState[key] = {
+    initState.models[key] = {
         items: null,
         activeItem: null,
         createdItem: null,
@@ -32,50 +34,58 @@ const adminReducer = (state = initState, action) => {
 
         case actionTypes.FETCH_DATA_REQUEST:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isFetching: true
-                    }),
-                    error: rewriteObjectProps(state[action.model].error, {
-                        fetchError: null
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isFetching: true
+                        }),
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            fetchError: null
+                        })
                     })
                 })
             });
 
         case actionTypes.FETCH_DATA_SUCCESS:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isFetching: false
-                    }),
-                    items: [...action.fetchedData]
-                })
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isFetching: false
+                        }),
+                        items: [...action.fetchedData]
+                    })
+                })           
             });
 
         case actionTypes.FETCH_DATA_FAILURE:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isFetching: false
-                    }),
-                    error: rewriteObjectProps(state[action.model].error, {
-                        fetchError: action.error
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isFetching: false
+                        }),
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            fetchError: action.error
+                        })
                     })
                 })
             });
 
         case actionTypes.CREATE_DATA_REQUEST:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isCreating: true
-                    }),
-                    error: rewriteObjectProps(state[action.model].error, {
-                        createError: null
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isCreating: true
+                        }),
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            createError: null
+                        })
                     })
                 })
             });
-
+/*
         case actionTypes.CREATE_DATA_SUCCESS:
             return rewriteObjectProps(state, {
                 [action.model]: rewriteObjectProps(state[action.model], {
@@ -97,7 +107,7 @@ const adminReducer = (state = initState, action) => {
                     })
                 })
             });
-
+/*
         case actionTypes.UPDATE_DATA_REQUEST:
             return rewriteObjectProps(state, {
                 [action.model]: rewriteObjectProps(state[action.model], {
@@ -130,7 +140,7 @@ const adminReducer = (state = initState, action) => {
                         updateError: action.error
                     })
                 })
-            });
+            }); */
 
         default:
             return state;
