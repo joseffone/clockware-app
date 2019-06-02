@@ -94,7 +94,7 @@ const inputElemTypesConfig = {
                     disabled: config.restrictions ? config.restrictions.disabled : false
                 },
                 source: config.source || [],
-                options: config.options || []
+                defaultOptions: config.defaultOptions || []
             },
             value: '',
             isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,

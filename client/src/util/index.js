@@ -1,5 +1,6 @@
 export {
     getFormConfig,
     rewriteObjectProps,
-    validateInput
+    validateInput,
+    transformSelectOptions
 } from './util';

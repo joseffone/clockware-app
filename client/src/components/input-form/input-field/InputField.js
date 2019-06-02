@@ -38,6 +38,7 @@ const InputField = (props) => {
                     search
                     disabled={props.disabled}
                     placeholder={props.placeholder}
+                    loading={props.loading}
                     options={props.options}
                     onChange={props.changed}
                     onBlur={props.blurred}

@@ -19,7 +19,7 @@ export const validateInput = (value, restrictions) => {
     }
 
     if (restrictions.requared) {
-        isValid = value.trim() !== '' && isValid;
+        isValid = value.toString().trim() !== '' && isValid;
     }
 
     if (restrictions.minLength) {
@@ -43,11 +43,11 @@ export const validateInput = (value, restrictions) => {
     return isValid;
 };
 
-export const transformSelectOptions = (models, data) => {
+export const transformSelectOptions = (models = [], data, defaultOptions = []) => {
     switch (models[0]) {
 
         case 'marks':
-            return data[models[0]].map((item) => {
+            return data[models[0]].items.map((item) => {
                 return {
                     key: item.id,
                     text: `${item.mark_name} (${item.mark_value})`,
@@ -56,7 +56,7 @@ export const transformSelectOptions = (models, data) => {
             });
         
         case 'cities':
-            return data[models[0]].map((item) => {
+            return data[models[0]].items.map((item) => {
                 return {
                     key: item.id,
                     text: item.city_name,
@@ -65,34 +65,34 @@ export const transformSelectOptions = (models, data) => {
             });
 
         case 'clocks':
-            return data[models[0]].map((item) => {
+            return data[models[0]].items.map((item) => {
                 return {
                     key: item.id,
-                    text: `${item.clock_type} (${item.hours_of_repair}h of repair)`,
+                    text: `${item.clock_type} [${item.hours_of_repair}h of repair]`,
                     value: item.id
                 };
             });
         
         case 'agents':
-            return data[models[0]].map((item) => {
+            return data[models[0]].items.map((item) => {
                 return {
                     key: item.id,
-                    text: `${item.nickname} - fullname: ${item.last_name} ${item.first_name} - raiting: ${data[models[1]].filter(id => id === item.mark_id).mark_name}`,
+                    text: `${item.nickname} [${item.last_name} ${item.first_name}, raiting: ${data[models[1]].items.filter(obj => obj.id === item.mark_id).map(obj => obj.mark_name)}]`,
                     value: item.id
                 };
             });
         
         case 'users':
-            return data[models[0]].map((item) => {
+            return data[models[0]].items.map((item) => {
                 return {
                     key: item.id,
-                    text: `${item.email} - fullname: ${item.last_name} ${item.first_name} - role: ${data[models[1]].filter(id => id === item.role_id).role}`,
+                    text: `${item.email} [${item.last_name} ${item.first_name}, status: ${data[models[1]].items.filter(obj => obj.id === item.role_id).map(obj => obj.role)}]`,
                     value: item.id
                 };
             });
 
         case 'roles':
-            return data[models[0]].map((item) => {
+            return data[models[0]].items.map((item) => {
                 return {
                     key: item.id,
                     text: item.role,
@@ -101,6 +101,6 @@ export const transformSelectOptions = (models, data) => {
             });
         
         default:
-            return [];
+            return defaultOptions;
     }
 }

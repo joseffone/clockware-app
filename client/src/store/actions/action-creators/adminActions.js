@@ -1,6 +1,5 @@
 import * as actionTypes from '../action-types';
 import { fetchDataService, createDataService, updateDataService, deleteDataService } from '../../../services/api';
-import { setSelectOptions } from '../../actions';
 
 export const fetchDataSuccess = (model, fetchedData) => {
     return {
@@ -42,9 +41,10 @@ export const createDataSuccess = (model, createdData) => {
     };
 };
 
-export const createDataFailure = (error) => {
+export const createDataFailure = (model, error) => {
     return {
         type: actionTypes.CREATE_DATA_FAILURE,
+        model,
         error
     };
 };
@@ -60,7 +60,7 @@ export const createDataRequest = (accessToken, model, dataObj) => {
                 dispatch(createDataSuccess(model, response.data));
             })
             .catch(error => {
-                dispatch(createDataFailure(error));
+                dispatch(createDataFailure(model, error));
             });
     };
 };
@@ -73,9 +73,10 @@ export const updateDataSuccess = (model, updatedData) => {
     };
 };
 
-export const updateDataFailure = (error) => {
+export const updateDataFailure = (model, error) => {
     return {
         type: actionTypes.UPDATE_DATA_FAILURE,
+        model,
         error
     };
 };
@@ -91,7 +92,7 @@ export const updateDataRequest = (accessToken, model, dataObj) => {
                 dispatch(updateDataSuccess(model, response.data));
             })
             .catch(error => {
-                dispatch(updateDataFailure(error));
+                dispatch(updateDataFailure(model, error));
             });
     };
 };
@@ -104,9 +105,10 @@ export const deleteDataSuccess = (model, deletedData) => {
     };
 };
 
-export const deleteDataFailure = (error) => {
+export const deleteDataFailure = (model, error) => {
     return {
         type: actionTypes.DELETE_DATA_FAILURE,
+        model,
         error
     };
 };
@@ -122,7 +124,7 @@ export const deleteDataRequest = (accessToken, model, id, queryString) => {
                 dispatch(updateDataSuccess(model, response.data));
             })
             .catch(error => {
-                dispatch(updateDataFailure(error));
+                dispatch(updateDataFailure(model, error));
             });
     };
 };

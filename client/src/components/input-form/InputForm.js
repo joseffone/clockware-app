@@ -2,17 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Button, Message } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
-import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest } from '../../store/actions';
+import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest } from '../../store/actions';
+import { transformSelectOptions } from '../../util';
 
 class InputForm extends Component {
 
     state = {
         isModalOpen: false,
-        isFormDataValid: true
+        isFormDataValid: true,
+        isFormSubmited: false
     }
 
     onModalOpenHandler = () => {
-        this.setState({isModalOpen: true});
+        this.setState({
+            isModalOpen: true,
+            isFormSubmited: false
+        });
     }
 
     onModalCloseHandler = () => {
@@ -34,13 +39,24 @@ class InputForm extends Component {
     }
 
     onFormSubmitHandler = () => {
-        if(this.state.isFormDataValid) {
+        if (this.state.isFormDataValid) {
             if (this.props.model === 'authentication') {
                 return this.props.onUserLoginHandler({
                     email: this.props.forms.authentication.email.value,
                     password: this.props.forms.authentication.password.value
                 });
             }
+            if (this.props.update) {
+
+            }
+    
+            let  formDataObj = {};
+            for (const key in this.props.forms[this.props.model]) {
+                if (key !== 'id' && key !== 'created_at' && key !== 'updated_at' && key !== 'deleted_at') {
+                    formDataObj[key] = this.props.forms[this.props.model][key].value;
+                }
+            }
+            return this.props.onCreateDataHandler(this.props.auth.accessToken, this.props.model, formDataObj);
         }
     }
 
@@ -49,6 +65,14 @@ class InputForm extends Component {
         const Trigger = this.props.trigger;
         const formFieldsArray = [];
         let isFormDataValid = true;
+        let fetchError = true;
+        let createError = true;
+        let updateError = true;
+        let formDataError = true;
+        let errorMessageHeader = null;
+        let errorMessageContent = null;
+        let successMessageHeader = null;
+        let successMessageContent = null;
 
         for (const key in this.props.forms[this.props.model]) {
             formFieldsArray.push({
@@ -56,6 +80,42 @@ class InputForm extends Component {
                 ...this.props.forms[this.props.model][key]
             });
             isFormDataValid = isFormDataValid && this.props.forms[this.props.model][key].isValid;
+        }
+
+        for (const key in this.props.forms[this.props.model]) {
+            if (this.props.forms[this.props.model][key].config.source) {
+                this.props.forms[this.props.model][key].config.source.forEach(src => {
+                    fetchError = fetchError && !!this.props.models[src].error.fetchError;
+                    if (fetchError) {
+                        errorMessageHeader = `${this.props.models[src].error.fetchError.response.status} ${this.props.models[src].error.fetchError.response.statusText}`;
+                        errorMessageContent = `${this.props.models[src].error.fetchError.response.data.error ? this.props.models[src].error.fetchError.response.data.error.message + '.' : 'Not able to get data.'}`;
+                    }
+                });
+            }
+        }
+
+        createError = createError && this.state.isFormSubmited && !!this.props.models[this.props.model].error.createError;
+        updateError = updateError && this.state.isFormSubmited && !!this.props.models[this.props.model].error.updateError;
+        formDataError = !this.state.isFormDataValid;
+
+        if (formDataError) {
+            errorMessageHeader = 'Form validation error!';
+            errorMessageContent = 'Some fields are empty or contain invalid data. Check your inputs before submiting.';
+        }
+
+        if (createError) {
+            errorMessageHeader = `${this.props.models[this.props.model].error.createError.response.status} ${this.props.models[this.props.model].error.createError.response.statusText}`;
+            errorMessageContent = `${this.props.models[this.props.model].error.createError.response.data.error ? this.props.models[this.props.model].error.createError.response.data.error.message + '.' : 'Not able to create entry.'}`;
+        }
+
+        if (updateError) {
+            errorMessageHeader = `${this.props.models[this.props.model].error.updateError.response.status} ${this.props.models[this.props.model].error.updateError.response.statusText}`;
+            errorMessageContent = `${this.props.models[this.props.model].error.updateError.response.data.error ? this.props.models[this.props.model].error.updateError.response.data.error.message + '.' : 'Not able to update entry.'}`;
+        }
+
+        if (this.state.isFormSubmited && (this.props.models[this.props.model].createdItem || this.props.models[this.props.model].updatedItem)) {
+            successMessageHeader = 'Request completed!';
+            successMessageContent = this.props.update ? 'Entry updated successfully.' : 'Entry created successfully.'
         }
 
         return (
@@ -78,8 +138,8 @@ class InputForm extends Component {
                 </Modal.Header>
                 <Modal.Content>
                     <Form 
-                        loading={this.props.auth.isLoading}
-                        error={!this.state.isFormDataValid}
+                        loading={this.props.auth.isLoading || this.props.models[this.props.model].loading.isCreating || this.props.models[this.props.model].loading.isUpdating}
+                        error={formDataError || fetchError || createError || updateError}
                         onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => (
@@ -99,7 +159,11 @@ class InputForm extends Component {
                                     icon={formField.config.icon}
                                     iconPosition={formField.config.iconPosition}
                                     placeholder={formField.config.placeholder}
-                                    options={formField.config.options}
+                                    loading={formField.config.source ? 
+                                        formField.config.source.length !== 0 ?
+                                            this.props.models[formField.config.source[0]].loading.isFetching : false
+                                            : false}
+                                    options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
                                     value={formField.value}
                                     changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
                                     blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
@@ -110,8 +174,14 @@ class InputForm extends Component {
                         ))}
                         <Message 
                             error
-                            header={!this.state.isFormDataValid ? 'Validation error!' : null}
-                            content={!this.state.isFormDataValid ? 'Some fields are empty or contain invalid data. Check your inputs before submiting.' : null}
+                            header={errorMessageHeader}
+                            content={errorMessageContent}
+                        />
+                        <Message
+                            positive
+                            hidden={!successMessageHeader}
+                            header={successMessageHeader}
+                            content={successMessageContent}
                         />
                         <Form.Group widths='equal'>
                             <Form.Field>
@@ -119,7 +189,7 @@ class InputForm extends Component {
                                     type='submit' 
                                     fluid 
                                     positive
-                                    onClick={() => this.setState({isFormDataValid: isFormDataValid})}
+                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true})}
                                 >
                                     {this.props.model === 'authentication' ?
                                         'LOGIN' : this.props.update ? 'UPDATE' : 'ADD'}
@@ -139,6 +209,7 @@ class InputForm extends Component {
                 </Modal.Content>
             </Modal>
         );
+
     }
 }
 
@@ -146,7 +217,7 @@ const mapStateToProps = state => {
     return {
         forms: state.forms,
         auth: state.auth,
-        dataStore: state.admin
+        models: state.admin.models
     };
 };
 
@@ -155,7 +226,8 @@ const mapDispatchToProps = dispatch => {
         onFormRefreshStateHandler: (model) => dispatch(refreshInpFormState(model)),
         onInputChangeHandler: (event, model, formFieldKey, { value }) => dispatch(changeInpFormState(event, model, formFieldKey, value)),
         onUserLoginHandler: (loginData) => dispatch(loginRequest(loginData)),
-        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model))
+        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
+        onCreateDataHandler: (accessToken, model, dataObj) => dispatch(createDataRequest(accessToken, model, dataObj))
     };
 };
 

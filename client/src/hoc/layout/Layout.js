@@ -8,10 +8,8 @@ import NavBar from '../../components/navbar';
 class Layout extends Component {
 
     componentDidMount () {
-        if (localStorage.getItem('pathToAutoRedirect')) {
-            this.props.onRefreshTokensHandler(localStorage.getItem('refresh_token'));
-            this.props.history.replace(localStorage.getItem('pathToAutoRedirect'));
-        }
+        this.props.onRefreshTokensHandler(localStorage.getItem('refresh_token'));
+        this.props.history.replace(this.props.auth.pathToAutoRedirect);
     }
 
     componentDidUpdate (prevProps) {

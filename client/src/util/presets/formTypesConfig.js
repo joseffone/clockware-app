@@ -340,7 +340,7 @@ const formTypesConfig = {
         model: configElem.select({
             label: 'Register',
             placeholder: 'Select Register',
-            options: [
+            defaultOptions: [
                 {
                     key: 'users',
                     text: 'Users',
@@ -391,7 +391,7 @@ const formTypesConfig = {
         action: configElem.select({
             label: 'Action Type',
             placeholder: 'Select Action Type',
-            options: [
+            defaultOptions: [
                 {
                     key: 'read',
                     text: 'READ',

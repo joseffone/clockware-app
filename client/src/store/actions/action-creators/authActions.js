@@ -25,7 +25,6 @@ export const loginRequest = (loginData) => {
                 localStorage.setItem('refresh_token', response.data.refresh_token);
                 localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
-                localStorage.setItem('pathToAutoRedirect', '/admin');
                 dispatch(loginSuccess(response.data));
                 dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
                 dispatch(setRefreshTimeout(response.data.access_token, response.data.refresh_token_exp - response.data.refresh_token_iat));
@@ -60,7 +59,6 @@ export const refreshTokensRequest = (refreshToken) => {
                 localStorage.setItem('refresh_token', response.data.refresh_token);
                 localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
-                localStorage.setItem('pathToAutoRedirect', '/admin');
                 dispatch(refreshTokensSuccess(response.data));
                 dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
                 dispatch(setRefreshTimeout(response.data.access_token, response.data.refresh_token_exp - response.data.refresh_token_iat));

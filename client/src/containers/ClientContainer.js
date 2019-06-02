@@ -20,7 +20,7 @@ class ClientContainer extends Component {
                                     {...props}
                                 />
                         }
-                        model='orders'
+                        model='cities'
                         mobile={false}
                     />}
                 </Grid.Column>

@@ -38,7 +38,8 @@ const authReducer = (state = initState, action) => {
 
         case actionTypes.REFRESH_TOKENS_REQUEST:
             return rewriteObjectProps(state, {
-                error: null
+                error: null,
+                isLoading: true
             });
 
         case actionTypes.REFRESH_TOKENS_SUCCESS:
@@ -46,6 +47,7 @@ const authReducer = (state = initState, action) => {
                 accessToken: action.authData.access_token,
                 accessTokenIat: action.authData.access_token_iat,
                 accessTokenExp: action.authData.access_token_exp,
+                isLoading: false,
                 pathToAutoRedirect: '/admin'
             });
 
@@ -55,6 +57,7 @@ const authReducer = (state = initState, action) => {
                 accessToken: null,
                 accessTokenIat: null,
                 accessTokenExp: null,
+                isLoading: false,
                 pathToAutoRedirect: '/'
             });
         

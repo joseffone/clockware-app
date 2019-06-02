@@ -16,12 +16,3 @@ export const changeInpFormState = (event, model, formFieldKey, value = null) => 
         value
     };
 };
-
-export const setSelectOptions = (modelToEdit, source, items) => {
-    return {
-        type: actionTypes.SET_SELECT_OPTIONS,
-        modelToEdit,
-        source,
-        items
-    };
-};

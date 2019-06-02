@@ -27,9 +27,6 @@ const formReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SET_SELECT_OPTIONS:
-            return;
-
         default:
             return state;
             

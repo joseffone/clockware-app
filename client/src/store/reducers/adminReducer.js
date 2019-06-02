@@ -8,7 +8,7 @@ const initState = {
 
 for (const key in formTypesConfig) {
     initState.models[key] = {
-        items: null,
+        items: [],
         activeItem: null,
         createdItem: null,
         updatedItem: null,
@@ -85,28 +85,34 @@ const adminReducer = (state = initState, action) => {
                     })
                 })
             });
-/*
+
         case actionTypes.CREATE_DATA_SUCCESS:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isCreating: false
-                    }),
-                    createdItem: {...action.createdData[0]}
-                })
-            });
-
-        case actionTypes.CREATE_DATA_FAILURE:
-            return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isCreating: false
-                    }),
-                    error: rewriteObjectProps(state[action.model].error, {
-                        createError: action.error
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isCreating: false
+                        }),
+                        createdItem: {...action.createdData[0]}
                     })
                 })
             });
+        
+        case actionTypes.CREATE_DATA_FAILURE:
+            return rewriteObjectProps(state, {
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isCreating: false
+                        }),
+                        createdItem: null,
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            createError: action.error
+                        })
+                    })
+                })
+            });
+
 /*
         case actionTypes.UPDATE_DATA_REQUEST:
             return rewriteObjectProps(state, {
