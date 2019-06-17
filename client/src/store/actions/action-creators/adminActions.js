@@ -81,13 +81,13 @@ export const updateDataFailure = (model, error) => {
     };
 };
 
-export const updateDataRequest = (accessToken, model, dataObj) => {
+export const updateDataRequest = (accessToken, model, id, dataObj) => {
     return dispatch => {
         dispatch({
             type: actionTypes.UPDATE_DATA_REQUEST,
             model
         });
-        updateDataService(accessToken, model, dataObj)
+        updateDataService(accessToken, model, id, dataObj)
             .then(response => {
                 dispatch(updateDataSuccess(model, response.data));
             })

@@ -22,6 +22,7 @@ class ClientContainer extends Component {
                         }
                         model='cities'
                         mobile={false}
+                        update={false}
                     />}
                 </Grid.Column>
             </Grid>

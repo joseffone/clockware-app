@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Form, Button, Message } from 'semantic-ui-react';
+import { Modal, Form, Button, Message, Icon } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
-import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest } from '../../store/actions';
+import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest } from '../../store/actions';
 import { transformSelectOptions } from '../../util';
 
 class InputForm extends Component {
@@ -10,20 +10,78 @@ class InputForm extends Component {
     state = {
         isModalOpen: false,
         isFormDataValid: true,
-        isFormSubmited: false
+        isFormSubmited: false,
+        update: this.props.update,
+        lastRequestType: null
+    }
+
+    componentDidMount () {
+        if (this.props.update) {
+            for (const key in this.props.update) {
+                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.update[key]});
+            }
+        }
+    }
+
+    componentDidUpdate (prevProps) {
+        if (this.state.isFormSubmited) {
+            let updateFlag = false;
+            let createFlag = false;
+            if (this.state.update) {
+                if (this.props.models[this.props.model].updatedItem && !this.props.models[this.props.model].loading.isUpdating) {
+                    for (const key in this.props.models[this.props.model].updatedItem) {
+                        if (!prevProps.models[this.props.model].updatedItem) {
+                            updateFlag = true;
+                            this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
+                            continue;
+                        }
+                        if (!!prevProps.models[this.props.model].updatedItem[key] &&
+                            !!this.props.models[this.props.model].updatedItem[key] &&
+                            (prevProps.models[this.props.model].updatedItem[key] !== this.props.models[this.props.model].updatedItem[key])) {
+                            updateFlag = true;
+                            this.props.onInputChangeHandler(null, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
+                        }
+                    }
+                }
+            } else {
+                if (this.props.models[this.props.model].createdItem && !this.props.models[this.props.model].loading.isCreating) {
+                    for (const key in this.props.models[this.props.model].createdItem) {
+                        if (!prevProps.models[this.props.model].createdItem) {
+                            createFlag = true;
+                            this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
+                            continue;
+                        }
+                        if (!!prevProps.models[this.props.model].createdItem[key] &&
+                            !!this.props.models[this.props.model].createdItem[key] &&
+                            (prevProps.models[this.props.model].createdItem[key] !== this.props.models[this.props.model].createdItem[key])) {
+                            createFlag = true;
+                            this.props.onInputChangeHandler(null, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
+                        }
+                    }
+                }
+            }
+            if (createFlag) {
+                this.setState({update: true, lastRequestType: 'add', isFormSubmited: false});
+            }
+            if (updateFlag) {
+                this.setState({lastRequestType: 'update', isFormSubmited: false});
+            }
+        }
     }
 
     onModalOpenHandler = () => {
         this.setState({
             isModalOpen: true,
-            isFormSubmited: false
+            isFormSubmited: false,
+            isFormDataValid: true,
+            update: this.props.update,
+            lastRequestType: null
         });
     }
 
     onModalCloseHandler = () => {
         this.setState({
-            isModalOpen: false,
-            isFormDataValid: true
+            isModalOpen: false
         });
     }
 
@@ -46,15 +104,14 @@ class InputForm extends Component {
                     password: this.props.forms.authentication.password.value
                 });
             }
-            if (this.props.update) {
-
-            }
-    
             let  formDataObj = {};
             for (const key in this.props.forms[this.props.model]) {
                 if (key !== 'id' && key !== 'created_at' && key !== 'updated_at' && key !== 'deleted_at') {
                     formDataObj[key] = this.props.forms[this.props.model][key].value;
                 }
+            }
+            if (this.state.update) {
+                return this.props.onUpdateDataHandler(this.props.auth.accessToken, this.props.model, this.props.forms[this.props.model].id.value, formDataObj);
             }
             return this.props.onCreateDataHandler(this.props.auth.accessToken, this.props.model, formDataObj);
         }
@@ -65,14 +122,13 @@ class InputForm extends Component {
         const Trigger = this.props.trigger;
         const formFieldsArray = [];
         let isFormDataValid = true;
-        let fetchError = true;
-        let createError = true;
-        let updateError = true;
-        let formDataError = true;
-        let errorMessageHeader = null;
-        let errorMessageContent = null;
-        let successMessageHeader = null;
-        let successMessageContent = null;
+        let formDataError = !this.state.isFormDataValid;
+        let fetchError = false;
+        let createError = !this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.createError;
+        let updateError = !!this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.updateError;
+        let authError = this.state.isFormSubmited && !!this.props.auth.error;
+        let messageHeader = null;
+        let messageContent = null;
 
         for (const key in this.props.forms[this.props.model]) {
             formFieldsArray.push({
@@ -84,38 +140,46 @@ class InputForm extends Component {
 
         for (const key in this.props.forms[this.props.model]) {
             if (this.props.forms[this.props.model][key].config.source) {
+                fetchError = true;
                 this.props.forms[this.props.model][key].config.source.forEach(src => {
                     fetchError = fetchError && !!this.props.models[src].error.fetchError;
                     if (fetchError) {
-                        errorMessageHeader = `${this.props.models[src].error.fetchError.response.status} ${this.props.models[src].error.fetchError.response.statusText}`;
-                        errorMessageContent = `${this.props.models[src].error.fetchError.response.data.error ? this.props.models[src].error.fetchError.response.data.error.message + '.' : 'Not able to get data.'}`;
+                        messageHeader = `${this.props.models[src].error.fetchError.response.status} ${this.props.models[src].error.fetchError.response.statusText}`;
+                        messageContent = `${this.props.models[src].error.fetchError.response.data.error ? this.props.models[src].error.fetchError.response.data.error.message + '.' : 'Not able to get data.'}`;
                     }
                 });
+                if (fetchError) break;
             }
         }
 
-        createError = createError && this.state.isFormSubmited && !!this.props.models[this.props.model].error.createError;
-        updateError = updateError && this.state.isFormSubmited && !!this.props.models[this.props.model].error.updateError;
-        formDataError = !this.state.isFormDataValid;
-
         if (formDataError) {
-            errorMessageHeader = 'Form validation error!';
-            errorMessageContent = 'Some fields are empty or contain invalid data. Check your inputs before submiting.';
+            messageHeader = 'Form validation error!';
+            messageContent = 'Some fields are empty or contain invalid data. Check your inputs before submiting.';
         }
 
-        if (createError) {
-            errorMessageHeader = `${this.props.models[this.props.model].error.createError.response.status} ${this.props.models[this.props.model].error.createError.response.statusText}`;
-            errorMessageContent = `${this.props.models[this.props.model].error.createError.response.data.error ? this.props.models[this.props.model].error.createError.response.data.error.message + '.' : 'Not able to create entry.'}`;
+        if (createError && !formDataError) {
+            messageHeader = `${this.props.models[this.props.model].error.createError.response.status} ${this.props.models[this.props.model].error.createError.response.statusText}`;
+            messageContent = `${this.props.models[this.props.model].error.createError.response.data.error ? this.props.models[this.props.model].error.createError.response.data.error.message + '.' : 'Not able to create entry.'}`;
         }
 
-        if (updateError) {
-            errorMessageHeader = `${this.props.models[this.props.model].error.updateError.response.status} ${this.props.models[this.props.model].error.updateError.response.statusText}`;
-            errorMessageContent = `${this.props.models[this.props.model].error.updateError.response.data.error ? this.props.models[this.props.model].error.updateError.response.data.error.message + '.' : 'Not able to update entry.'}`;
+        if (updateError && !formDataError) {
+            messageHeader = `${this.props.models[this.props.model].error.updateError.response.status} ${this.props.models[this.props.model].error.updateError.response.statusText}`;
+            messageContent = `${this.props.models[this.props.model].error.updateError.response.data.error ? this.props.models[this.props.model].error.updateError.response.data.error.message + '.' : 'Not able to update entry.'}`;
         }
 
-        if (this.state.isFormSubmited && (this.props.models[this.props.model].createdItem || this.props.models[this.props.model].updatedItem)) {
-            successMessageHeader = 'Request completed!';
-            successMessageContent = this.props.update ? 'Entry updated successfully.' : 'Entry created successfully.'
+        if (authError && !formDataError) {
+            messageHeader = `${this.props.auth.error.response.status} ${this.props.auth.error.response.statusText}`;
+            messageContent = `${this.props.auth.error.response.data.error ? this.props.auth.error.response.data.error.message + '.' : 'Authentication failed.'}`;
+        }
+
+        if (this.state.lastRequestType === 'add') {
+            messageHeader = 'Request completed!';
+            messageContent = 'Entry created successfully.';
+        }
+
+        if (this.state.lastRequestType === 'update') {
+            messageHeader = 'Request completed!';
+            messageContent = 'Entry updated successfully.';
         }
 
         return (
@@ -130,23 +194,23 @@ class InputForm extends Component {
                 onOpen={this.onFormLoadHandler}
             >
                 <Modal.Header>
-                    {this.props.model === 'authentication' ?
-                        this.props.model.split('')[0].toUpperCase() + this.props.model.split('').slice(1).join('') :
-                            this.props.update ?
-                                this.props.model.toUpperCase() + ': edit entry' :
-                                this.props.model.toUpperCase() + ': add entry'}
+                    <Icon name={this.props.model === 'authentication' ? 'lock' : 'file alternate'} />
+                    {this.props.model === 'authentication' ? 
+                    this.props.model.split('')[0].toUpperCase() + this.props.model.split('').slice(1).join('') : 
+                    this.state.update ? this.props.model.toUpperCase() + ': editing' : this.props.model.toUpperCase() + ': adding'}
                 </Modal.Header>
                 <Modal.Content>
                     <Form 
                         loading={this.props.auth.isLoading || this.props.models[this.props.model].loading.isCreating || this.props.models[this.props.model].loading.isUpdating}
-                        error={formDataError || fetchError || createError || updateError}
+                        error={formDataError || fetchError || createError || updateError || authError}
                         onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => (
                             <Form.Field
                                 key={formField.key}
                                 error={!formField.isValid && formField.touched}
-                                onChange={() => this.setState({isFormDataValid: true})}
+                                onChange={() => this.setState({isFormDataValid: true, isFormSubmited: false})}
+                                onFocus={() => (formField.elementType === 'select' || formField.elementType === 'datetime') ? this.setState({isFormDataValid: true, isFormSubmited: false}) : null}
                             >
                                 <label>{formField.config.label}</label> 
                                 <InputField 
@@ -159,10 +223,7 @@ class InputForm extends Component {
                                     icon={formField.config.icon}
                                     iconPosition={formField.config.iconPosition}
                                     placeholder={formField.config.placeholder}
-                                    loading={formField.config.source ? 
-                                        formField.config.source.length !== 0 ?
-                                            this.props.models[formField.config.source[0]].loading.isFetching : false
-                                            : false}
+                                    loading={formField.config.source ? formField.config.source.length !== 0 ? this.props.models[formField.config.source[0]].loading.isFetching : false : false}
                                     options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
                                     value={formField.value}
                                     changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
@@ -174,33 +235,33 @@ class InputForm extends Component {
                         ))}
                         <Message 
                             error
-                            header={errorMessageHeader}
-                            content={errorMessageContent}
+                            header={messageHeader}
+                            content={messageContent}
                         />
                         <Message
                             positive
-                            hidden={!successMessageHeader}
-                            header={successMessageHeader}
-                            content={successMessageContent}
+                            hidden={!this.state.lastRequestType}
+                            header={messageHeader}
+                            content={messageContent}
                         />
                         <Form.Group widths='equal'>
                             <Form.Field>
                                 <Button 
-                                    type='submit' 
+                                    type='submit'
                                     fluid 
                                     positive
-                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true})}
+                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null})}
                                 >
-                                    {this.props.model === 'authentication' ?
-                                        'LOGIN' : this.props.update ? 'UPDATE' : 'ADD'}
+                                    <Icon name={this.props.model === 'authentication' ? 'unlock' : this.state.update ? 'save' : 'add'} />
+                                    {this.props.model === 'authentication' ? 'LOGIN' : this.state.update ? 'SAVE' : 'ADD'}
                                 </Button>
                             </Form.Field>
                             <Form.Field>
-                                <Button 
-                                    basic 
+                                <Button
                                     fluid
                                     onClick={this.onModalCloseHandler}
                                 >
+                                    <Icon name='close' />
                                     CANCEL
                                 </Button>
                             </Form.Field>
@@ -227,7 +288,8 @@ const mapDispatchToProps = dispatch => {
         onInputChangeHandler: (event, model, formFieldKey, { value }) => dispatch(changeInpFormState(event, model, formFieldKey, value)),
         onUserLoginHandler: (loginData) => dispatch(loginRequest(loginData)),
         onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
-        onCreateDataHandler: (accessToken, model, dataObj) => dispatch(createDataRequest(accessToken, model, dataObj))
+        onCreateDataHandler: (accessToken, model, dataObj) => dispatch(createDataRequest(accessToken, model, dataObj)),
+        onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(updateDataRequest(accessToken, model, id, dataObj))
     };
 };
 

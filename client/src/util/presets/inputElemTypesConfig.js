@@ -46,7 +46,7 @@ const inputElemTypesConfig = {
             config: {
                 type: 'password',
                 label: config.label || 'Password',
-                icon: 'lock',
+                icon: 'key',
                 iconPosition: 'left',
                 placeholder: config.placeholder || 'Password',
                 restrictions: {

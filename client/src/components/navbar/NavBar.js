@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Header, Button } from 'semantic-ui-react';
+import { Menu, Header, Button, Icon } from 'semantic-ui-react';
 import InputForm from '../input-form';
 import { logoutRequest } from '../../store/actions'
 

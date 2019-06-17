@@ -105,7 +105,6 @@ const adminReducer = (state = initState, action) => {
                         loading: rewriteObjectProps(state.models[action.model].loading, {
                             isCreating: false
                         }),
-                        createdItem: null,
                         error: rewriteObjectProps(state.models[action.model].error, {
                             createError: action.error
                         })
@@ -113,40 +112,46 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-/*
+
         case actionTypes.UPDATE_DATA_REQUEST:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isUpdating: true
-                    }),
-                    error: rewriteObjectProps(state[action.model].error, {
-                        updateError: null
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isUpdating: true
+                        }),
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            updateError: null
+                        })
                     })
                 })
             });
         
         case actionTypes.UPDATE_DATA_SUCCESS:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isUpdating: false
-                    }),
-                    updatedItem: {...action.updatedData}
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isUpdating: false
+                        }),
+                        updatedItem: {...action.updatedData}
+                    })
                 })
             });
 
         case actionTypes.UPDATE_DATA_FAILURE:
             return rewriteObjectProps(state, {
-                [action.model]: rewriteObjectProps(state[action.model], {
-                    loading: rewriteObjectProps(state[action.model].loading, {
-                        isUpdating: false
-                    }),
-                    error: rewriteObjectProps(state[action.model].error, {
-                        updateError: action.error
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isUpdating: false
+                        }),
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            updateError: action.error
+                        })
                     })
                 })
-            }); */
+            });
 
         default:
             return state;
