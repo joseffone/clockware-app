@@ -3,17 +3,17 @@ import { rewriteObjectProps } from '../../util';
 import formTypesConfig from '../../util/presets/formTypesConfig';
 
 const initState = {
-    models: {}
+    models: {},
+    lists: {},
+    ui: {}
 };
 
 for (const key in formTypesConfig) {
     initState.models[key] = {
         items: [],
-        activeItem: null,
         createdItem: null,
         updatedItem: null,
-        deletedItems: null,
-        filter: null,
+        deletedItems: [],
         error: {
             fetchError: null,
             createError: null,
@@ -25,6 +25,22 @@ for (const key in formTypesConfig) {
             isCreating: false,
             isUpdating: false,
             isDeleting: false
+        }
+    };
+    initState.lists[key] = {
+        ids: [],
+        activeId: null,
+        selectedIds: [],
+        params: {
+            fields: [],
+            filter: {},
+            sort: {
+                target: null,
+                order: null
+            },
+            currentPage: null,
+            itemsPerPage: null,
+            totalItems: null
         }
     };
 }
@@ -148,6 +164,46 @@ const adminReducer = (state = initState, action) => {
                         }),
                         error: rewriteObjectProps(state.models[action.model].error, {
                             updateError: action.error
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.DELETE_DATA_REQUEST:
+            return rewriteObjectProps(state, {
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isDeleting: true
+                        }),
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            deleteError: null
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.DELETE_DATA_SUCCESS:
+            return rewriteObjectProps(state, {
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isDeleting: false
+                        }),
+                        deletedItems: [...action.deletedData]
+                    })
+                })
+            });
+
+        case actionTypes.DELETE_DATA_FAILURE:
+            return rewriteObjectProps(state, {
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        loading: rewriteObjectProps(state.models[action.model].loading, {
+                            isDeleting: false
+                        }),
+                        error: rewriteObjectProps(state.models[action.model].error, {
+                            deleteError: action.error
                         })
                     })
                 })

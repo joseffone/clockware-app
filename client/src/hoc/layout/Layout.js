@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { refreshTokensRequest } from '../../store/actions';
-import { Segment, Container } from 'semantic-ui-react';
+import { refreshTokensRequest, changeDisplayView } from '../../store/actions';
+import { Responsive, Segment, Container } from 'semantic-ui-react';
 import NavBar from '../../components/navbar';
 
 class Layout extends Component {
@@ -22,7 +22,10 @@ class Layout extends Component {
         return(
             <React.Fragment>
                 <NavBar fixed='top' />
-                <Segment
+                <Responsive
+                    as={Segment}
+                    fireOnMount
+                    onUpdate={(e, { width }) => this.props.onChangeDisplayViewHandler(width <= Responsive.onlyMobile.maxWidth)}
                     loading={this.props.auth.isLoading}
                     style={{
                         margin: 0,
@@ -35,7 +38,7 @@ class Layout extends Component {
                     }}
                 >
                     {this.props.children}
-                </Segment>
+                </Responsive>
                 <Segment
                         inverted
                         style={{
@@ -63,7 +66,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRefreshTokensHandler: (refreshToken) => dispatch(refreshTokensRequest(refreshToken))
+        onRefreshTokensHandler: (refreshToken) => dispatch(refreshTokensRequest(refreshToken)),
+        onChangeDisplayViewHandler: (mobile) => dispatch(changeDisplayView(mobile))
     };
 };
 

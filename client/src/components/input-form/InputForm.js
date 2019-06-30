@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Form, Button, Message, Icon } from 'semantic-ui-react';
+import { Modal, Form, Button, Message, Icon, Confirm } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
 import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest } from '../../store/actions';
 import { transformSelectOptions } from '../../util';
@@ -12,7 +12,8 @@ class InputForm extends Component {
         isFormDataValid: true,
         isFormSubmited: false,
         update: this.props.update,
-        lastRequestType: null
+        lastRequestType: null,
+        deleteRequest: false ///
     }
 
     componentDidMount () {
@@ -75,7 +76,8 @@ class InputForm extends Component {
             isFormSubmited: false,
             isFormDataValid: true,
             update: this.props.update,
-            lastRequestType: null
+            lastRequestType: null,
+            deleteRequest: false ///
         });
     }
 
@@ -126,6 +128,7 @@ class InputForm extends Component {
         let fetchError = false;
         let createError = !this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.createError;
         let updateError = !!this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.updateError;
+        let deleteError = !!this.state.update && this.state.deleteRequest && !!this.props.models[this.props.model].error.deleteError;
         let authError = this.state.isFormSubmited && !!this.props.auth.error;
         let messageHeader = null;
         let messageContent = null;
@@ -172,6 +175,12 @@ class InputForm extends Component {
             messageContent = `${this.props.auth.error.response.data.error ? this.props.auth.error.response.data.error.message + '.' : 'Authentication failed.'}`;
         }
 
+        ///
+        if (deleteError) {
+            messageHeader = `${this.props.models[this.props.model].error.deleteError.response.status} ${this.props.models[this.props.model].error.deleteError.response.statusText}`;
+            messageContent = `${this.props.models[this.props.model].error.deleteError.response.data.error ? this.props.models[this.props.model].error.deleteError.response.data.error.message + '.' : 'Not able to delete entry.'}`;
+        }
+
         if (this.state.lastRequestType === 'add') {
             messageHeader = 'Request completed!';
             messageContent = 'Entry created successfully.';
@@ -201,8 +210,8 @@ class InputForm extends Component {
                 </Modal.Header>
                 <Modal.Content>
                     <Form 
-                        loading={this.props.auth.isLoading || this.props.models[this.props.model].loading.isCreating || this.props.models[this.props.model].loading.isUpdating}
-                        error={formDataError || fetchError || createError || updateError || authError}
+                        loading={this.props.auth.isLoading || this.props.models[this.props.model].loading.isCreating || this.props.models[this.props.model].loading.isUpdating || this.props.models[this.props.model].loading.isDeleting}
+                        error={formDataError || fetchError || createError || updateError || deleteError || authError} ///
                         onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => (
@@ -250,12 +259,23 @@ class InputForm extends Component {
                                     type='submit'
                                     fluid 
                                     positive
-                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null})}
+                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null, deleteRequest: false})}///
                                 >
                                     <Icon name={this.props.model === 'authentication' ? 'unlock' : this.state.update ? 'save' : 'add'} />
                                     {this.props.model === 'authentication' ? 'LOGIN' : this.state.update ? 'SAVE' : 'ADD'}
                                 </Button>
                             </Form.Field>
+                            {this.state.update ?
+                                <Form.Field>
+                                    <Button
+                                        fluid
+                                        negative
+                                    >
+                                        <Icon name='trash alternate' />
+                                        DELETE
+                                    </Button>
+                                </Form.Field>
+                            : null}
                             <Form.Field>
                                 <Button
                                     fluid

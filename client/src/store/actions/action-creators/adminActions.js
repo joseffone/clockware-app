@@ -121,10 +121,10 @@ export const deleteDataRequest = (accessToken, model, id, queryString) => {
         });
         deleteDataService(accessToken, model, id, queryString)
             .then(response => {
-                dispatch(updateDataSuccess(model, response.data));
+                dispatch(deleteDataSuccess(model, response.data));
             })
             .catch(error => {
-                dispatch(updateDataFailure(model, error));
+                dispatch(deleteDataFailure(model, error));
             });
     };
 };
