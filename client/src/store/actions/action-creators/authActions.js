@@ -27,7 +27,6 @@ export const loginRequest = (loginData) => {
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
                 dispatch(loginSuccess(response.data));
                 dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
-                dispatch(setRefreshTimeout(response.data.access_token, response.data.refresh_token_exp - response.data.refresh_token_iat));
             })
             .catch(error => {
                 dispatch(loginFailure(error));
@@ -61,11 +60,9 @@ export const refreshTokensRequest = (refreshToken) => {
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
                 dispatch(refreshTokensSuccess(response.data));
                 dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
-                dispatch(setRefreshTimeout(response.data.access_token, response.data.refresh_token_exp - response.data.refresh_token_iat));
             })
             .catch(error => {
                 clearTimeout(localStorage.getItem('accessTimeoutID'));
-                clearTimeout(localStorage.getItem('refreshTimeoutID'));
                 localStorage.clear();
                 dispatch(refreshTokensFailure(error));
             });
@@ -92,7 +89,6 @@ export const logoutRequest = (accessToken) => {
         logoutUserService(accessToken)
             .then(response => {
                 clearTimeout(localStorage.getItem('accessTimeoutID'));
-                clearTimeout(localStorage.getItem('refreshTimeoutID'));
                 localStorage.clear();
                 dispatch(logoutSuccess());
             })
@@ -116,16 +112,3 @@ export const setAccessTimeout = (refreshToken, delayInSec) => {
     };
 };
 
-export const setRefreshTimeout = (accessToken, delayInSec) => {
-    return dispatch => {
-        localStorage.setItem(
-            'refreshTimeoutID',
-            setTimeout(
-                () => {
-                    dispatch(logoutRequest(accessToken));
-                }, 
-                delayInSec*1000
-            )
-        );
-    };
-};

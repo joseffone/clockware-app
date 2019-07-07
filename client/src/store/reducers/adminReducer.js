@@ -13,7 +13,7 @@ for (const key in formTypesConfig) {
         items: [],
         createdItem: null,
         updatedItem: null,
-        deletedItems: [],
+        deletedItemIds: [],
         error: {
             fetchError: null,
             createError: null,
@@ -176,6 +176,7 @@ const adminReducer = (state = initState, action) => {
                         loading: rewriteObjectProps(state.models[action.model].loading, {
                             isDeleting: true
                         }),
+                        deletedItemIds: [],
                         error: rewriteObjectProps(state.models[action.model].error, {
                             deleteError: null
                         })
@@ -190,7 +191,7 @@ const adminReducer = (state = initState, action) => {
                         loading: rewriteObjectProps(state.models[action.model].loading, {
                             isDeleting: false
                         }),
-                        deletedItems: [...action.deletedData]
+                        deletedItemIds: [...action.deletedData.id]
                     })
                 })
             });

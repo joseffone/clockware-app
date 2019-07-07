@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Button, Message, Icon, Confirm } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
-import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest } from '../../store/actions';
+import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest, deleteDataRequest } from '../../store/actions';
 import { transformSelectOptions } from '../../util';
 
 class InputForm extends Component {
@@ -13,7 +13,7 @@ class InputForm extends Component {
         isFormSubmited: false,
         update: this.props.update,
         lastRequestType: null,
-        deleteRequest: false ///
+        confirmDeleteOpen: false
     }
 
     componentDidMount () {
@@ -28,7 +28,15 @@ class InputForm extends Component {
         if (this.state.isFormSubmited) {
             let updateFlag = false;
             let createFlag = false;
-            if (this.state.update) {
+            let deleteFlag = false;
+            if (this.state.lastRequestType === 'delete') {
+                if (this.props.models[this.props.model].deletedItemIds.length !== 0 && !this.props.models[this.props.model].loading.isDeleting) {
+                    if (prevProps.models[this.props.model].deletedItemIds[0] !== this.props.models[this.props.model].deletedItemIds[0]) {
+                        deleteFlag = true;
+                    }
+                }
+            }
+            if (this.state.update && this.state.lastRequestType !== 'delete') {
                 if (this.props.models[this.props.model].updatedItem && !this.props.models[this.props.model].loading.isUpdating) {
                     for (const key in this.props.models[this.props.model].updatedItem) {
                         if (!prevProps.models[this.props.model].updatedItem) {
@@ -44,7 +52,8 @@ class InputForm extends Component {
                         }
                     }
                 }
-            } else {
+            }
+            if (!this.state.update) {
                 if (this.props.models[this.props.model].createdItem && !this.props.models[this.props.model].loading.isCreating) {
                     for (const key in this.props.models[this.props.model].createdItem) {
                         if (!prevProps.models[this.props.model].createdItem) {
@@ -67,6 +76,11 @@ class InputForm extends Component {
             if (updateFlag) {
                 this.setState({lastRequestType: 'update', isFormSubmited: false});
             }
+            if (deleteFlag) {
+                this.setState({lastRequestType: null, isFormSubmited: false, update: false}, () => {
+                    this.props.onFormRefreshStateHandler(this.props.model);
+                });
+            }
         }
     }
 
@@ -76,8 +90,7 @@ class InputForm extends Component {
             isFormSubmited: false,
             isFormDataValid: true,
             update: this.props.update,
-            lastRequestType: null,
-            deleteRequest: false ///
+            lastRequestType: null
         });
     }
 
@@ -99,7 +112,7 @@ class InputForm extends Component {
     }
 
     onFormSubmitHandler = () => {
-        if (this.state.isFormDataValid) {
+        if (this.state.isFormDataValid && !this.state.confirmDeleteOpen) {
             if (this.props.model === 'authentication') {
                 return this.props.onUserLoginHandler({
                     email: this.props.forms.authentication.email.value,
@@ -119,6 +132,12 @@ class InputForm extends Component {
         }
     }
 
+    onDeleteRequestHandler = () => {
+        this.setState({isFormSubmited: true, lastRequestType: 'delete', confirmDeleteOpen: false}, () => {
+            this.props.onDeleteDataHandler(this.props.auth.accessToken, this.props.model, this.props.forms[this.props.model].id.value);
+        });
+    }
+
     render () {
 
         const Trigger = this.props.trigger;
@@ -128,7 +147,7 @@ class InputForm extends Component {
         let fetchError = false;
         let createError = !this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.createError;
         let updateError = !!this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.updateError;
-        let deleteError = !!this.state.update && this.state.deleteRequest && !!this.props.models[this.props.model].error.deleteError;
+        let deleteError = this.state.lastRequestType === 'delete' && this.state.isFormSubmited && !!this.props.models[this.props.model].error.deleteError;
         let authError = this.state.isFormSubmited && !!this.props.auth.error;
         let messageHeader = null;
         let messageContent = null;
@@ -175,7 +194,6 @@ class InputForm extends Component {
             messageContent = `${this.props.auth.error.response.data.error ? this.props.auth.error.response.data.error.message + '.' : 'Authentication failed.'}`;
         }
 
-        ///
         if (deleteError) {
             messageHeader = `${this.props.models[this.props.model].error.deleteError.response.status} ${this.props.models[this.props.model].error.deleteError.response.statusText}`;
             messageContent = `${this.props.models[this.props.model].error.deleteError.response.data.error ? this.props.models[this.props.model].error.deleteError.response.data.error.message + '.' : 'Not able to delete entry.'}`;
@@ -211,7 +229,7 @@ class InputForm extends Component {
                 <Modal.Content>
                     <Form 
                         loading={this.props.auth.isLoading || this.props.models[this.props.model].loading.isCreating || this.props.models[this.props.model].loading.isUpdating || this.props.models[this.props.model].loading.isDeleting}
-                        error={formDataError || fetchError || createError || updateError || deleteError || authError} ///
+                        error={formDataError || fetchError || createError || updateError || deleteError || authError}
                         onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => (
@@ -249,17 +267,24 @@ class InputForm extends Component {
                         />
                         <Message
                             positive
-                            hidden={!this.state.lastRequestType}
+                            hidden={!this.state.lastRequestType || this.state.lastRequestType === 'delete'}
                             header={messageHeader}
                             content={messageContent}
                         />
+                        <Confirm
+                            open={this.state.confirmDeleteOpen}
+                            content='Delete entry?'
+                            cancelButton='No'
+                            confirmButton='Yes'
+                            onConfirm={this.onDeleteRequestHandler}
+                            onCancel={() => this.setState({confirmDeleteOpen: false})}
+                         />
                         <Form.Group widths='equal'>
                             <Form.Field>
                                 <Button 
-                                    type='submit'
                                     fluid 
                                     positive
-                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null, deleteRequest: false})}///
+                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null})}
                                 >
                                     <Icon name={this.props.model === 'authentication' ? 'unlock' : this.state.update ? 'save' : 'add'} />
                                     {this.props.model === 'authentication' ? 'LOGIN' : this.state.update ? 'SAVE' : 'ADD'}
@@ -270,6 +295,7 @@ class InputForm extends Component {
                                     <Button
                                         fluid
                                         negative
+                                        onClick={() => this.setState({confirmDeleteOpen: true})}
                                     >
                                         <Icon name='trash alternate' />
                                         DELETE
@@ -309,7 +335,8 @@ const mapDispatchToProps = dispatch => {
         onUserLoginHandler: (loginData) => dispatch(loginRequest(loginData)),
         onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
         onCreateDataHandler: (accessToken, model, dataObj) => dispatch(createDataRequest(accessToken, model, dataObj)),
-        onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(updateDataRequest(accessToken, model, id, dataObj))
+        onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(updateDataRequest(accessToken, model, id, dataObj)),
+        onDeleteDataHandler: (accessToken, model, id) => dispatch(deleteDataRequest(accessToken, model, id))
     };
 };
 
