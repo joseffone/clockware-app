@@ -4,7 +4,7 @@ import { rewriteObjectProps } from '../../util';
 const initState = {
     ui: {
         mobile: false,
-        isSidebarOpen: false
+        isSideBarOpen: false
     }
 };
 
@@ -21,10 +21,11 @@ const globalReducer = (state = initState, action) => {
         case actionTypes.TOGGLE_SIDEBAR:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
-                    isSidebarOpen: !state.ui.isSidebarOpen
+                    isSideBarOpen: !state.ui.isSideBarOpen,
+                    isSideBarAnimationFinished: false
                 })
             });
-
+        
         default:
             return state;
 

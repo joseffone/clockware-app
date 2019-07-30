@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Menu, Header, Button, Icon, Popup } from 'semantic-ui-react';
 import InputForm from '../input-form';
-import { logoutRequest, toggleSidebar } from '../../store/actions';
+import { logoutRequest, toggleSidebar, triggerDataReload } from '../../store/actions';
 
 class NavBar extends Component {
     render () {
@@ -68,10 +68,11 @@ class NavBar extends Component {
                                     circular
                                     content={
                                         <Popup 
-                                            trigger={<Icon name='sync' />}
+                                            trigger={<Icon name='sync alternate' loading={this.props.admin.ui.reloadDataTrigger}/>}
                                             content='Refresh'
                                          />
                                     }
+                                    onClick={this.props.onTriggerDataReloadHandler}
                                 />
                             }
                         />
@@ -88,11 +89,11 @@ class NavBar extends Component {
                                     circular
                                     content={
                                         <Popup 
-                                            trigger={<Icon name={this.props.global.ui.isSidebarOpen ? 'x' : 'sidebar'} />} 
-                                            content={this.props.global.ui.isSidebarOpen ? 'Hide sidebar' : 'Show sidebar'} 
+                                            trigger={<Icon name={this.props.global.ui.isSideBarOpen ? 'x' : 'sidebar'} />} 
+                                            content={this.props.global.ui.isSideBarOpen ? 'Hide sidebar' : 'Show sidebar'} 
                                         />
                                     }
-                                    onClick={this.props.onToggleSidebarHandler}
+                                    onClick={this.props.onToggleSideBarHandler}
                                 />
                             }
                         />
@@ -108,14 +109,16 @@ class NavBar extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.auth,
-        global: state.global
-    }
+        global: state.global,
+        admin: state.admin
+    };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         onUserLogoutHandler: (accessToken) => dispatch(logoutRequest(accessToken)),
-        onToggleSidebarHandler: () => dispatch(toggleSidebar())
+        onToggleSideBarHandler: () => dispatch(toggleSidebar()),
+        onTriggerDataReloadHandler: () => dispatch(triggerDataReload())
     };
 };
 

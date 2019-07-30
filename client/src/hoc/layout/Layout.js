@@ -21,7 +21,7 @@ class Layout extends Component {
     render () {
         return(
             <React.Fragment>
-                <NavBar fixed='top' />
+                <NavBar fixed='top'/>
                 <Responsive
                     as={Segment}
                     fireOnMount
@@ -39,20 +39,7 @@ class Layout extends Component {
                 >
                     {this.props.children}
                 </Responsive>
-                <Segment
-                        inverted
-                        style={{
-                            margin: 0,
-                            padding: 0,
-                            border: 0,
-                            borderRadius: 0, 
-                            boxShadow: 'none'
-                        }}
-                    >
-                        <Container textAlign='center'>
-                            © 2019 Clockwise Clockware. All rights reserved.
-                        </Container>
-                    </Segment>
+
             </React.Fragment>
         );
     }

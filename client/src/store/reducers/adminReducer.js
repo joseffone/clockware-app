@@ -5,7 +5,48 @@ import formTypesConfig from '../../util/presets/formTypesConfig';
 const initState = {
     models: {},
     lists: {},
-    ui: {}
+    ui: {
+        currentModel: 'users',
+        reloadDataTrigger: false,
+        models: [
+            {
+                name: 'users',
+                icon: 'group'
+            }, 
+            {
+                name: 'agents',
+                icon: 'spy'
+            }, 
+            {
+                name: 'marks',
+                icon: 'trophy'
+            },
+            {
+                name: 'cities',
+                icon: 'building'
+            },
+            {
+                name: 'clocks',
+                icon: 'clock'
+            },
+            {
+                name: 'coverage',
+                icon: 'linkify'
+            },
+            {
+                name: 'roles',
+                icon: 'briefcase'
+            },
+            {
+                name: 'permissions',
+                icon: 'unlock alternate'
+            },
+            {
+                name: 'orders',
+                icon: 'dollar'
+            }
+        ]
+    }
 };
 
 for (const key in formTypesConfig) {
@@ -28,15 +69,26 @@ for (const key in formTypesConfig) {
         }
     };
     initState.lists[key] = {
-        ids: [],
+        items: [],
         activeId: null,
         selectedIds: [],
         params: {
-            fields: [],
+            fields: Object.keys(formTypesConfig[key]).map(field => {
+                return {
+                    name: field,
+                    alias: formTypesConfig[key][field].config.label,
+                    sortable: field !== 'id' ? true : false 
+                };
+            }),
             filter: {},
             sort: {
                 target: null,
                 order: null
+            },
+            search: {
+                isLoading: false,
+                results: [],
+                value: ''
             },
             currentPage: null,
             itemsPerPage: null,
@@ -59,7 +111,10 @@ const adminReducer = (state = initState, action) => {
                             fetchError: null
                         })
                     })
-                })
+                }),
+                ui: rewriteObjectProps(state.ui, {
+                    reloadDataTrigger: true 
+                })  
             });
 
         case actionTypes.FETCH_DATA_SUCCESS:
@@ -71,7 +126,15 @@ const adminReducer = (state = initState, action) => {
                         }),
                         items: [...action.fetchedData]
                     })
-                })           
+                }),
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        items: [...action.fetchedData]
+                    })
+                }),
+                ui: rewriteObjectProps(state.ui, {
+                    reloadDataTrigger: false 
+                })    
             });
 
         case actionTypes.FETCH_DATA_FAILURE:
@@ -85,7 +148,10 @@ const adminReducer = (state = initState, action) => {
                             fetchError: action.error
                         })
                     })
-                })
+                }),
+                ui: rewriteObjectProps(state.ui, {
+                    reloadDataTrigger: false 
+                }) 
             });
 
         case actionTypes.CREATE_DATA_REQUEST:
@@ -207,6 +273,21 @@ const adminReducer = (state = initState, action) => {
                             deleteError: action.error
                         })
                     })
+                })
+            });
+
+        case actionTypes.CHANGE_CURRENT_MODEL:
+            return rewriteObjectProps(state, {
+                ui: rewriteObjectProps(state.ui, {
+                    currentModel: action.modelName,
+                    reloadDataTrigger: true
+                })
+            });
+
+        case actionTypes.TRIGGER_DATA_RELOAD:
+            return rewriteObjectProps(state, {
+                ui: rewriteObjectProps(state.ui, {
+                    reloadDataTrigger: true
                 })
             });
 

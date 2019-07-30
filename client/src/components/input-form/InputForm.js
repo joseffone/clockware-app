@@ -13,7 +13,7 @@ class InputForm extends Component {
         isFormSubmited: false,
         update: this.props.update,
         lastRequestType: null,
-        confirmDeleteOpen: false
+        isConfirmDeleteOpen: false
     }
 
     componentDidMount () {
@@ -112,7 +112,7 @@ class InputForm extends Component {
     }
 
     onFormSubmitHandler = () => {
-        if (this.state.isFormDataValid && !this.state.confirmDeleteOpen) {
+        if (this.state.isFormDataValid && !this.state.isConfirmDeleteOpen) {
             if (this.props.model === 'authentication') {
                 return this.props.onUserLoginHandler({
                     email: this.props.forms.authentication.email.value,
@@ -133,7 +133,7 @@ class InputForm extends Component {
     }
 
     onDeleteRequestHandler = () => {
-        this.setState({isFormSubmited: true, lastRequestType: 'delete', confirmDeleteOpen: false}, () => {
+        this.setState({isFormSubmited: true, lastRequestType: 'delete', isConfirmDeleteOpen: false}, () => {
             this.props.onDeleteDataHandler(this.props.auth.accessToken, this.props.model, this.props.forms[this.props.model].id.value);
         });
     }
@@ -272,12 +272,12 @@ class InputForm extends Component {
                             content={messageContent}
                         />
                         <Confirm
-                            open={this.state.confirmDeleteOpen}
+                            open={this.state.isConfirmDeleteOpen}
                             content='Delete entry?'
                             cancelButton='No'
                             confirmButton='Yes'
                             onConfirm={this.onDeleteRequestHandler}
-                            onCancel={() => this.setState({confirmDeleteOpen: false})}
+                            onCancel={() => this.setState({isConfirmDeleteOpen: false})}
                          />
                         <Form.Group widths='equal'>
                             <Form.Field>
@@ -295,7 +295,7 @@ class InputForm extends Component {
                                     <Button
                                         fluid
                                         negative
-                                        onClick={() => this.setState({confirmDeleteOpen: true})}
+                                        onClick={() => this.setState({isConfirmDeleteOpen: true})}
                                     >
                                         <Icon name='trash alternate' />
                                         DELETE

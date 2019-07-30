@@ -128,3 +128,16 @@ export const deleteDataRequest = (accessToken, model, id, queryString) => {
             });
     };
 };
+
+export const changeCurrentModel = (modelName) => {
+    return {
+        type: actionTypes.CHANGE_CURRENT_MODEL,
+        modelName
+    };
+};
+
+export const triggerDataReload = () => {
+    return {
+        type: actionTypes.TRIGGER_DATA_RELOAD
+    };
+};
