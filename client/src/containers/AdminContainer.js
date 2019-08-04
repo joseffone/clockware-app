@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Grid, Segment, Button } from 'semantic-ui-react';
+import { Grid, Segment, Message, Button } from 'semantic-ui-react';
 import SideBarWrapper from '../hoc/sidebar-wrapper';
 import { AdminSideBar } from '../components/sidebar';
 import List from '../components/list';
@@ -19,13 +19,29 @@ class AdminContainer extends Component {
                         transition: 'padding-left 0.5s'
                     }}
                 >
-                    <Grid.Column 
-                        as={Segment}
-                        loading={this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching}
-                        style={{padding: 0, margin: '1em'}}
+                    <Grid.Row
+                        style={{padding: 0}}
                     >
-                        <List />
-                    </Grid.Column>
+                        {this.props.admin.ui.errorDataCounter.length > 0 ? 
+                            <Message
+                                error 
+                                header='Cannot fetch data from the server'
+                                content='Something went wrong while receiving data so displayed info may be outdated and incomplete. Please, try to refresh the page. If it does not help, visit this resource later.'
+                                style={{border: 'none', margin: '1em 1em 0 1em', width: '100%'}}
+                            />
+                        : null}
+                    </Grid.Row>
+                    <Grid.Row
+                        style={{padding: 0}}
+                    >
+                        <Grid.Column 
+                            as={Segment}
+                            loading={this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching}
+                            style={{padding: 0, margin: '1em'}}
+                        >
+                            <List />
+                        </Grid.Column>
+                    </Grid.Row>
                 </Grid>
             </SideBarWrapper>
 

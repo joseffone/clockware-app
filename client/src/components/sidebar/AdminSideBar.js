@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Sidebar, Menu, Icon } from 'semantic-ui-react';
 import { changeCurrentModel, finishSideBarAnimation } from '../../store/actions';
+import './AdminSideBar.css';
 
 class SideBar extends Component {
     render () {
@@ -22,10 +23,11 @@ class SideBar extends Component {
         
         return (
             <Sidebar
+                id='adminSideBar'
                 animation='overlay'
                 visible={this.props.global.ui.isSideBarOpen}
                 width='thin'
-                style={{border: 'none', boxShadow: 'none', paddingLeft: '1em', paddingTop: '1em'}}
+                style={{border: 'none', boxShadow: 'none', paddingLeft: '1em', paddingTop: '1em', 'overflow': 'visible !important'}}
             >
                 <Menu 
                     icon='labeled'

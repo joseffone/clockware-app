@@ -136,8 +136,24 @@ export const changeCurrentModel = (modelName) => {
     };
 };
 
-export const triggerDataReload = () => {
+export const setReloadDataTrigger = (flag) => {
     return {
-        type: actionTypes.TRIGGER_DATA_RELOAD
+        type: actionTypes.SET_RELOAD_DATA_TRIGGER,
+        flag
+    };
+};
+
+export const setSelectAllTrigger = (checked) => {
+    return {
+        type: actionTypes.SET_SELECT_ALL_TRIGGER,
+        checked
+    };
+};
+
+export const toggleListItemSelect = (checked, id) => {
+    return {
+        type: actionTypes.TOGGLE_LIST_ITEM_SELECT,
+        checked,
+        id
     };
 };

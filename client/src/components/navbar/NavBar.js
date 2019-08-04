@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Menu, Header, Button, Icon, Popup } from 'semantic-ui-react';
 import InputForm from '../input-form';
-import { logoutRequest, toggleSidebar, triggerDataReload } from '../../store/actions';
+import { logoutRequest, toggleSidebar, setReloadDataTrigger } from '../../store/actions';
 
 class NavBar extends Component {
     render () {
@@ -68,11 +68,11 @@ class NavBar extends Component {
                                     circular
                                     content={
                                         <Popup 
-                                            trigger={<Icon name='sync alternate' loading={this.props.admin.ui.reloadDataTrigger}/>}
+                                            trigger={<Icon name='sync alternate' loading={this.props.admin.ui.reloadDataCounter > 0}/>}
                                             content='Refresh'
                                          />
                                     }
-                                    onClick={this.props.onTriggerDataReloadHandler}
+                                    onClick={() => this.props.onSetReloadDataTriggerHandler(true)}
                                 />
                             }
                         />
@@ -118,7 +118,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onUserLogoutHandler: (accessToken) => dispatch(logoutRequest(accessToken)),
         onToggleSideBarHandler: () => dispatch(toggleSidebar()),
-        onTriggerDataReloadHandler: () => dispatch(triggerDataReload())
+        onSetReloadDataTriggerHandler: (flag) => dispatch(setReloadDataTrigger(flag))
     };
 };
 

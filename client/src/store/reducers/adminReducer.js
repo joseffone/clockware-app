@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions/action-types';
 import { rewriteObjectProps } from '../../util';
 import formTypesConfig from '../../util/presets/formTypesConfig';
+import tableFieldsConfig from '../../util/presets/tableFieldsConfig';
 
 const initState = {
     models: {},
@@ -8,6 +9,9 @@ const initState = {
     ui: {
         currentModel: 'users',
         reloadDataTrigger: false,
+        reloadDataCounter: 0,
+        errorDataCounter: [],
+        selectAllTrigger: false,
         models: [
             {
                 name: 'users',
@@ -69,16 +73,12 @@ for (const key in formTypesConfig) {
         }
     };
     initState.lists[key] = {
-        items: [],
+        ids: [],
         activeId: null,
         selectedIds: [],
         params: {
-            fields: Object.keys(formTypesConfig[key]).map(field => {
-                return {
-                    name: field,
-                    alias: formTypesConfig[key][field].config.label,
-                    sortable: field !== 'id' ? true : false 
-                };
+            fields: key === 'authentication' ? [] : Object.keys(tableFieldsConfig[key]).map(field => {
+                return {...tableFieldsConfig[key][field]};
             }),
             filter: {},
             sort: {
@@ -113,8 +113,9 @@ const adminReducer = (state = initState, action) => {
                     })
                 }),
                 ui: rewriteObjectProps(state.ui, {
-                    reloadDataTrigger: true 
-                })  
+                    reloadDataCounter: state.ui.reloadDataCounter + 1,
+                    errorDataCounter: state.ui.errorDataCounter.filter(item => item !== action.model)
+                }) 
             });
 
         case actionTypes.FETCH_DATA_SUCCESS:
@@ -129,12 +130,12 @@ const adminReducer = (state = initState, action) => {
                 }),
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
-                        items: [...action.fetchedData]
+                        ids: action.fetchedData.map(({ id }) => id)
                     })
                 }),
                 ui: rewriteObjectProps(state.ui, {
-                    reloadDataTrigger: false 
-                })    
+                    reloadDataCounter: state.ui.reloadDataCounter - 1
+                }) 
             });
 
         case actionTypes.FETCH_DATA_FAILURE:
@@ -150,8 +151,9 @@ const adminReducer = (state = initState, action) => {
                     })
                 }),
                 ui: rewriteObjectProps(state.ui, {
-                    reloadDataTrigger: false 
-                }) 
+                    reloadDataCounter: state.ui.reloadDataCounter - 1,
+                    errorDataCounter: [...state.ui.errorDataCounter.slice(), action.model]
+                })
             });
 
         case actionTypes.CREATE_DATA_REQUEST:
@@ -284,12 +286,22 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.TRIGGER_DATA_RELOAD:
+        case actionTypes.SET_RELOAD_DATA_TRIGGER:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
-                    reloadDataTrigger: true
+                    reloadDataTrigger: action.flag
                 })
             });
+
+        case actionTypes.SET_SELECT_ALL_TRIGGER:
+            return rewriteObjectProps(state, {
+                ui: rewriteObjectProps(state.ui, {
+                    selectAllTrigger: action.checked
+                })
+            });
+        
+        case actionTypes.TOGGLE_LIST_ITEM_SELECT:
+            
 
         default:
             return state;

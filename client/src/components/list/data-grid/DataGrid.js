@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table } from 'semantic-ui-react';
-import { fetchDataRequest } from '../../../store/actions';
+import moment from 'moment';
+import { Table, Checkbox } from 'semantic-ui-react';
+import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger } from '../../../store/actions';
+import { transformDataList } from '../../../util';
 
 class DataGrid extends Component {
 
@@ -12,9 +14,10 @@ class DataGrid extends Component {
     componentDidUpdate (prevProps) {
         if (this.props.admin.ui.reloadDataTrigger) {
             if (prevProps.admin.ui.reloadDataTrigger !== this.props.admin.ui.reloadDataTrigger) {
-                if (!this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching) {
-                    this.onRefreshDataListHandler();
-                }
+                return this.onRefreshDataListHandler();
+            }
+            if (this.props.admin.ui.reloadDataCounter === 0) {
+                this.props.onSetReloadDataTriggerHandler(false);
             }
         }
     }
@@ -35,7 +38,7 @@ class DataGrid extends Component {
 
         this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.forEach(({ name, alias, sortable }) => {
             headerFields.push(
-                <Table.HeaderCell 
+                <Table.HeaderCell
                     key={name} 
                     disabled={!sortable}
                     //sorted={sortable ? 'ascending' : null}
@@ -47,30 +50,41 @@ class DataGrid extends Component {
             );
         });
 
-        this.props.admin.lists[this.props.admin.ui.currentModel].items.forEach(item => {
-            bodyRows.push(
-                <Table.Row key={item.id}>
-                    {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name }) => {
-                        return (
-                            <Table.Cell key={item.id + name}>
-                                {item[name]}
-                            </Table.Cell>
-                        );
-                    })}
-                </Table.Row>
-            );
-        });
-        
+        headerFields.unshift(<Table.HeaderCell><Checkbox onChange={(e, { checked }) => this.props.onSetSelectAllTriggerHandler(checked)} /></Table.HeaderCell>);
+
+        if (this.props.admin.ui.reloadDataCounter === 0) {
+            this.props.admin.lists[this.props.admin.ui.currentModel].ids.forEach(id => {
+                bodyRows.push(
+                    <Table.Row key={id}>
+                        <Table.Cell>
+                            <Checkbox id={id} checked={this.props.admin.ui.selectAllTrigger} />
+                        </Table.Cell>
+                    
+                        {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name, isDate }) => {
+                            let fieldValue = transformDataList(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models).filter(item => item.id === id)[0][name];
+                            fieldValue = isDate && fieldValue !== null ? moment(fieldValue).format('DD-MM-YYYY HH:mm') : fieldValue;
+                            return (
+                                <Table.Cell
+                                    key={id + name}
+                                    error={fieldValue === false}
+                                    >
+                                    {fieldValue === false ? 'Cannot pull data' : fieldValue}
+                                </Table.Cell>
+                            );
+                        })}
+                    </Table.Row>
+                );
+            });
+        }
+ 
         return (
             <Table
+                selectable
                 sortable
-                striped
-                style={{ border: 0 }}
+                style={{ border: 0, margin: 0 }}
             >
                 <Table.Header>
-                    <Table.Row>
-                        {headerFields}
-                    </Table.Row>
+                    <Table.Row>{headerFields}</Table.Row>
                 </Table.Header>
                 <Table.Body>
                     {bodyRows}
@@ -90,7 +104,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model))
+        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
+        onSetReloadDataTriggerHandler: (flag) => dispatch(setReloadDataTrigger(flag)),
+        onSetSelectAllTriggerHandler: (checked) => dispatch(setSelectAllTrigger(checked))
     };
 };
 
