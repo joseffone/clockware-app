@@ -129,31 +129,58 @@ export const deleteDataRequest = (accessToken, model, id, queryString) => {
     };
 };
 
-export const changeCurrentModel = (modelName) => {
+export const changeCurrentModel = (model) => {
     return {
         type: actionTypes.CHANGE_CURRENT_MODEL,
-        modelName
+        model
     };
 };
 
-export const setReloadDataTrigger = (flag) => {
+export const setReloadDataTrigger = (model, flag) => {
     return {
         type: actionTypes.SET_RELOAD_DATA_TRIGGER,
+        model,
         flag
     };
 };
 
-export const setSelectAllTrigger = (checked) => {
+export const setSelectAllTrigger = (model, checked) => {
     return {
         type: actionTypes.SET_SELECT_ALL_TRIGGER,
+        model,
         checked
     };
 };
 
-export const toggleListItemSelect = (checked, id) => {
+export const toggleListItemSelect = (model, checked, id) => {
     return {
         type: actionTypes.TOGGLE_LIST_ITEM_SELECT,
+        model,
         checked,
         id
+    };
+};
+
+export const setCurrentPage = (model, activePage) => {
+    return {
+        type: actionTypes.SET_CURRENT_PAGE,
+        model,
+        activePage
+    };
+};
+
+export const setItemsPerPage = (model, value) => {
+    return {
+        type: actionTypes.SET_ITEMS_PER_PAGE,
+        model,
+        value
+    };
+};
+
+export const setTotalItems = (model, total) => {
+    return {
+        type: actionTypes.SET_TOTAL_ITEMS,
+        model,
+        total
     };
 };

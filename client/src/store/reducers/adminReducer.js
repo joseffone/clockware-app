@@ -11,7 +11,7 @@ const initState = {
         reloadDataTrigger: false,
         reloadDataCounter: 0,
         errorDataCounter: [],
-        selectAllTrigger: false,
+        selectAlltrigger: false,
         models: [
             {
                 name: 'users',
@@ -48,6 +48,28 @@ const initState = {
             {
                 name: 'orders',
                 icon: 'dollar'
+            }
+        ],
+        itemsPerPageOptions: [
+            {
+                key: 5,
+                text: '5',
+                value: 5
+            },
+            {
+                key: 10,
+                text: '10',
+                value: 10
+            },
+            {
+                key: 25,
+                text: '25',
+                value: 25
+            },
+            {
+                key: 50,
+                text: '50',
+                value: 50
             }
         ]
     }
@@ -90,9 +112,11 @@ for (const key in formTypesConfig) {
                 results: [],
                 value: ''
             },
-            currentPage: null,
-            itemsPerPage: null,
-            totalItems: null
+            pagination: {
+                currentPage: 1,
+                itemsPerPage: 5,
+                totalItems: null
+            }
         }
     };
 }
@@ -281,8 +305,17 @@ const adminReducer = (state = initState, action) => {
         case actionTypes.CHANGE_CURRENT_MODEL:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
-                    currentModel: action.modelName,
+                    currentModel: action.model,
                     reloadDataTrigger: true
+                }),
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
+                                currentPage: 1
+                            })
+                        })
+                    })
                 })
             });
 
@@ -290,18 +323,74 @@ const adminReducer = (state = initState, action) => {
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     reloadDataTrigger: action.flag
+                }),
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
+                                currentPage: action.flag ? 1 : state.lists[action.model].params.pagination.currentPage
+                            })
+                        })
+                    })
                 })
             });
 
         case actionTypes.SET_SELECT_ALL_TRIGGER:
             return rewriteObjectProps(state, {
-                ui: rewriteObjectProps(state.ui, {
-                    selectAllTrigger: action.checked
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        selectedIds: action.checked ? state.lists[action.model].ids.slice() : []
+                    })
                 })
             });
         
         case actionTypes.TOGGLE_LIST_ITEM_SELECT:
-            
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        selectedIds: action.checked ? [...state.lists[action.model].selectedIds.slice(), +action.id] : state.lists[action.model].selectedIds.filter(selectedId => selectedId !== +action.id)
+                    })
+                })
+            });
+
+        case actionTypes.SET_CURRENT_PAGE:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
+                                currentPage: action.activePage
+                            })
+                        })
+                    })
+                })
+            });
+        
+        case actionTypes.SET_ITEMS_PER_PAGE:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
+                                itemsPerPage: action.value
+                            })
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.SET_TOTAL_ITEMS:
+                return rewriteObjectProps(state, {
+                    lists: rewriteObjectProps(state.lists, {
+                        [action.model]: rewriteObjectProps(state.lists[action.model], {
+                            params: rewriteObjectProps(state.lists[action.model].params, {
+                                pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
+                                    totalItems: action.total
+                                })
+                            })
+                        })
+                    })
+                });
 
         default:
             return state;

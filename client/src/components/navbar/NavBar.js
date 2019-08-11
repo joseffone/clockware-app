@@ -72,7 +72,7 @@ class NavBar extends Component {
                                             content='Refresh'
                                          />
                                     }
-                                    onClick={() => this.props.onSetReloadDataTriggerHandler(true)}
+                                    onClick={() => this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true)}
                                 />
                             }
                         />
@@ -118,7 +118,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onUserLogoutHandler: (accessToken) => dispatch(logoutRequest(accessToken)),
         onToggleSideBarHandler: () => dispatch(toggleSidebar()),
-        onSetReloadDataTriggerHandler: (flag) => dispatch(setReloadDataTrigger(flag))
+        onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag))
     };
 };
 

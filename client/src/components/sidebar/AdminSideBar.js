@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Sidebar, Menu, Icon } from 'semantic-ui-react';
-import { changeCurrentModel, finishSideBarAnimation } from '../../store/actions';
+import { changeCurrentModel, toggleSidebar } from '../../store/actions';
 import './AdminSideBar.css';
 
 class SideBar extends Component {
@@ -25,15 +25,22 @@ class SideBar extends Component {
             <Sidebar
                 id='adminSideBar'
                 animation='overlay'
+                direction={this.props.global.ui.mobile ? 'top' : 'left'}
                 visible={this.props.global.ui.isSideBarOpen}
                 width='thin'
-                style={{border: 'none', boxShadow: 'none', paddingLeft: '1em', paddingTop: '1em', 'overflow': 'visible !important'}}
+                style={{
+                    border: 'none', 
+                    boxShadow: 'none', 
+                    paddingLeft: this.props.global.ui.mobile ? 0 : '1em', 
+                    paddingTop: this.props.global.ui.mobile ? 0 : '1em'
+                }}
+                onHide={this.props.global.ui.mobile ? this.props.onToggleSideBarHandler : null}
             >
                 <Menu 
                     icon='labeled'
                     vertical
-                    secondary
-                    style={{width: '100%', padding: 0, margin: 0}}
+                    secondary={!this.props.global.ui.mobile}
+                    style={{width: '100%', padding: 0, margin: 0, borderRadius: 0}}
                 >
                     {menuItems}
                 </Menu>
@@ -51,7 +58,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onChangeCurrentModelHandler: (event, { name }) => dispatch(changeCurrentModel(name))
+        onChangeCurrentModelHandler: (event, { name }) => dispatch(changeCurrentModel(name)),
+        onToggleSideBarHandler: () => dispatch(toggleSidebar())
     };
 };
 

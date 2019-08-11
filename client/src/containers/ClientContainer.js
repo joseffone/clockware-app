@@ -20,7 +20,7 @@ class ClientContainer extends Component {
                                     {...props}
                                 />
                         }
-                        model='agents'
+                        model='orders'
                         mobile={false}
                         update={false}
                     />}

@@ -9,14 +9,17 @@ import InputForm from '../components/input-form';
 class AdminContainer extends Component {
     render () {
         return (
-           <SideBarWrapper sidebar={AdminSideBar}>
+            <SideBarWrapper 
+                sidebar={AdminSideBar}
+                dimmed={this.props.global.ui.mobile && this.props.global.ui.isSideBarOpen}
+            >
                 <Grid
                     textAlign='center'
                     verticalAlign='middle' 
                     style={{
                         margin: 0,
-                        paddingLeft: this.props.global.ui.isSideBarOpen ? '10.714em' : 0,
-                        transition: 'padding-left 0.5s'
+                        paddingLeft: this.props.global.ui.mobile ? 0 : this.props.global.ui.isSideBarOpen ? '10.714em' : 0,
+                        transition: this.props.global.ui.mobile ? 'none' : 'padding-left 0.5s'
                     }}
                 >
                     <Grid.Row
