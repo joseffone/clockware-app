@@ -8,6 +8,11 @@ import InputForm from '../components/input-form';
 
 class AdminContainer extends Component {
     render () {
+        let emptyDataFlag;
+        if (this.props.admin.models[this.props.admin.ui.currentModel].error.fetchError) {
+            emptyDataFlag = this.props.admin.models[this.props.admin.ui.currentModel].error.fetchError.response.status === 404 ? true : false;
+        }
+
         return (
             <SideBarWrapper 
                 sidebar={AdminSideBar}
@@ -25,11 +30,12 @@ class AdminContainer extends Component {
                     <Grid.Row
                         style={{padding: 0}}
                     >
-                        {this.props.admin.ui.errorDataCounter.length > 0 ? 
+                        {this.props.admin.ui.errorDataCounter.length > 0 && !this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching ? 
                             <Message
-                                error 
-                                header='Cannot fetch data from the server'
-                                content='Something went wrong while receiving data so displayed info may be outdated and incomplete. Please, try to refresh the page. If it does not help, visit this resource later.'
+                                info={emptyDataFlag}
+                                error={!emptyDataFlag}
+                                header={emptyDataFlag ? 'Data is not found' : 'Cannot fetch data from the server'}
+                                content={emptyDataFlag ? 'This register does not contain data yet.' : 'Something went wrong while receiving data so displayed info may be outdated and incomplete. Please, try to refresh the page. If it does not help, visit this resource later.'}
                                 style={{border: 'none', margin: '1em 1em 0 1em', width: '100%'}}
                             />
                         : null}

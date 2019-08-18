@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import InputForm from '../components/input-form';
+import DatePicker from '../components/date-picker';
 
 
 class ClientContainer extends Component {
@@ -24,6 +25,7 @@ class ClientContainer extends Component {
                         mobile={false}
                         update={false}
                     />}
+                    <DatePicker />
                 </Grid.Column>
             </Grid>
         );

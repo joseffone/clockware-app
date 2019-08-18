@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Sidebar, Menu, Icon } from 'semantic-ui-react';
-import { changeCurrentModel, toggleSidebar } from '../../store/actions';
+import { changeCurrentModel, toggleSidebar, toggleSidebarButtonPress } from '../../store/actions';
 import './AdminSideBar.css';
 
 class SideBar extends Component {
@@ -17,7 +17,7 @@ class SideBar extends Component {
                 onClick={this.props.onChangeCurrentModelHandler}
             >
                 <Icon name={item.icon} />
-                {item.name}
+                {item.name.split('')[0].toUpperCase() + item.name.split('').slice(1).join('')}
             </Menu.Item>
         ));
         
@@ -35,12 +35,14 @@ class SideBar extends Component {
                     paddingTop: this.props.global.ui.mobile ? 0 : '1em'
                 }}
                 onHide={this.props.global.ui.mobile ? this.props.onToggleSideBarHandler : null}
+                onHidden={this.props.global.ui.mobile &&  this.props.global.ui.isSideBarButtonPressed ? this.props.onToggleSideBarButtonPressHandler : null}
             >
                 <Menu 
-                    icon='labeled'
+                    icon={this.props.global.ui.mobile ? null : 'labeled'}
+                    fluid
                     vertical
                     secondary={!this.props.global.ui.mobile}
-                    style={{width: '100%', padding: 0, margin: 0, borderRadius: 0}}
+                    style={{padding: 0, margin: 0, borderRadius: 0}}
                 >
                     {menuItems}
                 </Menu>
@@ -59,7 +61,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onChangeCurrentModelHandler: (event, { name }) => dispatch(changeCurrentModel(name)),
-        onToggleSideBarHandler: () => dispatch(toggleSidebar())
+        onToggleSideBarHandler: () => dispatch(toggleSidebar()),
+        onToggleSideBarButtonPressHandler: () => dispatch(toggleSidebarButtonPress())
     };
 };
 

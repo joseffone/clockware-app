@@ -36,7 +36,7 @@ class InputForm extends Component {
                     }
                 }
             }
-            if (this.state.update && this.state.lastRequestType !== 'delete') {
+            if (this.state.update && !this.props.update && this.state.lastRequestType !== 'delete') {
                 if (this.props.models[this.props.model].updatedItem && !this.props.models[this.props.model].loading.isUpdating) {
                     for (const key in this.props.models[this.props.model].updatedItem) {
                         if (!prevProps.models[this.props.model].updatedItem) {
@@ -97,16 +97,33 @@ class InputForm extends Component {
     onModalCloseHandler = () => {
         this.setState({
             isModalOpen: false
+        }, () => {
+            if (this.props.refreshAfterClose) {
+                for (const key in this.props.forms[this.props.model]) {
+                    if (this.props.forms[this.props.model][key].config.source) {
+                        this.props.forms[this.props.model][key].config.source.forEach(src => {
+                            this.props.onFetchDataHandler(this.props.auth.accessToken, src);
+                        });
+                    }
+                }
+            }
         });
     }
 
     onFormLoadHandler = () => {
         this.props.onFormRefreshStateHandler(this.props.model);
-        for (const key in this.props.forms[this.props.model]) {
-            if (this.props.forms[this.props.model][key].config.source) {
-                this.props.forms[this.props.model][key].config.source.forEach(src => {
-                    this.props.onFetchDataHandler(this.props.auth.accessToken, src);
-                });
+        if (!this.props.refreshAfterClose) {
+            for (const key in this.props.forms[this.props.model]) {
+                if (this.props.forms[this.props.model][key].config.source) {
+                    this.props.forms[this.props.model][key].config.source.forEach(src => {
+                        this.props.onFetchDataHandler(this.props.auth.accessToken, src);
+                    });
+                }
+            }
+        }
+        if (this.props.update) {
+            for (const key in this.props.update) {
+                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.update[key]});
             }
         }
     }
@@ -308,7 +325,7 @@ class InputForm extends Component {
                                     onClick={this.onModalCloseHandler}
                                 >
                                     <Icon name='close' />
-                                    CANCEL
+                                    CLOSE
                                 </Button>
                             </Form.Field>
                         </Form.Group>

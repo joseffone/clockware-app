@@ -12,3 +12,9 @@ export const toggleSidebar = () => {
         type: actionTypes.TOGGLE_SIDEBAR
     };
 };
+
+export const toggleSidebarButtonPress = () => {
+    return {
+        type: actionTypes.TOGGLE_SIDEBAR_BUTTON_PRESS
+    };
+};

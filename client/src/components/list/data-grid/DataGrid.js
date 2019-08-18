@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Table, Checkbox, Pagination, Dropdown } from 'semantic-ui-react';
-import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems } from '../../../store/actions';
+import { Table, Checkbox, Pagination, Dropdown, Icon } from 'semantic-ui-react';
+import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setActiveItemId } from '../../../store/actions';
 import { transformDataList } from '../../../util';
+import InputForm from '../../input-form';
 
 class DataGrid extends Component {
 
@@ -60,12 +61,19 @@ class DataGrid extends Component {
         });
 
         headerFields.unshift(
-            <Table.HeaderCell>
+            <Table.HeaderCell
+                key={'select'}
+                collapsing
+                textAlign='right'
+            >
                 <Checkbox 
                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length === this.props.admin.lists[this.props.admin.ui.currentModel].ids.length} 
                     onChange={(e, { checked }) => this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, checked)} 
                 />
             </Table.HeaderCell>
+        );
+        headerFields.push(
+            <Table.HeaderCell key={'edit'} disabled={true} style={{ borderLeft: 0, borderRight: 0 }} />
         );
 
         if (this.props.admin.ui.reloadDataCounter === 0) {
@@ -76,14 +84,17 @@ class DataGrid extends Component {
                 if (index >= startIndex && index <= endIndex) {
                     bodyRows.push(
                         <Table.Row key={id}>
-                            <Table.Cell>
+                            <Table.Cell 
+                                collapsing
+                                textAlign='right'
+                            >
                                 <Checkbox 
                                     id={id}
                                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.filter(selectedId => selectedId === id).length === 1}
                                     onChange={(e, { checked}) => this.props.onToggleListItemSelectHandler(this.props.admin.ui.currentModel, checked, e.target.id)}
                                 />
                             </Table.Cell>
-                            {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name, isDate }) => {
+                            {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name, alias, isDate }) => {
                                 let fieldValue = transformDataList(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models).filter(item => item.id === id)[0][name];
                                 fieldValue = isDate && fieldValue !== null ? moment(fieldValue).format('DD-MM-YYYY HH:mm') : fieldValue;
                                 return (
@@ -91,10 +102,31 @@ class DataGrid extends Component {
                                         key={id + name}
                                         error={fieldValue === false}
                                         >
-                                        {fieldValue === false ? 'Cannot pull data' : fieldValue}
+                                        {this.props.global.ui.mobile ? `${alias}: ` : null}
+                                        {this.props.global.ui.mobile ? <i>{fieldValue === false ? 'Cannot pull data' : fieldValue}</i> : fieldValue === false ? 'Cannot pull data' : fieldValue}
                                     </Table.Cell>
                                 );
                             })}
+                            <Table.Cell 
+                                collapsing 
+                                textAlign='right'
+                            >
+                                <InputForm 
+                                    trigger={
+                                        (props) =>
+                                            <Icon 
+                                                name='pencil'
+                                                link 
+                                                {...props}
+                                            />
+                                    }
+                                    refreshAfterClose
+                                    model={this.props.admin.ui.currentModel}
+                                    mobile={this.props.global.ui.mobile}
+                                    update={{...this.props.admin.models[this.props.admin.ui.currentModel].items.filter(item => item.id === id)[0]}}
+                                />
+                                
+                            </Table.Cell>
                         </Table.Row>
                     );
                 }
@@ -116,36 +148,38 @@ class DataGrid extends Component {
                 <Table.Footer 
                     style={{display: 'table-footer-group'}}
                 >
-                    <Table.HeaderCell 
-                        colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.length + 1}
-                        style={{lineHeight: '3em', borderTop: this.props.global.ui.mobile ? 'none' : '1px solid rgba(34,36,38,.15)'}}
-                    >   
-                        {this.props.global.ui.mobile ? null : <span>Rows per page:</span>}
-                        {this.props.global.ui.mobile ? null :
-                            <Dropdown
-                                options={this.props.admin.ui.itemsPerPageOptions}
-                                defaultValue={itemsPerPage}
-                                text={itemsPerPage}
-                                inline
-                                style={{marginLeft: '1em', marginRight: '1em'}}
-                                onChange={(e, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
+                    <Table.Row>
+                        <Table.HeaderCell 
+                            colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.length + 2}
+                            style={{lineHeight: '3em', borderTop: this.props.global.ui.mobile ? 'none' : '1px solid rgba(34,36,38,.15)'}}
+                        >   
+                            {this.props.global.ui.mobile ? null : <span>Rows per page:</span>}
+                            {this.props.global.ui.mobile ? null :
+                                <Dropdown
+                                    options={this.props.admin.ui.itemsPerPageOptions}
+                                    defaultValue={itemsPerPage}
+                                    text={'' + itemsPerPage}
+                                    inline
+                                    style={{marginLeft: '1em', marginRight: '1em'}}
+                                    onChange={(e, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
+                                />
+                            }
+                            {totalItems > 0 ? <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span> : null}
+                            <Pagination
+                                totalPages={totalPages}
+                                activePage={currentPage}
+                                pageItem={this.props.global.ui.mobile ? null : undefined}
+                                ellipsisItem={this.props.global.ui.mobile ? null : undefined}
+                                firstItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
+                                lastItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
+                                boundaryRange={1}
+                                siblingRange={1}
+                                floated='right'
+                                style={{boxShadow: 'none'}}
+                                onPageChange={(e, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
                             />
-                        }
-                        <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span>
-                        <Pagination
-                            totalPages={totalPages}
-                            activePage={currentPage}
-                            pageItem={this.props.global.ui.mobile ? null : undefined}
-                            ellipsisItem={this.props.global.ui.mobile ? null : undefined}
-                            firstItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
-                            lastItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
-                            boundaryRange={1}
-                            siblingRange={1}
-                            floated='right'
-                            style={{boxShadow: 'none'}}
-                            onPageChange={(e, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
-                        />
-                    </Table.HeaderCell>
+                        </Table.HeaderCell>
+                    </Table.Row>
                 </Table.Footer>
             </Table>
         );

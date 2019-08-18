@@ -4,7 +4,8 @@ import { rewriteObjectProps } from '../../util';
 const initState = {
     ui: {
         mobile: false,
-        isSideBarOpen: false
+        isSideBarOpen: false,
+        isSideBarButtonPressed: false
     }
 };
 
@@ -23,6 +24,13 @@ const globalReducer = (state = initState, action) => {
                 ui: rewriteObjectProps(state.ui, {
                     isSideBarOpen: !state.ui.isSideBarOpen,
                     isSideBarAnimationFinished: false
+                })
+            });
+
+        case actionTypes.TOGGLE_SIDEBAR_BUTTON_PRESS:
+            return rewriteObjectProps(state, {
+                ui: rewriteObjectProps(state.ui, {
+                    isSideBarButtonPressed: !state.ui.isSideBarButtonPressed,
                 })
             });
         

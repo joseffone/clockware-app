@@ -306,7 +306,8 @@ const adminReducer = (state = initState, action) => {
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     currentModel: action.model,
-                    reloadDataTrigger: true
+                    reloadDataTrigger: true,
+                    errorDataCounter: []
                 }),
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -391,7 +392,7 @@ const adminReducer = (state = initState, action) => {
                         })
                     })
                 });
-
+                
         default:
             return state;
 

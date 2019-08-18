@@ -2,9 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Menu, Header, Button, Icon, Popup } from 'semantic-ui-react';
 import InputForm from '../input-form';
-import { logoutRequest, toggleSidebar, setReloadDataTrigger } from '../../store/actions';
+import { logoutRequest, toggleSidebar, toggleSidebarButtonPress, setReloadDataTrigger } from '../../store/actions';
 
 class NavBar extends Component {
+
+    onClickSideBarButtonHandler = () => {
+        if (this.props.global.ui.mobile && this.props.global.ui.isSideBarButtonPressed) {
+            return this.props.onToggleSideBarButtonPressHandler();
+        }
+        this.props.onToggleSideBarHandler();
+        this.props.onToggleSideBarButtonPressHandler();
+    }
+
     render () {
         return(
             <Menu
@@ -67,10 +76,13 @@ class NavBar extends Component {
                                     inverted
                                     circular
                                     content={
-                                        <Popup 
-                                            trigger={<Icon name='sync alternate' loading={this.props.admin.ui.reloadDataCounter > 0}/>}
-                                            content='Refresh'
-                                         />
+                                        this.props.global.ui.mobile ?
+                                            <Icon name='sync alternate' loading={this.props.admin.ui.reloadDataCounter > 0}/>
+                                        :
+                                            <Popup 
+                                                trigger={<Icon name='sync alternate' loading={this.props.admin.ui.reloadDataCounter > 0}/>}
+                                                content='Refresh'
+                                            />
                                     }
                                     onClick={() => this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true)}
                                 />
@@ -88,12 +100,15 @@ class NavBar extends Component {
                                     inverted
                                     circular
                                     content={
-                                        <Popup 
-                                            trigger={<Icon name={this.props.global.ui.isSideBarOpen ? 'x' : 'sidebar'} />} 
-                                            content={this.props.global.ui.isSideBarOpen ? 'Hide sidebar' : 'Show sidebar'} 
-                                        />
+                                        this.props.global.ui.mobile ?
+                                            <Icon name={this.props.global.ui.isSideBarOpen ? 'x' : 'sidebar'} />
+                                        :
+                                            <Popup 
+                                                trigger={<Icon name={this.props.global.ui.isSideBarOpen ? 'x' : 'sidebar'} />} 
+                                                content={this.props.global.ui.isSideBarOpen ? 'Hide sidebar' : 'Show sidebar'} 
+                                            />
                                     }
-                                    onClick={this.props.onToggleSideBarHandler}
+                                    onClick={this.onClickSideBarButtonHandler}
                                 />
                             }
                         />
@@ -118,6 +133,7 @@ const mapDispatchToProps = dispatch => {
     return {
         onUserLogoutHandler: (accessToken) => dispatch(logoutRequest(accessToken)),
         onToggleSideBarHandler: () => dispatch(toggleSidebar()),
+        onToggleSideBarButtonPressHandler: () => dispatch(toggleSidebarButtonPress()),
         onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag))
     };
 };
