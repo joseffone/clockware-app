@@ -14,6 +14,11 @@ class NavBar extends Component {
         this.props.onToggleSideBarButtonPressHandler();
     }
 
+    onLogoutButtonClickHandler = () => {
+        this.props.onUserLogoutHandler(this.props.auth.accessToken);
+        window.location.reload(true);
+    }
+
     render () {
         return(
             <Menu
@@ -62,7 +67,7 @@ class NavBar extends Component {
                                     circular={this.props.global.ui.mobile}
                                     content={this.props.global.ui.mobile ? <Popup trigger={<Icon name='sign-out' />} content='Log out' /> : 'Log out'}
                                     style={{borderRadius: '30px'}}
-                                    onClick={() => this.props.onUserLogoutHandler(this.props.auth.accessToken)}
+                                    onClick={this.onLogoutButtonClickHandler}
                                 />
                         }
                     />

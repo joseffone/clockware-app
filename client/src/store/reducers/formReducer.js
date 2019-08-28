@@ -22,7 +22,7 @@ const formReducer = (state = initState, action) => {
                     [action.formFieldKey]: rewriteObjectProps(state[action.model][action.formFieldKey], {
                         value: action.value || action.event.target.value,
                         isValid: validateInput(action.value || action.event.target.value || '', state[action.model][action.formFieldKey].config.restrictions),
-                        touched: true
+                        touched: action.touched
                     })
                 })
             });

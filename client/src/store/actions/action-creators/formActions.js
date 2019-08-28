@@ -7,12 +7,13 @@ export const refreshInpFormState = (model) => {
     };
 };
 
-export const changeInpFormState = (event, model, formFieldKey, value = null) => {
+export const changeInpFormState = (event, model, formFieldKey, value = null, touched = true) => {
     return {
         type: actionTypes.CHANGE_INPUT_FORM_STATE,
         event,
         model,
         formFieldKey,
-        value
+        value,
+        touched
     };
 };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Button, Message, Icon, Confirm } from 'semantic-ui-react';
 import InputField from '../input-form/input-field';
+import ConfirmPassword from './confirm-password';
 import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest, deleteDataRequest } from '../../store/actions';
 import { transformSelectOptions } from '../../util';
 
@@ -13,15 +14,8 @@ class InputForm extends Component {
         isFormSubmited: false,
         update: this.props.update,
         lastRequestType: null,
-        isConfirmDeleteOpen: false
-    }
-
-    componentDidMount () {
-        if (this.props.update) {
-            for (const key in this.props.update) {
-                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.update[key]});
-            }
-        }
+        isConfirmDeleteOpen: false,
+        isConfirmPasswordOpen: false
     }
 
     componentDidUpdate (prevProps) {
@@ -106,6 +100,7 @@ class InputForm extends Component {
                         });
                     }
                 }
+                this.props.onFetchDataHandler(this.props.auth.accessToken, this.props.model);
             }
         });
     }
@@ -123,7 +118,7 @@ class InputForm extends Component {
         }
         if (this.props.update) {
             for (const key in this.props.update) {
-                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.update[key]});
+                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.update[key]}, false);
             }
         }
     }
@@ -139,6 +134,9 @@ class InputForm extends Component {
             let  formDataObj = {};
             for (const key in this.props.forms[this.props.model]) {
                 if (key !== 'id' && key !== 'created_at' && key !== 'updated_at' && key !== 'deleted_at') {
+                    if (key === 'password' && !this.props.forms[this.props.model][key].touched) {
+                        continue;
+                    }
                     formDataObj[key] = this.props.forms[this.props.model][key].value;
                 }
             }
@@ -160,6 +158,8 @@ class InputForm extends Component {
         const Trigger = this.props.trigger;
         const formFieldsArray = [];
         let isFormDataValid = true;
+        let isFieldsNotTouched = true;
+        let isPasswordFieldTouched = false;
         let formDataError = !this.state.isFormDataValid;
         let fetchError = false;
         let createError = !this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.createError;
@@ -175,6 +175,10 @@ class InputForm extends Component {
                 ...this.props.forms[this.props.model][key]
             });
             isFormDataValid = isFormDataValid && this.props.forms[this.props.model][key].isValid;
+            isFieldsNotTouched = isFieldsNotTouched && !this.props.forms[this.props.model][key].touched;
+            if (key === 'password') {
+                isPasswordFieldTouched = this.props.forms[this.props.model][key].touched;
+            }
         }
 
         for (const key in this.props.forms[this.props.model]) {
@@ -247,7 +251,7 @@ class InputForm extends Component {
                     <Form 
                         loading={this.props.auth.isLoading || this.props.models[this.props.model].loading.isCreating || this.props.models[this.props.model].loading.isUpdating || this.props.models[this.props.model].loading.isDeleting}
                         error={formDataError || fetchError || createError || updateError || deleteError || authError}
-                        onSubmit={this.onFormSubmitHandler}
+                        onSubmit={() => this.props.model === 'users' && isPasswordFieldTouched ? null : this.onFormSubmitHandler()}
                     >
                         {formFieldsArray.map(formField => (
                             <Form.Field
@@ -269,6 +273,7 @@ class InputForm extends Component {
                                     placeholder={formField.config.placeholder}
                                     loading={formField.config.source ? formField.config.source.length !== 0 ? this.props.models[formField.config.source[0]].loading.isFetching : false : false}
                                     options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
+                                    text={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
                                     value={formField.value}
                                     changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
                                     blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
@@ -290,18 +295,27 @@ class InputForm extends Component {
                         />
                         <Confirm
                             open={this.state.isConfirmDeleteOpen}
-                            content='Delete entry?'
+                            content='You are going to delete the entry. Do you confirm this action?'
                             cancelButton='No'
                             confirmButton='Yes'
                             onConfirm={this.onDeleteRequestHandler}
                             onCancel={() => this.setState({isConfirmDeleteOpen: false})}
-                         />
+                        />
+                        <ConfirmPassword
+                            open={this.state.isConfirmPasswordOpen}
+                            header='Delete confirmation'
+                            onClose={() => this.setState({isConfirmPasswordOpen: false})}
+                            onCancel={() => this.setState({isConfirmPasswordOpen: false})}
+                            onConfirm={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null, isConfirmPasswordOpen: false}, () => this.onFormSubmitHandler())}
+                        />
                         <Form.Group widths='equal'>
-                            <Form.Field>
+                            <Form.Field 
+                                disabled={this.state.update && isFieldsNotTouched}
+                            >
                                 <Button 
                                     fluid 
                                     positive
-                                    onClick={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null})}
+                                    onClick={() => this.props.model === 'users' && isPasswordFieldTouched ? this.setState({isConfirmPasswordOpen: true}) : this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null})}
                                 >
                                     <Icon name={this.props.model === 'authentication' ? 'unlock' : this.state.update ? 'save' : 'add'} />
                                     {this.props.model === 'authentication' ? 'LOGIN' : this.state.update ? 'SAVE' : 'ADD'}
@@ -348,7 +362,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onFormRefreshStateHandler: (model) => dispatch(refreshInpFormState(model)),
-        onInputChangeHandler: (event, model, formFieldKey, { value }) => dispatch(changeInpFormState(event, model, formFieldKey, value)),
+        onInputChangeHandler: (event, model, formFieldKey, { value }, touched) => dispatch(changeInpFormState(event, model, formFieldKey, value, touched)),
         onUserLoginHandler: (loginData) => dispatch(loginRequest(loginData)),
         onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
         onCreateDataHandler: (accessToken, model, dataObj) => dispatch(createDataRequest(accessToken, model, dataObj)),

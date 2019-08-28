@@ -14,7 +14,8 @@ export default {
             admin: ['read', 'create', 'update', 'delete']
         },
         keys: {
-            admin: ['read', 'create', 'update', 'delete']
+            admin: ['read', 'create', 'update', 'delete'],
+            client: ['delete']
         },
         clocks: {
             admin: ['read', 'create', 'update', 'delete'],

@@ -19,7 +19,6 @@ const InputField = (props) => {
                     onBlur={props.blurred}
                 />
             );
-            break;
         case 'textarea':
             return (
                 <TextArea
@@ -30,7 +29,6 @@ const InputField = (props) => {
                     onBlur={props.blurred}
                 />
             );
-            break;
         case 'select':
             return (
                 <Select
@@ -40,11 +38,11 @@ const InputField = (props) => {
                     placeholder={props.placeholder}
                     loading={props.loading}
                     options={props.options}
+                    text={props.text}
                     onChange={props.changed}
                     onBlur={props.blurred}
                  />
             );
-            break;
         case 'datetime':
             return (
                 <DatePicker 
@@ -54,7 +52,6 @@ const InputField = (props) => {
                     changed={props.changed}
                 />
             );
-            break;
         default:
             return null;
     }

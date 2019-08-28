@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Table, Checkbox, Pagination, Dropdown, Icon } from 'semantic-ui-react';
-import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setActiveItemId } from '../../../store/actions';
+import { Table, Checkbox, Pagination, Dropdown, Button, Icon } from 'semantic-ui-react';
+import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems } from '../../../store/actions';
 import { transformDataList } from '../../../util';
 import InputForm from '../../input-form';
 
@@ -40,6 +40,7 @@ class DataGrid extends Component {
 
     render() {
         let headerFields = [], bodyRows = [];
+        let dataSet = transformDataList(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models);
         let totalPages = 0;
         let itemsPerPage = this.props.admin.lists[this.props.admin.ui.currentModel].params.pagination.itemsPerPage;
         let totalItems = this.props.admin.lists[this.props.admin.ui.currentModel].params.pagination.totalItems;
@@ -65,10 +66,11 @@ class DataGrid extends Component {
                 key={'select'}
                 collapsing
                 textAlign='right'
+                style={{ borderLeft: 0, borderRight: 0 }}
             >
                 <Checkbox 
                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length === this.props.admin.lists[this.props.admin.ui.currentModel].ids.length} 
-                    onChange={(e, { checked }) => this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, checked)} 
+                    onChange={(event, { checked }) => this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, checked)} 
                 />
             </Table.HeaderCell>
         );
@@ -83,7 +85,10 @@ class DataGrid extends Component {
                 startIndex = endIndex - itemsPerPage + 1;
                 if (index >= startIndex && index <= endIndex) {
                     bodyRows.push(
-                        <Table.Row key={id}>
+                        <Table.Row 
+                            key={id}
+                            disabled={dataSet.filter(item => item.id === id)[0].deleted_at !== null}
+                        >
                             <Table.Cell 
                                 collapsing
                                 textAlign='right'
@@ -91,11 +96,11 @@ class DataGrid extends Component {
                                 <Checkbox 
                                     id={id}
                                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.filter(selectedId => selectedId === id).length === 1}
-                                    onChange={(e, { checked}) => this.props.onToggleListItemSelectHandler(this.props.admin.ui.currentModel, checked, e.target.id)}
+                                    onChange={(event, { checked}) => this.props.onToggleListItemSelectHandler(this.props.admin.ui.currentModel, checked, event.target.id)}
                                 />
                             </Table.Cell>
                             {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name, alias, isDate }) => {
-                                let fieldValue = transformDataList(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models).filter(item => item.id === id)[0][name];
+                                let fieldValue = dataSet.filter(item => item.id === id)[0][name];
                                 fieldValue = isDate && fieldValue !== null ? moment(fieldValue).format('DD-MM-YYYY HH:mm') : fieldValue;
                                 return (
                                     <Table.Cell
@@ -114,11 +119,14 @@ class DataGrid extends Component {
                                 <InputForm 
                                     trigger={
                                         (props) =>
-                                            <Icon 
-                                                name='pencil'
-                                                link 
+                                            <Button
+                                                as='a'
+                                                basic
+                                                style={{boxShadow: 'none'}}
                                                 {...props}
-                                            />
+                                             >
+                                                 <Icon name='pencil' color={dataSet.filter(item => item.id === id)[0].deleted_at !== null ? null : 'blue'} /> Edit
+                                            </Button>
                                     }
                                     refreshAfterClose
                                     model={this.props.admin.ui.currentModel}
@@ -137,7 +145,7 @@ class DataGrid extends Component {
             <Table
                 selectable
                 sortable
-                style={{ border: 0, margin: 0 }}
+                style={{borderRadius: 0, borderBottom: 0, borderLeft: 0, borderRight: 0, margin: 0}}
             >
                 <Table.Header>
                     <Table.Row>{headerFields}</Table.Row>
@@ -161,7 +169,7 @@ class DataGrid extends Component {
                                     text={'' + itemsPerPage}
                                     inline
                                     style={{marginLeft: '1em', marginRight: '1em'}}
-                                    onChange={(e, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
+                                    onChange={(event, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
                                 />
                             }
                             {totalItems > 0 ? <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span> : null}
@@ -176,7 +184,7 @@ class DataGrid extends Component {
                                 siblingRange={1}
                                 floated='right'
                                 style={{boxShadow: 'none'}}
-                                onPageChange={(e, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
+                                onPageChange={(event, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
                             />
                         </Table.HeaderCell>
                     </Table.Row>

@@ -8,7 +8,6 @@ export default (db, modelName) => {
         let errorMessage = 'No valid entry found for provided ID';
         let queryParams = {};
         queryParams.where = {id: [req.params.id]};
-
         if (!req.params.id) {
             queryParams.where = {...req.query};
             errorMessage = 'No entries found';
