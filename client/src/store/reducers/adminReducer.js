@@ -105,7 +105,8 @@ for (const key in formTypesConfig) {
             filter: {},
             sort: {
                 target: null,
-                order: null
+                order: null,
+                reverse: false
             },
             search: {
                 isLoading: false,
@@ -392,6 +393,71 @@ const adminReducer = (state = initState, action) => {
                         })
                     })
                 });
+
+        case actionTypes.SET_LIST_ITEMS_IDS:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        ids: action.ids.slice()
+                    })
+                })
+            });
+
+        case actionTypes.SEARCH_DATA_INIT:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            search: rewriteObjectProps(state.lists[action.model].params.search, {
+                                isLoading: true,
+                                results: []
+                            })
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.SEARCH_DATA_COMPLETE:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            search: rewriteObjectProps(state.lists[action.model].params.search, {
+                                isLoading: false,
+                                results: action.ids.slice()
+                            })
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.CHANGE_SEARCH_VALUE:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            search: rewriteObjectProps(state.lists[action.model].params.search, {
+                                value: action.value
+                            })
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.CHANGE_SORT_STATE:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            sort: rewriteObjectProps(state.lists[action.model].params.sort, {
+                                target: action.target,
+                                order: action.order,
+                                reverse: action.reverse
+                            })
+                        })
+                    })
+                })
+            });
                 
         default:
             return state;

@@ -31,6 +31,8 @@ const deleteDataService = (accessToken, model, id, queryString) => {
         case 'users':
             url = id ? '/user/' + id : '/users' + queryString;
             break;
+        default:
+            url = '/';
     }
 
     return new Promise ((resolve, reject) => {

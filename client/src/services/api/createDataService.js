@@ -31,6 +31,8 @@ const createDataService = (accessToken, model, dataObj) => {
         case 'users':
             url = '/signup';
             break;
+        default:
+            url = '/';
     }
 
     return new Promise ((resolve, reject) => {

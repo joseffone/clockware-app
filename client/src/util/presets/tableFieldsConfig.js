@@ -28,20 +28,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     cities: {
@@ -52,25 +49,23 @@ const tableFieldsConfig = {
         },
         city_name: {
             name: 'city_name',
-            alias: 'City'
+            alias: 'City',
+            sortable: true
         },
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     clocks: {
@@ -92,20 +87,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     coverage: {
@@ -137,20 +129,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     marks: {
@@ -172,20 +161,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     orders: {
@@ -232,14 +218,12 @@ const tableFieldsConfig = {
         start_date: {
             name: 'start_date',
             alias: 'Start date',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         eхpiration_date: {
             name: 'eхpiration_date',
             alias: 'Exp date',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         note: {
             name: 'note',
@@ -249,20 +233,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     roles: {
@@ -279,20 +260,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     permissions: {
@@ -319,20 +297,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     },
     users: {
@@ -369,20 +344,17 @@ const tableFieldsConfig = {
         created_at: {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         updated_at: {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true,
-            isDate: true
+            sortable: true
         },
         deleted_at: {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true,
-            isDate: true
+            sortable: true
         }
     }
 };

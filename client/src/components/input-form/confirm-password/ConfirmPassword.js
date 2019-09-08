@@ -26,17 +26,20 @@ class ConfirmPassword extends Component {
                 {...this.props}
                 onMount={() => this.passInput.current.focus()}
             >
-                <Modal.Header icon='key' content='Password confirmation' />
+                <Modal.Header>
+                    <Icon name='key' />
+                    <span> Password confirmation</span>
+                </Modal.Header>
                 <Modal.Content>
                     <p>You are going to change user's password. To confirm this action enter the new password again.</p>
                     <p>
-                        Password:
+                        <span>Password:</span>
                         <Input
                             ref={this.passInput}
                             type='password'
-                            iconPosition='left'
                             inverted
                             transparent
+                            style={{paddingLeft: '1em'}}
                             onChange={(event, { value }) => this.setState({passwordToConfirm: value, isPasswordValid: true})}
                         />
                     </p>

@@ -1,5 +1,6 @@
 import * as actionTypes from '../action-types';
 import { fetchDataService, createDataService, updateDataService, deleteDataService } from '../../../services/api';
+import { debounce, search } from '../../../util';
 
 export const fetchDataSuccess = (model, fetchedData) => {
     return {
@@ -182,5 +183,57 @@ export const setTotalItems = (model, total) => {
         type: actionTypes.SET_TOTAL_ITEMS,
         model,
         total
+    };
+};
+
+export const setListItemsIds = (model, ids) => {
+    return {
+        type: actionTypes.SET_LIST_ITEMS_IDS,
+        model,
+        ids
+    };
+};
+
+export const searchDataInit = (model) => {
+    return {
+        type: actionTypes.SEARCH_DATA_INIT,
+        model
+    };
+};
+
+export const searchDataComplete = (model, ids) => {
+    return {
+        type: actionTypes.SEARCH_DATA_COMPLETE,
+        model,
+        ids
+    };
+};
+
+export const searchDataRequest = (model, text, dataSet, key) => {
+    return dispatch => {
+        dispatch(searchDataInit(model));
+        debounce(() => {
+            let searchResult = search(text, dataSet, key);
+            dispatch(searchDataComplete(model, searchResult));
+            dispatch(setListItemsIds(model, searchResult));
+        }, 500)();
+    };
+};
+
+export const changeSearchValue = (model, value) => {
+    return {
+        type: actionTypes.CHANGE_SEARCH_VALUE,
+        model,
+        value
+    };
+};
+
+export const changeSortState = (model, target, order, reverse) => {
+    return {
+        type: actionTypes.CHANGE_SORT_STATE,
+        model,
+        target,
+        order,
+        reverse
     };
 };

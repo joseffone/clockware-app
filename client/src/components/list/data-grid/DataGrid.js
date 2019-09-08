@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { Table, Checkbox, Pagination, Dropdown, Button, Icon } from 'semantic-ui-react';
-import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems } from '../../../store/actions';
-import { transformDataList } from '../../../util';
+import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, changeSortState } from '../../../store/actions';
+import { transformDataSet } from '../../../util';
 import InputForm from '../../input-form';
 
 class DataGrid extends Component {
@@ -25,6 +24,17 @@ class DataGrid extends Component {
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].ids.length !== this.props.admin.lists[this.props.admin.ui.currentModel].ids.length) {
             this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
         }
+        if (prevProps.admin.lists[this.props.admin.ui.currentModel].params.sort !== this.props.admin.lists[this.props.admin.ui.currentModel].params.sort) {
+            this.props.onSetListItemsIdsHandler(
+                this.props.admin.ui.currentModel,
+                transformDataSet(
+                    this.props.admin.ui.currentModel,
+                    this.props.forms, 
+                    this.props.admin.models, 
+                    this.props.admin.lists[this.props.admin.ui.currentModel].params.sort
+                ).map(item => item.id)
+            );
+        }
     }
 
     onRefreshDataListHandler = () => {
@@ -38,9 +48,21 @@ class DataGrid extends Component {
         this.props.onFetchDataHandler(this.props.auth.accessToken, this.props.admin.ui.currentModel);
     }
 
+    onHeaderColumnClickHandler = (clickedColumnName) => {
+        if (clickedColumnName !== this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target) {
+            return this.props.onChangeSortStateHandler(this.props.admin.ui.currentModel, clickedColumnName, 'ascending', false);
+        }
+        return this.props.onChangeSortStateHandler(
+            this.props.admin.ui.currentModel,
+            clickedColumnName,
+            this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order === 'ascending' ? 'descending' : 'ascending',
+            this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.reverse === false ? true : false
+        );
+    }
+
     render() {
         let headerFields = [], bodyRows = [];
-        let dataSet = transformDataList(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models);
+        let dataSet = transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models);
         let totalPages = 0;
         let itemsPerPage = this.props.admin.lists[this.props.admin.ui.currentModel].params.pagination.itemsPerPage;
         let totalItems = this.props.admin.lists[this.props.admin.ui.currentModel].params.pagination.totalItems;
@@ -52,9 +74,9 @@ class DataGrid extends Component {
                 <Table.HeaderCell
                     key={name} 
                     disabled={!sortable}
-                    //sorted={sortable ? 'ascending' : null}
+                    sorted={name === this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target ? this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order : null}
                     style={{ borderLeft: 0, borderRight: 0 }}
-                    onClick={null}
+                    onClick={() => this.onHeaderColumnClickHandler(name)}
                 >
                     {alias}
                 </Table.HeaderCell>
@@ -66,7 +88,7 @@ class DataGrid extends Component {
                 key={'select'}
                 collapsing
                 textAlign='right'
-                style={{ borderLeft: 0, borderRight: 0 }}
+                style={{ borderLeft: 0, borderRight: 0, padding: '1em' }}
             >
                 <Checkbox 
                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length === this.props.admin.lists[this.props.admin.ui.currentModel].ids.length} 
@@ -92,6 +114,7 @@ class DataGrid extends Component {
                             <Table.Cell 
                                 collapsing
                                 textAlign='right'
+                                style={{ padding: '1em' }}
                             >
                                 <Checkbox 
                                     id={id}
@@ -99,9 +122,8 @@ class DataGrid extends Component {
                                     onChange={(event, { checked}) => this.props.onToggleListItemSelectHandler(this.props.admin.ui.currentModel, checked, event.target.id)}
                                 />
                             </Table.Cell>
-                            {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name, alias, isDate }) => {
+                            {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name, alias }) => {
                                 let fieldValue = dataSet.filter(item => item.id === id)[0][name];
-                                fieldValue = isDate && fieldValue !== null ? moment(fieldValue).format('DD-MM-YYYY HH:mm') : fieldValue;
                                 return (
                                     <Table.Cell
                                         key={id + name}
@@ -211,7 +233,9 @@ const mapDispatchToProps = dispatch => {
         onToggleListItemSelectHandler: (model, checked, id) => dispatch(toggleListItemSelect(model, checked, id)),
         onSetCurrentPageHandler: (model, activePage) => dispatch(setCurrentPage(model, activePage)),
         onSetItemsPerPageHandler: (model, value) => dispatch(setItemsPerPage(model, value)),
-        onSetTotalItemsHandler: (model, total) => dispatch(setTotalItems(model, total))
+        onSetTotalItemsHandler: (model, total) => dispatch(setTotalItems(model, total)),
+        onSetListItemsIdsHandler: (model, ids) => dispatch(setListItemsIds(model, ids)),
+        onChangeSortStateHandler: (model, target, order, reverse) => dispatch(changeSortState(model, target, order, reverse))
     };
 };
 

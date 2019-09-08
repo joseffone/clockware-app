@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { refreshTokensRequest, changeDisplayView } from '../../store/actions';
-import { Responsive, Segment, Container } from 'semantic-ui-react';
+import { Responsive, Segment } from 'semantic-ui-react';
 import NavBar from '../../components/navbar';
 
 class Layout extends Component {

@@ -31,6 +31,8 @@ const updateDataService = (accessToken, model, id, dataObj) => {
         case 'users':
             url = '/user/' + id;
             break;
+        default:
+            url = '/';
     }
 
     return new Promise ((resolve, reject) => {

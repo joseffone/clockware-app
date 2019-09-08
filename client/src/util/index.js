@@ -3,5 +3,7 @@ export {
     rewriteObjectProps,
     validateInput,
     transformSelectOptions,
-    transformDataList
+    transformDataSet,
+    debounce,
+    search
 } from './util';
