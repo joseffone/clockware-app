@@ -110,8 +110,13 @@ export const sortByKey = (dataSet, key, reverse) => {
     const compareByKey = (key, isDesc = false) => {
         let orderFlag = isDesc ? -1 : 1;
         return (a, b) => {
-            let valA = a[key].toUpperCase();
-            let valB = b[key].toUpperCase();
+            let valA = typeof a[key] === 'string' ? a[key].toUpperCase() : typeof a[key] ===  'number' ? a[key] : '';
+            let valB = typeof b[key] === 'string' ? b[key].toUpperCase() : typeof b[key] ===  'number' ? b[key] : '';
+            let dateKeys = ['created_at', 'updated_at', 'deleted_at', 'start_date', 'eхpiration_date'];
+            if (dateKeys.find(item => item === key)) {
+                valA = valA === '' ? moment(+valA) : moment(valA, 'DD-MM-YYYY HH:mm');
+                valB = valB === '' ? moment(+valB) : moment(valB, 'DD-MM-YYYY HH:mm');
+            }
             let result = (valA < valB) ? -1 : (valA > valB) ? 1 : 0;
             return result * orderFlag;
         };

@@ -76,7 +76,7 @@ class DataGrid extends Component {
                     disabled={!sortable}
                     sorted={name === this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target ? this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order : null}
                     style={{ borderLeft: 0, borderRight: 0 }}
-                    onClick={() => this.onHeaderColumnClickHandler(name)}
+                    onClick={(event) => sortable ? this.onHeaderColumnClickHandler(name) : event.preventDefault()}
                 >
                     {alias}
                 </Table.HeaderCell>
