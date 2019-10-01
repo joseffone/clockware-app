@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 import moment from 'moment';
+import styles from '../styles.module.css';
 
 const timePicker = (props) => {
 
@@ -18,7 +19,6 @@ const timePicker = (props) => {
                     selectable
                     active = {(h === +currentHour) ? true : false}
                     content={moment().hours(h).minutes(0).format('HH:mm')}
-                    style={{cursor: 'pointer', padding: 0}}
                     onClick={(event) => props.clicked(event, dateContext)}
                 />
             );
@@ -41,7 +41,6 @@ const timePicker = (props) => {
                     selectable
                     active = {(m === Math.round(currentMinutes/5)*5) ? true : false}
                     content={moment(dateContext).minutes(m).format('HH:mm')}
-                    style={{cursor: 'pointer', padding: 0}}
                     onClick={(event) => props.clicked(event, dateContext)}
                 />
             );
@@ -57,7 +56,13 @@ const timePicker = (props) => {
     }
 
     return (
-        <Table unstackable attached celled textAlign='center' style={{width: '21em', height: '18em'}}>
+        <Table 
+            unstackable 
+            attached 
+            celled 
+            textAlign='center' 
+            className={styles.timePicker}
+        >
             <Table.Body>
                 {rows}
             </Table.Body>

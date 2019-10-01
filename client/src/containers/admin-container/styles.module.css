@@ -1,0 +1,64 @@
+.adminContainerMobile {
+    margin: 0 !important;
+    padding-left: 0 !important;
+    transition: none;
+}
+
+.adminContainerPCOpen {
+    margin: 0 !important;
+    padding-left: 10.714em !important;
+    transition-property: padding-left;
+    transition-duration: 0.5s;
+}
+
+.adminContainerPCClose {
+    margin: 0 !important;
+    padding-left: 0 !important;
+    transition-property: padding-left;
+    transition-duration: 0.5s;
+}
+
+.adminContainerMobile :global .message {
+    border: none; 
+    margin: 1em 1em 0 1em !important;
+    width: 100%;
+}
+
+.adminContainerPCOpen :global .message {
+    border: none; 
+    margin: 1em 1em 0 1em !important;
+    width: 100%;
+}
+
+.adminContainerPCClose :global .message {
+    border: none; 
+    margin: 1em 1em 0 1em !important;
+    width: 100%;
+}
+
+.adminContainerMobile :global .row {
+    padding: 0 !important;
+}
+
+.adminContainerPCOpen :global .row {
+    padding: 0 !important;
+}
+
+.adminContainerPCClose :global .row {
+    padding: 0 !important;
+}
+
+.adminContainerMobile :global .column {
+    padding: 0 !important;
+    margin: 1em !important;
+}
+
+.adminContainerPCOpen :global .column {
+    padding: 0 !important;
+    margin: 1em !important;
+}
+
+.adminContainerPCClose :global .column {
+    padding: 0 !important;
+    margin: 1em !important;
+}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import Layout from './hoc/layout';
-import AdminContainer from './containers/AdminContainer';
+import AdminContainer from './containers/admin-container';
 import ClientContainer from './containers/ClientContainer';
 
 class App extends Component {

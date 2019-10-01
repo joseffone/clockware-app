@@ -25,7 +25,7 @@ class ClientContainer extends Component {
                         mobile={false}
                         update={false}
                     />}
-                    <DatePicker />
+                    <DatePicker mobile />
                 </Grid.Column>
             </Grid>
         );

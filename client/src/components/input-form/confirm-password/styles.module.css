@@ -1,0 +1,7 @@
+.confirmPasswordInput {
+    padding-left: 1em;
+}
+
+.confirmPasswordErrorMessage {
+    color: red;
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Sidebar, Menu, Icon } from 'semantic-ui-react';
 import { changeCurrentModel, toggleSidebar, toggleSidebarButtonPress } from '../../store/actions';
-import './AdminSideBar.css';
+import styles from './styles.module.css';
 
 class SideBar extends Component {
     render () {
@@ -23,17 +23,12 @@ class SideBar extends Component {
         
         return (
             <Sidebar
-                id='adminSideBar'
+                id={styles.adminSideBar}
+                className={`${this.props.global.ui.mobile ? styles.adminSideBarMobile : styles.adminSideBarPC}`}
                 animation='overlay'
                 direction={this.props.global.ui.mobile ? 'top' : 'left'}
                 visible={this.props.global.ui.isSideBarOpen}
                 width='thin'
-                style={{
-                    border: 'none', 
-                    boxShadow: 'none', 
-                    paddingLeft: this.props.global.ui.mobile ? 0 : '1em', 
-                    paddingTop: this.props.global.ui.mobile ? 0 : '1em'
-                }}
                 onHide={this.props.global.ui.mobile ? this.props.onToggleSideBarHandler : null}
                 onHidden={this.props.global.ui.mobile &&  this.props.global.ui.isSideBarButtonPressed ? this.props.onToggleSideBarButtonPressHandler : null}
             >
@@ -42,7 +37,6 @@ class SideBar extends Component {
                     fluid
                     vertical
                     secondary={!this.props.global.ui.mobile}
-                    style={{padding: 0, margin: 0, borderRadius: 0}}
                 >
                     {menuItems}
                 </Menu>

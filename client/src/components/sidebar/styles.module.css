@@ -1,0 +1,29 @@
+#adminSideBar {
+    overflow: visible !important;
+}
+
+.adminSideBarMobile {
+    border: none !important;
+    box-shadow: none !important;
+    padding-left: 0; 
+    padding-top: 0;
+}
+
+.adminSideBarPC {
+    border: none !important;
+    box-shadow: none !important;
+    padding-left: 1em; 
+    padding-top: 1em;
+}
+
+.adminSideBarMobile :global .menu {
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+.adminSideBarPC :global .menu {
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}

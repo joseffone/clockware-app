@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Dropdown, Icon } from 'semantic-ui-react';
 import moment from 'moment';
+import styles from '../styles.module.css';
 
 const dateNavBar = (props) => {
 
@@ -16,21 +17,24 @@ const dateNavBar = (props) => {
                 width={1}
                 selectable
                 content={dateContext.format('D')}
-                style={{cursor: 'pointer', padding: 0}}
                 onClick={() => props.dayClicked(dateContext)}
             />
         );
     }
 
     return (
-        <Table unstackable attached='top' textAlign='center' style={{width: '21em', height: '3em'}}>
+        <Table 
+            unstackable 
+            attached='top' 
+            textAlign='center' 
+            className={styles.dateNavBar}
+        >
             <Table.Body>
                 <Table.Row>
                     <Table.Cell 
                         width={1}
                         selectable
                         content={<Icon name='chevron left' />}
-                        style={{cursor: 'pointer', padding: 0}}
                         onClick={() => props.prevClicked(dateContext)}
                     />
                     {dayCell}
@@ -45,20 +49,17 @@ const dateNavBar = (props) => {
                                 onChange={(event) => props.monthChanged(event, dateContext)}
                             />
                         }
-                        style={{cursor: 'pointer', padding: 0}}
                         onClick={() => props.monthClicked(dateContext)}
                         onFocus={() => props.monthClicked(dateContext)}
                     />
                     <Table.Cell 
                         width={2}
                         content={currentYear}
-                        style={{padding: 0}}
                     />
                     <Table.Cell 
                         width={1}
                         selectable
                         content={<Icon name='chevron right' />}
-                        style={{cursor: 'pointer', padding: 0}}
                         onClick={() => props.nextClicked(dateContext)}
                     />
                 </Table.Row>

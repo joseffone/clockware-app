@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Menu, Header, Button, Icon, Popup } from 'semantic-ui-react';
 import InputForm from '../input-form';
 import { logoutRequest, toggleSidebar, toggleSidebarButtonPress, setReloadDataTrigger } from '../../store/actions';
+import styles from './styles.module.css';
 
 class NavBar extends Component {
 
@@ -24,8 +25,8 @@ class NavBar extends Component {
             <Menu
                 borderless
                 inverted
-                style={{boxShadow: '1px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)'}}
                 fixed={this.props.fixed}
+                className={styles.navBar}
             >
                 <Menu.Item
                     content={
@@ -41,7 +42,7 @@ class NavBar extends Component {
                     position='right'
                 >
                     <Menu.Item
-                        style={this.props.global.ui.mobile || this.props.auth.accessToken ? {padding: 0} : null}
+                        className={`${this.props.global.ui.mobile || this.props.auth.accessToken ? 'inOutItem' :''}`}
                         content={
                             this.props.auth.accessToken === null ?
                                 <InputForm 
@@ -51,9 +52,8 @@ class NavBar extends Component {
                                                 as='a'
                                                 inverted
                                                 icon={this.props.global.ui.mobile}
-                                                circular={this.props.global.ui.mobile}
+                                                circular
                                                 content={this.props.global.ui.mobile ? <Popup trigger={<Icon name='sign-in' />} content='Log in' /> : 'Log in'}
-                                                style={{borderRadius: '30px'}}
                                                 {...props}
                                             />
                                     }
@@ -64,16 +64,15 @@ class NavBar extends Component {
                                     as='a'
                                     inverted
                                     icon={this.props.global.ui.mobile}
-                                    circular={this.props.global.ui.mobile}
+                                    circular
                                     content={this.props.global.ui.mobile ? <Popup trigger={<Icon name='sign-out' />} content='Log out' /> : 'Log out'}
-                                    style={{borderRadius: '30px'}}
                                     onClick={this.onLogoutButtonClickHandler}
                                 />
                         }
                     />
                     {this.props.auth.accessToken ? 
-                        <Menu.Item 
-                            style={{paddingRight: 0}}
+                        <Menu.Item
+                            className={'refreshItem'}
                             content={
                                 <Button 
                                     as='a'

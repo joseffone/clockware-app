@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Input, Button, Icon } from 'semantic-ui-react';
+import styles from './styles.module.css';
 
 class ConfirmPassword extends Component {
 
@@ -39,11 +40,11 @@ class ConfirmPassword extends Component {
                             type='password'
                             inverted
                             transparent
-                            style={{paddingLeft: '1em'}}
+                            className={styles.confirmPasswordInput}
                             onChange={(event, { value }) => this.setState({passwordToConfirm: value, isPasswordValid: true})}
                         />
                     </p>
-                    {this.state.isPasswordValid ? null : <p style={{color: 'red'}}>Password is not valid!</p>}
+                    {this.state.isPasswordValid ? null : <p className={styles.confirmPasswordErrorMessage}>Password is not valid!</p>}
                 </Modal.Content>
                 <Modal.Actions>
                     <Button 

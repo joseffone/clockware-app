@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 import moment from 'moment';
+import styles from '../styles.module.css';
 
 const dayPicker = (props) => {
     
@@ -22,7 +23,13 @@ const dayPicker = (props) => {
     }
 
     return (
-        <Table unstackable attached celled textAlign='center' style={{width: '21em', height: '18em'}}>
+        <Table 
+            unstackable 
+            attached 
+            celled 
+            textAlign='center'
+            className={styles.dayPicker}
+        >
             <Table.Header>
                 <Table.Row>
                     {weekDays.map((wDay) => {
@@ -30,7 +37,6 @@ const dayPicker = (props) => {
                             <Table.HeaderCell 
                                 key={wDay} 
                                 content={wDay} 
-                                style={{padding: 0, width: '3em', height: '3em'}}
                             />
                         );
                     })}
@@ -41,11 +47,11 @@ const dayPicker = (props) => {
                     let disabled = false;
                     let active = false;
                     let selectable = true;
-                    let style = {cursor: 'pointer', padding: 0, width: '14.285714%'};
                     
                     if (day.month !== currentMonth) {
                        disabled = true;
                     }
+
                     if ((day.day === currentDay) && (day.month === currentMonth)) {
                         active = true;
                     }
@@ -57,7 +63,6 @@ const dayPicker = (props) => {
                             active={active} 
                             disabled={disabled} 
                             content={day.day}
-                            style={style}
                             onClick={(event) => props.clicked(event, dateContext)}
                         />
                     );

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { refreshTokensRequest, changeDisplayView } from '../../store/actions';
 import { Responsive, Segment } from 'semantic-ui-react';
 import NavBar from '../../components/navbar';
+import styles from './styles.module.css';
 
 class Layout extends Component {
 
@@ -24,18 +25,10 @@ class Layout extends Component {
                 <NavBar fixed='top'/>
                 <Responsive
                     as={Segment}
+                    className={styles.layout}
                     fireOnMount
-                    onUpdate={(e, { width }) => this.props.onChangeDisplayViewHandler(width <= Responsive.onlyMobile.maxWidth)}
                     loading={this.props.auth.isLoading}
-                    style={{
-                        margin: 0,
-                        padding: 0,
-                        border: 0,
-                        borderRadius: 0, 
-                        boxShadow: 'none', 
-                        paddingTop: '3.603em',
-                        height: '100%'
-                    }}
+                    onUpdate={(e, { width }) => this.props.onChangeDisplayViewHandler(width <= Responsive.onlyMobile.maxWidth)}
                 >
                     {this.props.children}
                 </Responsive>

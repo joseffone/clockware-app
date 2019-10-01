@@ -1,0 +1,62 @@
+.dateNavBar {
+    width: 21em !important;
+    height: 3em;
+}
+
+.dateNavBar td {
+    cursor: pointer;
+}
+
+.dayPicker {
+    width: 21em !important;
+    height: 21em;
+}
+
+.dayPicker th {
+    padding: 0 !important;
+    height: 3em;
+}
+
+.dayPicker td {
+    cursor: pointer;
+    padding: 0;
+    width: 14.285714%;
+}
+
+.timePicker {
+    width: 21em !important;
+    height: 18em;
+}
+
+.timePicker td {
+    cursor: pointer;
+}
+
+.datePickerPopup {
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+.datePickerModal {
+    height: 100%; 
+    width: 21em !important;
+    background: none !important; 
+    box-shadow: none !important;
+}
+
+.datePickerModal  :global .grid {
+    height: 100%; 
+    margin: 0;
+    padding: 0;
+}
+
+.datePickerModal :global .column {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.datePickerModal :global .container {
+    width: 21em;
+    margin: 0; 
+    padding: 1em;
+}

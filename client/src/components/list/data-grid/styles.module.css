@@ -1,0 +1,40 @@
+.dataGrid {
+    border-radius: 0 !important;
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    margin: 0 !important;
+}
+
+.dataGrid thead th {
+    border-left: 0 !important;
+    border-right: 0 !important;
+}
+
+.dataGrid thead th:first-child {
+    padding: 1em;
+}
+
+.dataGrid tbody tr td:first-child {
+    padding: 1em;
+}
+
+.dataGrid tbody tr td:last-child :global .button {
+    box-shadow: none !important;
+}
+
+.dataGrid tfoot th {
+    line-height: 3em;
+}
+
+.dataGrid tfoot :global .dropdown {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.dataGrid tfoot :global .pagination {
+    box-shadow: none;
+}
+
+
+

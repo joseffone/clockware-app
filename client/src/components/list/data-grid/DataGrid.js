@@ -4,6 +4,7 @@ import { Table, Checkbox, Pagination, Dropdown, Button, Icon } from 'semantic-ui
 import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, changeSortState } from '../../../store/actions';
 import { transformDataSet } from '../../../util';
 import InputForm from '../../input-form';
+import styles from './styles.module.css';
 
 class DataGrid extends Component {
 
@@ -75,7 +76,6 @@ class DataGrid extends Component {
                     key={name} 
                     disabled={!sortable}
                     sorted={name === this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target ? this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order : null}
-                    style={{ borderLeft: 0, borderRight: 0 }}
                     onClick={(event) => sortable ? this.onHeaderColumnClickHandler(name) : event.preventDefault()}
                 >
                     {alias}
@@ -88,7 +88,6 @@ class DataGrid extends Component {
                 key={'select'}
                 collapsing
                 textAlign='right'
-                style={{ borderLeft: 0, borderRight: 0, padding: '1em' }}
             >
                 <Checkbox 
                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length === this.props.admin.lists[this.props.admin.ui.currentModel].ids.length} 
@@ -96,8 +95,12 @@ class DataGrid extends Component {
                 />
             </Table.HeaderCell>
         );
+        
         headerFields.push(
-            <Table.HeaderCell key={'edit'} disabled={true} style={{ borderLeft: 0, borderRight: 0 }} />
+            <Table.HeaderCell 
+                key={'edit'} 
+                disabled={true}
+            />
         );
 
         if (this.props.admin.ui.reloadDataCounter === 0) {
@@ -114,7 +117,6 @@ class DataGrid extends Component {
                             <Table.Cell 
                                 collapsing
                                 textAlign='right'
-                                style={{ padding: '1em' }}
                             >
                                 <Checkbox 
                                     id={id}
@@ -144,7 +146,6 @@ class DataGrid extends Component {
                                             <Button
                                                 as='a'
                                                 basic
-                                                style={{boxShadow: 'none'}}
                                                 {...props}
                                              >
                                                  <Icon name='pencil' color={dataSet.filter(item => item.id === id)[0].deleted_at !== null ? null : 'blue'} /> Edit
@@ -167,7 +168,7 @@ class DataGrid extends Component {
             <Table
                 selectable
                 sortable
-                style={{borderRadius: 0, borderBottom: 0, borderLeft: 0, borderRight: 0, margin: 0}}
+                className={styles.dataGrid}
             >
                 <Table.Header>
                     <Table.Row>{headerFields}</Table.Row>
@@ -175,13 +176,10 @@ class DataGrid extends Component {
                 <Table.Body>
                     {bodyRows}
                 </Table.Body>
-                <Table.Footer 
-                    style={{display: 'table-footer-group'}}
-                >
+                <Table.Footer>
                     <Table.Row>
                         <Table.HeaderCell 
                             colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.length + 2}
-                            style={{lineHeight: '3em', borderTop: this.props.global.ui.mobile ? 'none' : '1px solid rgba(34,36,38,.15)'}}
                         >   
                             {this.props.global.ui.mobile ? null : <span>Rows per page:</span>}
                             {this.props.global.ui.mobile ? null :
@@ -190,7 +188,6 @@ class DataGrid extends Component {
                                     defaultValue={itemsPerPage}
                                     text={'' + itemsPerPage}
                                     inline
-                                    style={{marginLeft: '1em', marginRight: '1em'}}
                                     onChange={(event, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
                                 />
                             }
@@ -205,7 +202,6 @@ class DataGrid extends Component {
                                 boundaryRange={1}
                                 siblingRange={1}
                                 floated='right'
-                                style={{boxShadow: 'none'}}
                                 onPageChange={(event, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
                             />
                         </Table.HeaderCell>
