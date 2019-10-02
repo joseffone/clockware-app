@@ -33,15 +33,8 @@ class AdminContainer extends Component {
                     textAlign='center'
                     verticalAlign='middle'
                     className={this.props.global.ui.mobile ? styles.adminContainerMobile : this.props.global.ui.isSideBarOpen ? styles.adminContainerPCOpen : styles.adminContainerPCClose}
-/*                     style={{
-                        margin: 0,
-                        paddingLeft: this.props.global.ui.mobile ? 0 : this.props.global.ui.isSideBarOpen ? '10.714em' : 0,
-                        transition: this.props.global.ui.mobile ? 'none' : 'padding-left 0.5s'
-                    }} */
                 >
-                    <Grid.Row
-                        //style={{padding: 0}}
-                    >
+                    <Grid.Row>
                         {this.props.admin.ui.errorDataCounter.length > 0 && !this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching ? 
                             <Message
                                 info={emptyDataFlag}
@@ -49,17 +42,13 @@ class AdminContainer extends Component {
                                 error={!emptyDataFlag && !noAccessFlag}
                                 header={messageHeader}
                                 content={messageContent}
-                                //style={{border: 'none', margin: '1em 1em 0 1em', width: '100%'}}
                             />
                         : null}
                     </Grid.Row>
-                    <Grid.Row
-                        //style={{padding: 0}}
-                    >
+                    <Grid.Row>
                         <Grid.Column 
                             as={Segment}
                             loading={this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching}
-                            //style={{padding: 0, margin: '1em'}}
                         >
                             <List />
                         </Grid.Column>

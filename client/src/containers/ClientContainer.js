@@ -22,7 +22,6 @@ class ClientContainer extends Component {
                                 />
                         }
                         model='orders'
-                        mobile={false}
                         update={false}
                     />}
                     <DatePicker mobile />

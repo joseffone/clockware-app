@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { refreshTokensRequest, changeDisplayView } from '../../store/actions';
 import { Responsive, Segment } from 'semantic-ui-react';
 import NavBar from '../../components/navbar';
+import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 
 class Layout extends Component {
@@ -22,7 +23,7 @@ class Layout extends Component {
     render () {
         return(
             <React.Fragment>
-                <NavBar fixed='top'/>
+                <NavBar />
                 <Responsive
                     as={Segment}
                     className={styles.layout}
@@ -51,5 +52,8 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
+Layout.propTypes = {
+    children: PropTypes.node.isRequired
+};
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));

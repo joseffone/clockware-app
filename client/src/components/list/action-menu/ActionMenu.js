@@ -73,7 +73,6 @@ class ActionMenu extends Component {
                 }
                 refreshAfterClose
                 model={this.props.admin.ui.currentModel}
-                mobile={this.props.global.ui.mobile}
             />,
             <Dropdown
                 key='filter'

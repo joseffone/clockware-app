@@ -1,9 +1,10 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import styles from '../styles.module.css';
 
-const dayPicker = (props) => {
+const DayPicker = (props) => {
     
     let weekDays = [...moment.weekdaysShort(), moment.weekdaysShort(0)].slice(1);
     let dateContext = moment(Object.assign({}, props.dateContext));
@@ -63,7 +64,7 @@ const dayPicker = (props) => {
                             active={active} 
                             disabled={disabled} 
                             content={day.day}
-                            onClick={(event) => props.clicked(event, dateContext)}
+                            onClick={(event) => props.dayClicked(event, dateContext)}
                         />
                     );
 
@@ -81,6 +82,11 @@ const dayPicker = (props) => {
         </Table>
     );
 
-}
+};
 
-export default dayPicker;
+DayPicker.propTypes = {
+    dateContext: PropTypes.object.isRequired,
+    dayClicked: PropTypes.func.isRequired
+};
+
+export default DayPicker;

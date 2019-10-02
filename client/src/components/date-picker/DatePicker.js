@@ -4,6 +4,7 @@ import DayPicker from './ui/DayPicker';
 import TimePicker from './ui/TimePicker';
 import DateNavBar from './ui/DateNavBar';
 import { Grid, Popup, Modal, Input, Button, Container } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 
 class DatePicker extends Component {
@@ -165,42 +166,36 @@ class DatePicker extends Component {
             />;
             currentPicker = <DayPicker 
                 dateContext={this.state.dateContext} 
-                clicked={this.onDayClickHandler} 
+                dayClicked={this.onDayClickHandler} 
             />;
         }
 
-        if (this.state.showHours) {
+        if (this.state.showHours || this.state.showMinutes) {
             currentNavBar = <DateNavBar 
                 withDay 
                 dateContext={this.state.dateContext} 
                 monthClicked={this.onNavBarMonthClickHandler}
+                nextClicked={this.onNavBarNextClickHandler}
+                prevClicked={this.onNavBarPrevClickHandler}
+                monthChanged={this.onNavBarMonthChangeHandler}
                 dayClicked={this.onNavBarDayClickHandler}
-                nextClicked={this.onNavBarNextClickHandler}
-                prevClicked={this.onNavBarPrevClickHandler}
-                monthChanged={this.onNavBarMonthChangeHandler}
             />;
-            currentPicker = <TimePicker 
-                view='hours' 
-                dateContext={this.state.dateContext} 
-                clicked={this.onHoursClickHandler} 
-            />;
-        }
-
-        if (this.state.showMinutes) {
-            currentNavBar = <DateNavBar 
-                withDay 
-                dateContext={this.state.dateContext} 
-                monthClicked={this.onNavBarMonthClickHandler}
-                dayClicked={this.onNavBarDayClickHandler} 
-                nextClicked={this.onNavBarNextClickHandler}
-                prevClicked={this.onNavBarPrevClickHandler}
-                monthChanged={this.onNavBarMonthChangeHandler}
-            />;
-            currentPicker = <TimePicker 
-                view='minutes' 
-                dateContext={this.state.dateContext} 
-                clicked={this.onMinutesClickHandler} 
-            />;
+            
+            if (this.state.showHours) {
+                currentPicker = <TimePicker 
+                    view='hours' 
+                    dateContext={this.state.dateContext} 
+                    timeClicked={this.onHoursClickHandler} 
+                />;
+            }
+    
+            if (this.state.showMinutes) {
+                currentPicker = <TimePicker 
+                    view='minutes' 
+                    dateContext={this.state.dateContext} 
+                    timeClicked={this.onMinutesClickHandler} 
+                />;
+            }
         }
 
         inputTrigger = (
@@ -271,6 +266,13 @@ class DatePicker extends Component {
 
         return currentConfig;
     };
+};
+
+DatePicker.propTypes = {
+    mobile: PropTypes.bool,
+    fluid: PropTypes.bool,
+    disabled: PropTypes.bool,
+    changed: PropTypes.func.isRequired
 };
 
 export default DatePicker;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dimmer, Modal, Header, Button, Loader } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 class ConfirmDelete extends Component {
 
@@ -85,6 +86,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {};
+};
+
+ConfirmDelete.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+    onCommit: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfirmDelete);

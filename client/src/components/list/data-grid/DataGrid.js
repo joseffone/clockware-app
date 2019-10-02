@@ -153,7 +153,6 @@ class DataGrid extends Component {
                                     }
                                     refreshAfterClose
                                     model={this.props.admin.ui.currentModel}
-                                    mobile={this.props.global.ui.mobile}
                                     update={{...this.props.admin.models[this.props.admin.ui.currentModel].items.filter(item => item.id === id)[0]}}
                                 />
                                 

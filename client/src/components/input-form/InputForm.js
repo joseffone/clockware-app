@@ -5,6 +5,8 @@ import InputField from '../input-form/input-field';
 import ConfirmPassword from './confirm-password';
 import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest, deleteDataRequest } from '../../store/actions';
 import { transformSelectOptions } from '../../util';
+import formTypesConfig from '../../util/presets/formTypesConfig';
+import PropTypes from 'prop-types';
 
 class InputForm extends Component {
 
@@ -263,7 +265,7 @@ class InputForm extends Component {
                                 <label>{formField.config.label}</label> 
                                 <InputField 
                                     key={formField.key}
-                                    mobile={this.props.mobile}
+                                    mobile={this.props.global.ui.mobile}
                                     elementType={formField.elementType}
                                     inputType={formField.config.type}
                                     disabled={formField.config.restrictions.disabled}
@@ -303,7 +305,6 @@ class InputForm extends Component {
                         />
                         <ConfirmPassword
                             open={this.state.isConfirmPasswordOpen}
-                            header='Delete confirmation'
                             onClose={() => this.setState({isConfirmPasswordOpen: false})}
                             onCancel={() => this.setState({isConfirmPasswordOpen: false})}
                             onConfirm={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null, isConfirmPasswordOpen: false}, () => this.onFormSubmitHandler())}
@@ -353,6 +354,7 @@ class InputForm extends Component {
 
 const mapStateToProps = state => {
     return {
+        global: state.global,
         forms: state.forms,
         auth: state.auth,
         models: state.admin.models
@@ -369,6 +371,13 @@ const mapDispatchToProps = dispatch => {
         onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(updateDataRequest(accessToken, model, id, dataObj)),
         onDeleteDataHandler: (accessToken, model, id) => dispatch(deleteDataRequest(accessToken, model, id))
     };
+};
+
+InputForm.propTypes = {
+    refreshAfterClose: PropTypes.bool,
+    model: PropTypes.oneOf(Object.keys(formTypesConfig)).isRequired,
+    trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired,
+    update: PropTypes.object
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(InputForm);

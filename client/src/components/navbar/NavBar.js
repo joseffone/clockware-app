@@ -25,7 +25,7 @@ class NavBar extends Component {
             <Menu
                 borderless
                 inverted
-                fixed={this.props.fixed}
+                fixed='top'
                 className={styles.navBar}
             >
                 <Menu.Item

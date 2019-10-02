@@ -1,6 +1,7 @@
 import React from 'react';
 import {Input, TextArea, Select} from 'semantic-ui-react';
 import DatePicker from '../../date-picker';
+import PropTypes from 'prop-types';
 
 const InputField = (props) => {
     switch (props.elementType) {
@@ -55,6 +56,27 @@ const InputField = (props) => {
         default:
             return null;
     }
+};
+
+InputField.propTypes = {
+    mobile: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readOnly: PropTypes.bool,
+    loading: PropTypes.bool,
+    icon: PropTypes.string,
+    iconPosition: PropTypes.oneOf(['left', 'right']),
+    placeholder: PropTypes.string,
+    text: PropTypes.string,
+    value: PropTypes.any,
+    options: PropTypes.arrayOf(
+        PropTypes.shape({
+            key: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+            text: PropTypes.string.isRequired,
+            value: PropTypes.any.isRequired
+        })
+    ),
+    changed: PropTypes.func,
+    blurred: PropTypes.func
 };
 
 export default InputField;
