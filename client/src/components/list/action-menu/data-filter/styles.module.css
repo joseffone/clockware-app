@@ -1,0 +1,16 @@
+.dataFilter {
+    display: inline-block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.dataFilter :global .label {
+    background: none;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.dataFilter :global .button {
+    margin-left: 0.25em;
+}

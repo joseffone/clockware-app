@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Menu, Dropdown, Icon, Transition, Input } from 'semantic-ui-react';
-import { fetchDataRequest, deleteDataRequest, setSelectAllTrigger, changeSearchValue, searchDataRequest } from '../../../store/actions';
+import { fetchDataRequest, deleteDataRequest, setSelectAllTrigger, changeSearchValue, searchDataRequest, addFilter, deleteFilter, loadFilterOptions, setFilterTargetValue } from '../../../store/actions';
 import { transformDataSet } from '../../../util';
 import InputForm from '../../input-form';
 import ConfirmDelete from './confirm-delete';
+import DataFilter from './data-filter';
+import styles from './styles.module.css';
 
 class ActionMenu extends Component {
 
@@ -25,18 +27,47 @@ class ActionMenu extends Component {
         this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, false);
     }
 
-    onSearchInputChangeHandler = (event, { value }) => {
+    onSearchInputChangeHandler = (event, {value}) => {
         this.props.onChangeSearchValueHandler(this.props.admin.ui.currentModel, value);
         this.props.onSearchDataRequestHandler(
             this.props.admin.ui.currentModel, 
             value, 
-            transformDataSet(
+            () => transformDataSet(
                 this.props.admin.ui.currentModel, 
                 this.props.forms, 
                 this.props.admin.models, 
-                this.props.admin.lists[this.props.admin.ui.currentModel].params.sort
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
             )
         );
+    }
+
+    onFilterMenuItemClickHandler = (event, {name}) => {
+        this.props.onAddFilterHandler(this.props.admin.ui.currentModel, name);
+    }
+
+    onFilterCloseButtonClickHandler = (event, {id}) => {
+        this.props.onDeleteFilterHandler(this.props.admin.ui.currentModel, id);
+    }
+
+    onFilterMountedHandler = (filterKey, dataKey, tailIndex) => {
+        this.props.onLoadFilterOptionsHandler(
+            filterKey,
+            dataKey,
+            this.props.admin.ui.currentModel, 
+            () => transformDataSet(
+                this.props.admin.ui.currentModel, 
+                this.props.forms, 
+                this.props.admin.models, 
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.filters,
+                tailIndex
+            )
+        );
+    }
+
+    onFilterChangeHandler = (filterKey, value) => {
+        this.props.onSetFilterTargetValueHandler(this.props.admin.ui.currentModel, filterKey, value);
     }
 
     actions = (props) => {
@@ -50,7 +81,6 @@ class ActionMenu extends Component {
                 {this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length > 0 ?
                     <Item
                         as='a'
-                        style={{margin: 0}}
                         onClick={() => this.setState({isConfirmDeleteOpen: true})}
                     >
                         <Icon name='delete' color='red' />
@@ -64,7 +94,6 @@ class ActionMenu extends Component {
                     (props) =>
                         <Item
                             as='a'
-                            style={{margin: 0}}
                             {...props}
                         >
                             <Icon name='add' color='green' />
@@ -81,12 +110,22 @@ class ActionMenu extends Component {
                 floating
                 simple={this.props.global.ui.mobile}
                 icon={<span><Icon name='filter' />Filter</span>}
-                style={{margin: 0}}
             >
                 <Dropdown.Menu>
-                    <Dropdown.Item>filter 111111111</Dropdown.Item>
-                    <Dropdown.Item>filter 222222222</Dropdown.Item>
-                    <Dropdown.Item>filter 333333333</Dropdown.Item>
+                    {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ filterable, filterOperation }) => {
+                        if (filterable) {
+                            return filterOperation.map((filterItem) => (
+                                <Dropdown.Item
+                                    key={`triger_${filterItem.key}`}
+                                    name={filterItem.key}
+                                    onClick={this.onFilterMenuItemClickHandler}
+                                >
+                                    {filterItem.descriptor}
+                                </Dropdown.Item>
+                            ));
+                        }
+                        return null;
+                    })}
                 </Dropdown.Menu>
             </Dropdown>
         ];
@@ -94,15 +133,14 @@ class ActionMenu extends Component {
 
     render () {
         const Actions = this.actions;
-    
         return (
             <React.Fragment>
                 <Menu
                     secondary
-                    style={{ margin: '1em'}}
+                    className={styles.mainPanel}
                 >
                     <Menu.Item
-                        style={{margin: 0, padding: 0}}
+                        className={'search'}
                     >
                         <Input
                             icon='search'
@@ -114,19 +152,14 @@ class ActionMenu extends Component {
                             onChange={this.onSearchInputChangeHandler}
                         />
                     </Menu.Item>
-                    <Menu.Menu
+                    <Menu.Menu 
                         position='right'
                     >
                         {this.props.global.ui.mobile ? 
                             <Dropdown 
                                 item
-                                icon={
-                                    <Icon 
-                                        name='wrench'
-                                        style={{margin: 0, padding: 0}}
-                                    />
-                                }
-                                style={{margin: 0}}
+                                icon={<Icon name='wrench' />}
+                                className={'mobile'}
                             >
                                 <Dropdown.Menu>
                                     <Actions itemType={Dropdown.Item} />
@@ -134,9 +167,39 @@ class ActionMenu extends Component {
                             </Dropdown>
                         :
                             <Actions itemType={Menu.Item} />
-                        }                     
+                        }
                     </Menu.Menu>
                 </Menu>
+                {this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.length > 0 ?
+                    <Menu 
+                        secondary
+                        stackable
+                        className={styles.filterPanel}
+                    >
+                        {this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.map((filter, index) => {
+                            let filterKey = Object.keys(filter)[0];
+                            let {dataKey, isDate, options, targetValue} = Object.values(filter)[0];
+                            return (
+                                <Menu.Item>
+                                    <DataFilter
+                                        key={filterKey}
+                                        id={filterKey}
+                                        mobile={this.props.global.ui.mobile}
+                                        date={isDate}
+                                        loading={options.isLoading && !isDate}
+                                        description={filter[filterKey].description}
+                                        options={options.payload}
+                                        text={targetValue}
+                                        value={targetValue}
+                                        closed={this.onFilterCloseButtonClickHandler}
+                                        mounted={() => this.onFilterMountedHandler(filterKey, dataKey, index)}
+                                        changed={(event, {value}) => this.onFilterChangeHandler(filterKey, value)}
+                                    />
+                                </Menu.Item>
+                            );
+                        })}
+                    </Menu>
+                : null}
                 <ConfirmDelete
                     open={this.state.isConfirmDeleteOpen}
                     onClose={() => this.setState({isConfirmDeleteOpen: false})}
@@ -164,7 +227,11 @@ const mapDispatchToProps = dispatch => {
         onDeleteDataHandler: (accessToken, model, id, queryString) => dispatch(deleteDataRequest(accessToken, model, id, queryString)),
         onSetSelectAllTriggerHandler: (model, checked) => dispatch(setSelectAllTrigger(model, checked)),
         onChangeSearchValueHandler: (model, value) => dispatch(changeSearchValue(model, value)),
-        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(searchDataRequest(model, text, dataSet, key))
+        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(searchDataRequest(model, text, dataSet, key)),
+        onAddFilterHandler: (model, filterKey) => dispatch(addFilter(model, filterKey)),
+        onDeleteFilterHandler: (model, filterKey) => dispatch(deleteFilter(model, filterKey)),
+        onSetFilterTargetValueHandler: (model, filterKey, value) => dispatch(setFilterTargetValue(model, filterKey, value)),
+        onLoadFilterOptionsHandler: (filterKey, dataKey, model, getDataSet) => dispatch(loadFilterOptions(filterKey, dataKey, model, getDataSet))
     };
 };
 

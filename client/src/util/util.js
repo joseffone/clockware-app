@@ -1,9 +1,4 @@
 import moment from 'moment';
-import formTypesConfig from './presets/formTypesConfig';
-
-export const getFormConfig = (model) => {
-    return formTypesConfig[model];
-};
 
 export const rewriteObjectProps = (prevObject, newPropsValues) => {
     return {
@@ -106,14 +101,17 @@ export const transformSelectOptions = (source = [], data, defaultOptions = []) =
     }
 };
 
-export const sortByKey = (dataSet, key, reverse) => {
-    const compareByKey = (key, isDesc = false) => {
+export const sortByKey = (data, config) => {
+    let {target, isDate, reverse} = config;
+    if (target === null) {
+        return data;
+    }
+    const compareByKey = (key, isDate = false, isDesc = false) => {
         let orderFlag = isDesc ? -1 : 1;
         return (a, b) => {
             let valA = typeof a[key] === 'string' ? a[key].toUpperCase() : typeof a[key] ===  'number' ? a[key] : '';
             let valB = typeof b[key] === 'string' ? b[key].toUpperCase() : typeof b[key] ===  'number' ? b[key] : '';
-            let dateKeys = ['created_at', 'updated_at', 'deleted_at', 'start_date', 'eхpiration_date'];
-            if (dateKeys.find(item => item === key)) {
+            if (isDate) {
                 valA = valA === '' ? moment(+valA) : moment(valA, 'DD-MM-YYYY HH:mm');
                 valB = valB === '' ? moment(+valB) : moment(valB, 'DD-MM-YYYY HH:mm');
             }
@@ -121,16 +119,68 @@ export const sortByKey = (dataSet, key, reverse) => {
             return result * orderFlag;
         };
     };
-    return dataSet.sort(compareByKey(key, reverse));
+    return data.sort(compareByKey(target, isDate, reverse));
 };
 
-export const transformDataSet = (model, forms, data, sort = null) => {
+export const configFilterPreset = (preset, tailIndex = null) => {
+    let tIndex = isNaN(parseInt(tailIndex)) ? preset.length : parseInt(tailIndex);
+    return preset
+        .map(item => {
+            let {operatorType, dataKey, targetValue} = Object.values(item)[0];
+            return {
+                operatorType, 
+                dataKey, 
+                targetValue
+            };
+        })
+        .slice(0, tIndex)
+        .filter(item => item.targetValue !== null);
+};
+
+export const filterDataSet = (data, config) => {
+    const operate = (type, value, targetValue) => {
+        switch (type) {
+            case 'equal':
+                return value === targetValue;
+            case 'notEqual':
+                return value !== targetValue;
+            case 'more':
+                return value > targetValue;
+            case 'less':
+                return value < targetValue;
+            case 'moreOrEqual':
+                return value >= targetValue;
+            case 'lessOrEqual':
+                return value <= targetValue;
+            default:
+                return value === targetValue;
+        }
+    };
+    const compare = (item, masks) => {
+        let result = true;
+        for (let mask of masks) {
+            let {operatorType, dataKey, isDate, targetValue} = mask;
+            let xVal = typeof item[dataKey] === 'string' ? item[dataKey].toUpperCase() : typeof item[dataKey] ===  'number' ? item[dataKey] : '';
+            let tVal = typeof targetValue === 'string' ? targetValue.toUpperCase() : typeof targetValue ===  'number' ? targetValue : '';
+            if (isDate) {
+                xVal = xVal === '' ? moment(+xVal) : moment(xVal, 'DD-MM-YYYY HH:mm');
+                tVal = tVal === '' ? moment(+tVal) : moment(tVal, 'DD-MM-YYYY HH:mm');
+            }
+            result = result && operate(operatorType, xVal, tVal);
+        }
+        return result;
+    };
+    return data.filter(item => compare(item, config));
+};
+
+export const transformDataSet = (model, forms, data, sort = null, filters = null, filterTailIndex = null) => {
     let markName, markValue, userEmail, userLastName, userFirstName, role, agentNickName, agentLastName, agentFirstName, clockType, cityName;
-    let dataSet = data[model].items.map((item) => {
+    let dataSet = data[model].items.length > 0 ? data[model].items.map((item) => {
         let transformedItem = rewriteObjectProps(item, {
             created_at: item.created_at !== null ? moment(item.created_at).format('DD-MM-YYYY HH:mm') : item.created_at,
             updated_at: item.updated_at !== null ? moment(item.updated_at).format('DD-MM-YYYY HH:mm') : item.updated_at,
-            deleted_at: item.deleted_at !== null ? moment(item.deleted_at).format('DD-MM-YYYY HH:mm') : item.deleted_at
+            deleted_at: item.deleted_at !== null ? moment(item.deleted_at).format('DD-MM-YYYY HH:mm') : item.deleted_at,
+            status: item.deleted_at !== null ? 'deleted' : 'active'
         });
         switch (model) {
             case 'agents':
@@ -196,12 +246,12 @@ export const transformDataSet = (model, forms, data, sort = null) => {
             default:
                 return transformedItem;
         }
-    });
+    }) : [];
     if (sort !== null) {
-        if (sort.target === null) {
-            return dataSet;
-        }
-        sortByKey(dataSet, sort.target, sort.reverse);
+        sortByKey(dataSet, sort);
+    }
+    if (filters !== null) {
+        return filterDataSet(dataSet, configFilterPreset(filters, filterTailIndex));
     }
     return dataSet;
 };
@@ -236,4 +286,26 @@ export const search = (text, dataSet, key) => {
     }
     const isMatch = key ? (result) => re.test(result[key]) : (result) => re.test(result.payload);
     return source.filter(isMatch).map((item) => item.id);
+};
+
+export const getUniqueKeyValues = (data, key) => {
+    let result = [];
+    let values = data.map(item => item[key]);
+    for (let value of values) {
+        if (!result.includes(value)) {
+            result.push(value);
+        }
+    }
+    return result;
+};
+
+export const promiseToGetUniqueKeyValues = (dataKey, getDataSet) => {
+    return new Promise((resolve, reject) => {
+        try {
+            let uniqueKeyValues = getUniqueKeyValues(getDataSet(), dataKey);
+            return resolve(uniqueKeyValues);
+        } catch (e) {
+            return reject(e);
+        }
+    });
 };

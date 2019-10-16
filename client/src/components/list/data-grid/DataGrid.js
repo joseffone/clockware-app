@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Checkbox, Pagination, Dropdown, Button, Icon } from 'semantic-ui-react';
-import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, changeSortState } from '../../../store/actions';
+import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState } from '../../../store/actions';
 import { transformDataSet } from '../../../util';
 import InputForm from '../../input-form';
 import styles from './styles.module.css';
@@ -20,21 +20,27 @@ class DataGrid extends Component {
             if (this.props.admin.ui.reloadDataCounter === 0) {
                 this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false);
                 this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
+                this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models));
             }
         }
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].ids.length !== this.props.admin.lists[this.props.admin.ui.currentModel].ids.length) {
             this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
         }
-        if (prevProps.admin.lists[this.props.admin.ui.currentModel].params.sort !== this.props.admin.lists[this.props.admin.ui.currentModel].params.sort) {
+        if (prevProps.admin.lists[this.props.admin.ui.currentModel].params.sort !== this.props.admin.lists[this.props.admin.ui.currentModel].params.sort ||
+            prevProps.admin.lists[this.props.admin.ui.currentModel].params.filters !== this.props.admin.lists[this.props.admin.ui.currentModel].params.filters) {
             this.props.onSetListItemsIdsHandler(
                 this.props.admin.ui.currentModel,
                 transformDataSet(
                     this.props.admin.ui.currentModel,
                     this.props.forms, 
                     this.props.admin.models, 
-                    this.props.admin.lists[this.props.admin.ui.currentModel].params.sort
+                    this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
+                    this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
                 ).map(item => item.id)
             );
+        }
+        if (this.props.admin.lists[this.props.admin.ui.currentModel].dataSet.length !== this.props.admin.models[this.props.admin.ui.currentModel].items.length) {
+            this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models));
         }
     }
 
@@ -63,24 +69,27 @@ class DataGrid extends Component {
 
     render() {
         let headerFields = [], bodyRows = [];
-        let dataSet = transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models);
+        let dataSet = this.props.admin.lists[this.props.admin.ui.currentModel].dataSet;
         let totalPages = 0;
         let itemsPerPage = this.props.admin.lists[this.props.admin.ui.currentModel].params.pagination.itemsPerPage;
         let totalItems = this.props.admin.lists[this.props.admin.ui.currentModel].params.pagination.totalItems;
         let currentPage = this.props.admin.lists[this.props.admin.ui.currentModel].params.pagination.currentPage;
-        let startIndex, endIndex;
+        let endIndex = itemsPerPage * currentPage - 1;
+        let startIndex = endIndex - itemsPerPage + 1;
 
-        this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.forEach(({ name, alias, sortable }) => {
-            headerFields.push(
-                <Table.HeaderCell
-                    key={name} 
-                    disabled={!sortable}
-                    sorted={name === this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target ? this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order : null}
-                    onClick={(event) => sortable ? this.onHeaderColumnClickHandler(name) : event.preventDefault()}
-                >
-                    {alias}
-                </Table.HeaderCell>
-            );
+        this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.forEach(({name, alias, visible, sortable}) => {
+            if (visible) {
+                headerFields.push(
+                    <Table.HeaderCell
+                        key={name} 
+                        disabled={!sortable}
+                        sorted={name === this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target ? this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order : null}
+                        onClick={(event) => sortable ? this.onHeaderColumnClickHandler(name) : event.preventDefault()}
+                    >
+                        {alias}
+                    </Table.HeaderCell>
+                );
+            }
         });
 
         headerFields.unshift(
@@ -103,11 +112,9 @@ class DataGrid extends Component {
             />
         );
 
-        if (this.props.admin.ui.reloadDataCounter === 0) {
+        if (this.props.admin.ui.reloadDataCounter === 0 && dataSet.length > 0) {
             totalPages = Math.ceil(totalItems/itemsPerPage);
             this.props.admin.lists[this.props.admin.ui.currentModel].ids.forEach((id, index) => {
-                endIndex = itemsPerPage * currentPage - 1;
-                startIndex = endIndex - itemsPerPage + 1;
                 if (index >= startIndex && index <= endIndex) {
                     bodyRows.push(
                         <Table.Row 
@@ -124,9 +131,9 @@ class DataGrid extends Component {
                                     onChange={(event, { checked}) => this.props.onToggleListItemSelectHandler(this.props.admin.ui.currentModel, checked, event.target.id)}
                                 />
                             </Table.Cell>
-                            {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ name, alias }) => {
+                            {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({name, alias, visible}) => {
                                 let fieldValue = dataSet.filter(item => item.id === id)[0][name];
-                                return (
+                                return visible && (
                                     <Table.Cell
                                         key={id + name}
                                         error={fieldValue === false}
@@ -178,7 +185,7 @@ class DataGrid extends Component {
                 <Table.Footer>
                     <Table.Row>
                         <Table.HeaderCell 
-                            colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.length + 2}
+                            colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.filter(({visible}) => visible).length + 2}
                         >   
                             {this.props.global.ui.mobile ? null : <span>Rows per page:</span>}
                             {this.props.global.ui.mobile ? null :
@@ -190,7 +197,7 @@ class DataGrid extends Component {
                                     onChange={(event, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
                                 />
                             }
-                            {totalItems > 0 ? <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span> : null}
+                            {totalItems > 0 ? <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span> : <span>0-0 of 0</span>}
                             <Pagination
                                 totalPages={totalPages}
                                 activePage={currentPage}
@@ -230,6 +237,7 @@ const mapDispatchToProps = dispatch => {
         onSetItemsPerPageHandler: (model, value) => dispatch(setItemsPerPage(model, value)),
         onSetTotalItemsHandler: (model, total) => dispatch(setTotalItems(model, total)),
         onSetListItemsIdsHandler: (model, ids) => dispatch(setListItemsIds(model, ids)),
+        onSetListDataHandler: (model, dataSet) => dispatch(setListData(model, dataSet)),
         onChangeSortStateHandler: (model, target, order, reverse) => dispatch(changeSortState(model, target, order, reverse))
     };
 };

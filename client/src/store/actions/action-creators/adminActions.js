@@ -1,6 +1,6 @@
 import * as actionTypes from '../action-types';
 import { fetchDataService, createDataService, updateDataService, deleteDataService } from '../../../services/api';
-import { debounce, search } from '../../../util';
+import { debounce, search, promiseToGetUniqueKeyValues } from '../../../util';
 
 export const fetchDataSuccess = (model, fetchedData) => {
     return {
@@ -194,6 +194,14 @@ export const setListItemsIds = (model, ids) => {
     };
 };
 
+export const setListData = (model, dataSet) => {
+    return {
+        type: actionTypes.SET_LIST_DATA,
+        model,
+        dataSet
+    };
+};
+
 export const searchDataInit = (model) => {
     return {
         type: actionTypes.SEARCH_DATA_INIT,
@@ -209,11 +217,11 @@ export const searchDataComplete = (model, ids) => {
     };
 };
 
-export const searchDataRequest = (model, text, dataSet, key) => {
+export const searchDataRequest = (model, text, getDataSet, key) => {
     return dispatch => {
         dispatch(searchDataInit(model));
         debounce(() => {
-            let searchResult = search(text, dataSet, key);
+            let searchResult = search(text, getDataSet(), key);
             dispatch(searchDataComplete(model, searchResult));
             dispatch(setListItemsIds(model, searchResult));
         }, 500)();
@@ -235,5 +243,51 @@ export const changeSortState = (model, target, order, reverse) => {
         target,
         order,
         reverse
+    };
+};
+
+export const addFilter = (model, filterKey) => {
+    return {
+        type: actionTypes.ADD_FILTER,
+        model,
+        filterKey
+    };
+};
+
+export const deleteFilter = (model, filterKey) => {
+    return {
+        type: actionTypes.DELETE_FILTER,
+        model,
+        filterKey
+    };
+};
+
+export const setFilterOptions = (model, filterKey, options) => {
+    return {
+        type: actionTypes.SET_FILTER_OPTIONS,
+        model,
+        filterKey,
+        options
+    };
+};
+
+export const setFilterTargetValue = (model, filterKey, value) => {
+    return {
+        type: actionTypes.SET_FILTER_TARGET_VALUE,
+        model,
+        filterKey,
+        value
+    };
+};
+
+export const loadFilterOptions = (filterKey, dataKey, model, getDataSet) => {
+    return dispatch => {
+        promiseToGetUniqueKeyValues(dataKey, getDataSet)
+            .then((uniqueKeyValues) => {
+                dispatch(setFilterOptions(model, filterKey, uniqueKeyValues));
+            })
+            .catch((e) => {
+                dispatch(setFilterOptions(model, filterKey, []));
+            })
     };
 };

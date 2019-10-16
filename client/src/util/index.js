@@ -1,9 +1,10 @@
 export {
-    getFormConfig,
     rewriteObjectProps,
     validateInput,
     transformSelectOptions,
     transformDataSet,
+    promiseToGetUniqueKeyValues,
     debounce,
-    search
+    search,
+    getUniqueKeyValues
 } from './util';

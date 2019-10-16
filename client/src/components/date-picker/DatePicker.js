@@ -16,7 +16,7 @@ class DatePicker extends Component {
         showDays: true,
         showHours: false,
         showMinutes: false,
-        value: ''
+        value: this.props.value ? this.props.value : ''
     }
 
     inputFieldRef = React.createRef();
@@ -200,6 +200,7 @@ class DatePicker extends Component {
 
         inputTrigger = (
             <Input
+                {...this.props}
                 ref={this.inputFieldRef}
                 fluid={this.props.fluid}
                 disabled={this.props.disabled}

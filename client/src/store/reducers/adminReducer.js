@@ -95,16 +95,16 @@ for (const key in formTypesConfig) {
         }
     };
     initState.lists[key] = {
+        dataSet: [],
         ids: [],
         activeId: null,
         selectedIds: [],
         params: {
-            fields: key === 'authentication' ? [] : Object.keys(tableFieldsConfig[key]).map(field => {
-                return {...tableFieldsConfig[key][field]};
-            }),
-            filter: {},
+            fields: key === 'authentication' ? [] : [...tableFieldsConfig[key]],
+            filters: [],
             sort: {
                 target: null,
+                isDate: false,
                 order: null,
                 reverse: false
             },
@@ -382,23 +382,32 @@ const adminReducer = (state = initState, action) => {
             });
 
         case actionTypes.SET_TOTAL_ITEMS:
-                return rewriteObjectProps(state, {
-                    lists: rewriteObjectProps(state.lists, {
-                        [action.model]: rewriteObjectProps(state.lists[action.model], {
-                            params: rewriteObjectProps(state.lists[action.model].params, {
-                                pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
-                                    totalItems: action.total
-                                })
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        params: rewriteObjectProps(state.lists[action.model].params, {
+                            pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
+                                totalItems: action.total
                             })
                         })
                     })
-                });
+                })
+            });
 
         case actionTypes.SET_LIST_ITEMS_IDS:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
                         ids: action.ids.slice()
+                    })
+                })
+            });
+
+        case actionTypes.SET_LIST_DATA:
+            return rewriteObjectProps(state, {
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        dataSet: action.dataSet.slice()
                     })
                 })
             });
@@ -445,20 +454,117 @@ const adminReducer = (state = initState, action) => {
             });
 
         case actionTypes.CHANGE_SORT_STATE:
-            return rewriteObjectProps(state, {
-                lists: rewriteObjectProps(state.lists, {
-                    [action.model]: rewriteObjectProps(state.lists[action.model], {
-                        params: rewriteObjectProps(state.lists[action.model].params, {
-                            sort: rewriteObjectProps(state.lists[action.model].params.sort, {
-                                target: action.target,
-                                order: action.order,
-                                reverse: action.reverse
+            {
+                let isDate = state.lists[action.model].params.fields.find(({name}) => name === action.target).isDate;
+                return rewriteObjectProps(state, {
+                    lists: rewriteObjectProps(state.lists, {
+                        [action.model]: rewriteObjectProps(state.lists[action.model], {
+                            params: rewriteObjectProps(state.lists[action.model].params, {
+                                sort: rewriteObjectProps(state.lists[action.model].params.sort, {
+                                    target: action.target,
+                                    isDate,
+                                    order: action.order,
+                                    reverse: action.reverse
+                                })
                             })
                         })
                     })
-                })
-            });
-                
+                });
+            }
+
+        case actionTypes.ADD_FILTER:
+            if (!state.lists[action.model].params.filters.find(filter => filter[action.filterKey])) {
+                let {type, dataKey, isDate, descriptor} = state.lists[action.model].params.fields
+                    .filter(field => field.filterOperation)
+                    .map(field => field.filterOperation.map(operation => {
+                        return Object.assign({dataKey: field.name, isDate: field.isDate}, operation);
+                    }))
+                    .reduce((prevItem, item) => prevItem.concat(item))
+                    .find(({ key }) => key === action.filterKey);
+                return rewriteObjectProps(state, {
+                    lists: rewriteObjectProps(state.lists, {
+                        [action.model]: rewriteObjectProps(state.lists[action.model], {
+                            params: rewriteObjectProps(state.lists[action.model].params, {
+                                filters: state.lists[action.model].params.filters.concat({
+                                    [action.filterKey]: {
+                                        operatorType: type,
+                                        dataKey,
+                                        isDate,
+                                        description: descriptor,
+                                        targetValue: null,
+                                        options: {
+                                            isLoading: true,
+                                            payload: []
+                                        }
+                                    }
+                                })
+                            })
+                        })
+                    })
+                });
+            }
+            return state;
+
+            case actionTypes.DELETE_FILTER:
+            {
+                let filters = state.lists[action.model].params.filters;
+                let index = filters.findIndex(filter => filter[action.filterKey]);
+                return rewriteObjectProps(state, {
+                    lists: rewriteObjectProps(state.lists, {
+                        [action.model]: rewriteObjectProps(state.lists[action.model], {
+                            params: rewriteObjectProps(state.lists[action.model].params, {
+                                filters: [].concat(filters.slice(0, index), filters.slice(index + 1, filters.length))
+                            })
+                        })
+                    })
+                });
+            }
+
+            case actionTypes.SET_FILTER_OPTIONS:
+            {
+                let filters = state.lists[action.model].params.filters;
+                let index = filters.findIndex(filter => filter[action.filterKey]);
+                let filter = filters.find(filter => filter[action.filterKey]);
+                let newFilter = rewriteObjectProps(filter, {
+                    [action.filterKey]: rewriteObjectProps(filter[action.filterKey], {
+                        options: rewriteObjectProps(filter[action.filterKey].options, {
+                            isLoading: false,
+                            payload: action.options.slice()
+                        })
+                    })
+                });
+                return rewriteObjectProps(state, {
+                    lists: rewriteObjectProps(state.lists, {
+                        [action.model]: rewriteObjectProps(state.lists[action.model], {
+                            params: rewriteObjectProps(state.lists[action.model].params, {
+                                filters: [].concat(filters.slice(0, index), newFilter, filters.slice(index + 1, filters.length))
+                            })
+                        })
+                    })
+                });
+            }
+
+        case actionTypes.SET_FILTER_TARGET_VALUE:
+            {
+                let filters = state.lists[action.model].params.filters;
+                let index = filters.findIndex(filter => filter[action.filterKey]);
+                let filter = filters.find(filter => filter[action.filterKey]);
+                let newFilter = rewriteObjectProps(filter, {
+                    [action.filterKey]: rewriteObjectProps(filter[action.filterKey], {
+                        targetValue: action.value
+                    })
+                });
+                return rewriteObjectProps(state, {
+                    lists: rewriteObjectProps(state.lists, {
+                        [action.model]: rewriteObjectProps(state.lists[action.model], {
+                            params: rewriteObjectProps(state.lists[action.model].params, {
+                                filters: [].concat(filters.slice(0, index), newFilter, filters.slice(index + 1, filters.length))
+                            })
+                        })
+                    })
+                });
+            }
+
         default:
             return state;
 

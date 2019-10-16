@@ -1,5 +1,5 @@
 import React from 'react';
-import {Input, TextArea, Select} from 'semantic-ui-react';
+import { Input, TextArea, Select } from 'semantic-ui-react';
 import DatePicker from '../../date-picker';
 import PropTypes from 'prop-types';
 

@@ -1,0 +1,34 @@
+.mainPanel {
+    margin: 1em !important;
+}
+
+.mainPanel :global .item {
+    margin: 0 !important;
+}
+
+.mainPanel :global .search {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.mainPanel :global .mobile {
+    margin: 0 !important;
+}
+
+.mainPanel :global .mobile .icon {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.filterPanel {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    flex-wrap: wrap;
+}
+
+.filterPanel :global .item {
+    margin-right: 0 !important;
+    padding-top: 0 !important;
+    padding-right: 0 !important;
+}
+

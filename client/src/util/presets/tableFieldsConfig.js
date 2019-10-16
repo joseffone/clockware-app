@@ -1,362 +1,795 @@
 const tableFieldsConfig = {
-    agents: {
-        id: {
+    agents: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        nickname: {
+        {
             name: 'nickname',
             alias: 'Nickname',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'nickname', type: 'equal', descriptor: 'Nickname'}
+            ]
         },
-        first_name: {
+        {
             name: 'first_name',
             alias: 'First name',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'first_name', type: 'equal', descriptor: 'First name'}
+            ]
         },
-        last_name: {
+        {
             name: 'last_name',
             alias: 'Last name',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'last_name', type: 'equal', descriptor: 'Last name'}
+            ]
         },
-        raiting: {
+        {
             name: 'raiting',
             alias: 'Raiting',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'raiting', type: 'equal', descriptor: 'Raiting'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    cities: {
-        id: {
+    ],
+    cities: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        city_name: {
+        {
             name: 'city_name',
             alias: 'City',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'city_name', type: 'equal', descriptor: 'City'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    clocks: {
-        id: {
+    ],
+    clocks: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        clock_type: {
+        {
             name: 'clock_type',
             alias: 'Clock type',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'clock_type', type: 'equal', descriptor: 'Clock type'}
+            ]
         },
-        hours_of_repair: {
+        {
             name: 'hours_of_repair',
             alias: 'Repair time (h)',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'hours_of_repair', type: 'equal', descriptor: 'Repair time (h)'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    coverage: {
-        id: {
+    ],
+    coverage: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        agent_nickname: {
+        {
             name: 'agent_nickname',
             alias: 'Agent nickname',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'agent_nickname', type: 'equal', descriptor: 'Agent nickname'}
+            ]
         },
-        agent_fullname: {
+        {
             name: 'agent_fullname',
             alias: 'Agent fullname',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'agent_fullname', type: 'equal', descriptor: 'Agent fullname'}
+            ]
         },
-        agent_raiting: {
+        {
             name: 'agent_raiting',
             alias: 'Agent raiting',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'agent_raiting', type: 'equal', descriptor: 'Agent raiting'}
+            ]
         },
-        city_name: {
+        {
             name: 'city_name',
             alias: 'City',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'city_name', type: 'equal', descriptor: 'City'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    marks: {
-        id: {
+    ],
+    marks: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        mark_name: {
+        {
             name: 'mark_name',
             alias: 'Mark name',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'mark_name', type: 'equal', descriptor: 'Mark name'}
+            ]
         },
-        mark_value: {
+        {
             name: 'mark_value',
             alias: 'Mark value',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'mark_value', type: 'equal', descriptor: 'Mark value'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    orders: {
-        id: {
+    ],
+    orders: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        user_email: {
+        {
             name: 'user_email',
             alias: 'User e-mail',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'user_email', type: 'equal', descriptor: 'User e-mail'}
+            ]
         },
-        user_fullname: {
+        {
             name: 'user_fullname',
             alias: 'User fullname',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'user_fullname', type: 'equal', descriptor: 'User fullname'}
+            ]
         },
-        clock_type: {
+        {
             name: 'clock_type',
             alias: 'Clock type',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'clock_type', type: 'equal', descriptor: 'Clock type'}
+            ]
         },
-        city_name: {
+        {
             name: 'city_name',
             alias: 'City',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'city_name', type: 'equal', descriptor: 'City'}
+            ]
         },
-        agent_nickname: {
+        {
             name: 'agent_nickname',
             alias: 'Agent nickname',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'agent_nickname', type: 'equal', descriptor: 'Agent nickname'}
+            ]
         },
-        agent_fullname: {
+        {
             name: 'agent_fullname',
             alias: 'Agent fullname',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'agent_fullname', type: 'equal', descriptor: 'Agent fullname'}
+            ]
         },
-        agent_raiting: {
+        {
             name: 'agent_raiting',
             alias: 'Agent raiting',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'agent_raiting', type: 'equal', descriptor: 'Agent raiting'}
+            ]
         },
-        start_date: {
+        {
             name: 'start_date',
             alias: 'Start date',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: true,
+            filterOperation: [
+                {key: 'started_since', type: 'moreOrEqual', descriptor: 'Started since'},
+                {key: 'started_before', type: 'less', descriptor: 'Started before'}
+            ]
         },
-        eхpiration_date: {
+        {
             name: 'eхpiration_date',
             alias: 'Exp date',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: true,
+            filterOperation: [
+                {key: 'expired_since', type: 'moreOrEqual', descriptor: 'Expired since'},
+                {key: 'expired_before', type: 'less', descriptor: 'Expired before'}
+            ]
         },
-        note: {
+        {
             name: 'note',
             alias: 'Comment',
-            sortable: false
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    roles: {
-        id: {
+    ],
+    roles: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        role: {
+        {
             name: 'role',
             alias: 'Role',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'role', type: 'equal', descriptor: 'Role'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    permissions: {
-        id: {
+    ],
+    permissions: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        role: {
+        {
             name: 'role',
             alias: 'Role',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'role', type: 'equal', descriptor: 'Role'}
+            ]
         },
-        model: {
+        {
             name: 'model',
             alias: 'Register',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'model', type: 'equal', descriptor: 'Register'}
+            ]
         },
-        action: {
+        {
             name: 'action',
             alias: 'Action',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'action', type: 'equal', descriptor: 'Action'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    },
-    users: {
-        id: {
+    ],
+    users: [
+        {
             name: 'id',
             alias: 'ID',
-            sortable: false 
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        email: {
+        {
             name: 'email',
             alias: 'E-Mail',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'email', type: 'equal', descriptor: 'E-Mail'}
+            ]
         },
-        first_name: {
+        {
             name: 'first_name',
             alias: 'First name',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'first_name', type: 'equal', descriptor: 'First name'}
+            ]
         },
-        last_name: {
+        {
             name: 'last_name',
             alias: 'Last name',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'last_name', type: 'equal', descriptor: 'Last name'}
+            ]
         },
-        password: {
+        {
             name: 'password',
             alias: 'Password',
-            sortable: false
+            visible: true,
+            sortable: false,
+            isDate: false,
+            filterable: false,
+            filterOperation: null
         },
-        role: {
+        {
             name: 'role',
             alias: 'Role',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'role', type: 'equal', descriptor: 'Role'}
+            ]
         },
-        created_at: {
+        {
             name: 'created_at',
             alias: 'Created at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        updated_at: {
+        {
             name: 'updated_at',
             alias: 'Updated at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
         },
-        deleted_at: {
+        {
             name: 'deleted_at',
             alias: 'Deleted at',
-            sortable: true
+            visible: true,
+            sortable: true,
+            isDate: true,
+            filterable: false,
+            filterOperation: null
+        },
+        {
+            name: 'status',
+            alias: 'Status',
+            visible: false,
+            sortable: false,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'status', type: 'equal', descriptor: 'Entries status'}
+            ]
         }
-    }
+    ]
 };
 
 export default tableFieldsConfig;

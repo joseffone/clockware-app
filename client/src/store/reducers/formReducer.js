@@ -1,11 +1,11 @@
 import * as actionTypes from '../actions/action-types';
-import { getFormConfig, rewriteObjectProps, validateInput } from '../../util';
+import {rewriteObjectProps, validateInput} from '../../util';
 import formTypesConfig from '../../util/presets/formTypesConfig';
 
 const initState = {};
 
 for (const key in formTypesConfig) {
-    initState[key] = { ...getFormConfig(key) };
+    initState[key] = {...formTypesConfig[key]};
 }
 
 const formReducer = (state = initState, action) => {
@@ -13,7 +13,7 @@ const formReducer = (state = initState, action) => {
 
         case actionTypes.REFRESH_INPUT_FORM_STATE:
             return rewriteObjectProps(state, {
-                [action.model]: { ...getFormConfig(action.model) }
+                [action.model]: {...formTypesConfig[action.model]}
             });
 
         case actionTypes.CHANGE_INPUT_FORM_STATE:
@@ -29,7 +29,6 @@ const formReducer = (state = initState, action) => {
 
         default:
             return state;
-            
     }
 };
 
