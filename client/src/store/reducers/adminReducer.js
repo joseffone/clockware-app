@@ -11,7 +11,6 @@ const initState = {
         reloadDataTrigger: false,
         reloadDataCounter: 0,
         errorDataCounter: [],
-        selectAlltrigger: false,
         models: [
             {
                 name: 'users',

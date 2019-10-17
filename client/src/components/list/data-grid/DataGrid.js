@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Checkbox, Pagination, Dropdown, Button, Icon } from 'semantic-ui-react';
-import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState } from '../../../store/actions';
+import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState, searchDataRequest } from '../../../store/actions';
 import { transformDataSet } from '../../../util';
 import InputForm from '../../input-form';
 import styles from './styles.module.css';
@@ -21,6 +21,12 @@ class DataGrid extends Component {
                 this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false);
                 this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
                 this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models));
+                if (this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value !== '') {
+                    this.onSearchApplyHandler();
+                }
+                if (this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.length !== 0) {
+                    this.onFiltersApplyHandler();
+                }
             }
         }
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].ids.length !== this.props.admin.lists[this.props.admin.ui.currentModel].ids.length) {
@@ -28,16 +34,7 @@ class DataGrid extends Component {
         }
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].params.sort !== this.props.admin.lists[this.props.admin.ui.currentModel].params.sort ||
             prevProps.admin.lists[this.props.admin.ui.currentModel].params.filters !== this.props.admin.lists[this.props.admin.ui.currentModel].params.filters) {
-            this.props.onSetListItemsIdsHandler(
-                this.props.admin.ui.currentModel,
-                transformDataSet(
-                    this.props.admin.ui.currentModel,
-                    this.props.forms, 
-                    this.props.admin.models, 
-                    this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
-                    this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
-                ).map(item => item.id)
-            );
+            this.onFiltersApplyHandler();
         }
         if (this.props.admin.lists[this.props.admin.ui.currentModel].dataSet.length !== this.props.admin.models[this.props.admin.ui.currentModel].items.length) {
             this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models));
@@ -64,6 +61,33 @@ class DataGrid extends Component {
             clickedColumnName,
             this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order === 'ascending' ? 'descending' : 'ascending',
             this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.reverse === false ? true : false
+        );
+    }
+
+    onFiltersApplyHandler = () => {
+        this.props.onSetListItemsIdsHandler(
+            this.props.admin.ui.currentModel,
+            transformDataSet(
+                this.props.admin.ui.currentModel,
+                this.props.forms, 
+                this.props.admin.models, 
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
+            ).map(item => item.id)
+        );
+    }
+
+    onSearchApplyHandler = () => {
+        this.props.onSearchDataRequestHandler(
+            this.props.admin.ui.currentModel, 
+            this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value, 
+            () => transformDataSet(
+                this.props.admin.ui.currentModel, 
+                this.props.forms, 
+                this.props.admin.models, 
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
+                this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
+            )
         );
     }
 
@@ -238,7 +262,8 @@ const mapDispatchToProps = dispatch => {
         onSetTotalItemsHandler: (model, total) => dispatch(setTotalItems(model, total)),
         onSetListItemsIdsHandler: (model, ids) => dispatch(setListItemsIds(model, ids)),
         onSetListDataHandler: (model, dataSet) => dispatch(setListData(model, dataSet)),
-        onChangeSortStateHandler: (model, target, order, reverse) => dispatch(changeSortState(model, target, order, reverse))
+        onChangeSortStateHandler: (model, target, order, reverse) => dispatch(changeSortState(model, target, order, reverse)),
+        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(searchDataRequest(model, text, dataSet, key))
     };
 };
 
