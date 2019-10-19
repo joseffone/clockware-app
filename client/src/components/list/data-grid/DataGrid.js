@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Checkbox, Pagination, Dropdown, Button, Icon } from 'semantic-ui-react';
-import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState, searchDataRequest } from '../../../store/actions';
+import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState, searchDataRequest, setCustomFields, refreshInpFormState } from '../../../store/actions';
 import { transformDataSet } from '../../../util';
 import InputForm from '../../input-form';
+import FieldsCustomizer from './fields-customizer';
 import styles from './styles.module.css';
 
 class DataGrid extends Component {
@@ -91,6 +92,10 @@ class DataGrid extends Component {
         );
     }
 
+    onCustomFieldsApplyHandler = (fields) => {
+        this.props.onSetCustomFieldsHandler(this.props.admin.ui.currentModel, fields);
+    }
+
     render() {
         let headerFields = [], bodyRows = [];
         let dataSet = this.props.admin.lists[this.props.admin.ui.currentModel].dataSet;
@@ -133,7 +138,25 @@ class DataGrid extends Component {
             <Table.HeaderCell 
                 key={'edit'} 
                 disabled={true}
-            />
+                textAlign={this.props.global.ui.mobile ? 'right' : 'center'}
+            >
+                <FieldsCustomizer 
+                    trigger={
+                        (props) =>
+                            <Button
+                                as='a'
+                                basic
+                                {...props}
+                            >
+                                <Icon name='setting' />
+                                Fields
+                            </Button>
+                    }
+                    mobile={this.props.global.ui.mobile}
+                    fields={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields}
+                    applied={this.onCustomFieldsApplyHandler}
+                />
+            </Table.HeaderCell>
         );
 
         if (this.props.admin.ui.reloadDataCounter === 0 && dataSet.length > 0) {
@@ -169,7 +192,7 @@ class DataGrid extends Component {
                             })}
                             <Table.Cell 
                                 collapsing 
-                                textAlign='right'
+                                textAlign={this.props.global.ui.mobile ? 'right' : 'center'}
                             >
                                 <InputForm 
                                     trigger={
@@ -263,7 +286,8 @@ const mapDispatchToProps = dispatch => {
         onSetListItemsIdsHandler: (model, ids) => dispatch(setListItemsIds(model, ids)),
         onSetListDataHandler: (model, dataSet) => dispatch(setListData(model, dataSet)),
         onChangeSortStateHandler: (model, target, order, reverse) => dispatch(changeSortState(model, target, order, reverse)),
-        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(searchDataRequest(model, text, dataSet, key))
+        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(searchDataRequest(model, text, dataSet, key)),
+        onSetCustomFieldsHandler: (model, fields) => dispatch(setCustomFields(model, fields))
     };
 };
 

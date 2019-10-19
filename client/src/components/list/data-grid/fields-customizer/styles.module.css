@@ -1,0 +1,21 @@
+.trigger {
+    box-shadow: none !important;
+}
+
+.fieldsCustomizer :global .content {
+    padding: 0 !important;
+}
+
+.fieldsCustomizer :global .header .content {
+    padding-left: 0.5em !important;
+}
+
+.fieldsCustomizer :global .table {
+    border: 0;
+}
+
+.fieldsCustomizer :global .buttons .button {
+    padding-top: 0.25em !important;
+    padding-bottom: 0.25em !important;
+}
+

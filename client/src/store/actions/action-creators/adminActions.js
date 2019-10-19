@@ -291,3 +291,11 @@ export const loadFilterOptions = (filterKey, dataKey, model, getDataSet) => {
             })
     };
 };
+
+export const setCustomFields = (model, customFields) => {
+    return {
+        type: actionTypes.SET_CUSTOM_FIELDS,
+        model,
+        customFields
+    };
+};

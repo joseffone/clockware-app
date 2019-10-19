@@ -564,6 +564,22 @@ const adminReducer = (state = initState, action) => {
                 });
             }
 
+        case actionTypes.SET_CUSTOM_FIELDS:
+            {
+                let fields = state.lists[action.model].params.fields;
+                return rewriteObjectProps(state, {
+                    lists: rewriteObjectProps(state.lists, {
+                        [action.model]: rewriteObjectProps(state.lists[action.model], {
+                            params: rewriteObjectProps(state.lists[action.model].params, {
+                                fields: action.customFields.map(({name, visible}) => {
+                                    return rewriteObjectProps(fields.find(field => field.name === name), {visible});
+                                })
+                            })
+                        })
+                    })
+                });
+            }
+
         default:
             return state;
 
