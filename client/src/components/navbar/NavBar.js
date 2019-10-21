@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Menu, Header, Button, Icon, Popup } from 'semantic-ui-react';
-import InputForm from '../input-form';
+import AdminForm from '../admin-form';
 import { logoutRequest, toggleSidebar, toggleSidebarButtonPress, setReloadDataTrigger } from '../../store/actions';
 import styles from './styles.module.css';
 
@@ -45,7 +45,7 @@ class NavBar extends Component {
                         className={`${this.props.global.ui.mobile || this.props.auth.accessToken ? 'inOutItem' :''}`}
                         content={
                             this.props.auth.accessToken === null ?
-                                <InputForm 
+                                <AdminForm 
                                     trigger={
                                         (props) => 
                                             <Button

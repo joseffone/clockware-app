@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Sidebar, Menu, Icon } from 'semantic-ui-react';
-import { changeCurrentModel, toggleSidebar, toggleSidebarButtonPress } from '../../store/actions';
+import { changeCurrentModel, toggleSidebar, toggleSidebarButtonPress } from '../../../store/actions';
 import styles from './styles.module.css';
 
 class SideBar extends Component {

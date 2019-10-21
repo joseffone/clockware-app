@@ -2,6 +2,24 @@ import * as actionTypes from '../action-types';
 import { fetchDataService, createDataService, updateDataService, deleteDataService } from '../../../services/api';
 import { debounce, search, promiseToGetUniqueKeyValues } from '../../../util';
 
+export const refreshInpFormState = (model) => {
+    return {
+        type: actionTypes.REFRESH_INPUT_FORM_STATE,
+        model
+    };
+};
+
+export const changeInpFormState = (event, model, formFieldKey, value = null, touched = true) => {
+    return {
+        type: actionTypes.CHANGE_INPUT_FORM_STATE,
+        event,
+        model,
+        formFieldKey,
+        value,
+        touched
+    };
+};
+
 export const fetchDataSuccess = (model, fetchedData) => {
     return {
         type: actionTypes.FETCH_DATA_SUCCESS,

@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Menu, Dropdown, Icon, Transition, Input } from 'semantic-ui-react';
-import { fetchDataRequest, deleteDataRequest, setSelectAllTrigger, changeSearchValue, searchDataRequest, addFilter, deleteFilter, loadFilterOptions, setFilterTargetValue } from '../../../store/actions';
-import { transformDataSet } from '../../../util';
-import InputForm from '../../input-form';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Menu, Dropdown, Icon, Transition, Input} from 'semantic-ui-react';
+import {fetchDataRequest, deleteDataRequest, setSelectAllTrigger, changeSearchValue, searchDataRequest, addFilter, deleteFilter, loadFilterOptions, setFilterTargetValue} from '../../../store/actions';
+import {transformDataSet} from '../../../util';
+import AdminForm from '../../admin-form';
 import ConfirmDelete from './confirm-delete';
 import DataFilter from './data-filter';
 import styles from './styles.module.css';
@@ -34,7 +34,7 @@ class ActionMenu extends Component {
             value, 
             () => transformDataSet(
                 this.props.admin.ui.currentModel, 
-                this.props.forms, 
+                this.props.admin.forms, 
                 this.props.admin.models, 
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
@@ -57,7 +57,7 @@ class ActionMenu extends Component {
             this.props.admin.ui.currentModel, 
             () => transformDataSet(
                 this.props.admin.ui.currentModel, 
-                this.props.forms, 
+                this.props.admin.forms, 
                 this.props.admin.models, 
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters,
@@ -88,7 +88,7 @@ class ActionMenu extends Component {
                     </Item>
                 : null}
             </Transition.Group>,
-            <InputForm
+            <AdminForm
                 key='add'
                 trigger={
                     (props) =>
@@ -216,7 +216,6 @@ const mapStateToProps = state => {
     return {
         global: state.global,
         auth: state.auth,
-        forms: state.forms,
         admin: state.admin
     };
 }

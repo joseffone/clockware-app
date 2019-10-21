@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Segment, Message } from 'semantic-ui-react';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
-import { AdminSideBar } from '../../components/sidebar';
-import List from '../../components/list';
+import { AdminSideBar } from '../../components/sidebar/admin-sidebar';
+import AdminList from '../../components/admin-list';
 import styles from './styles.module.css';
 
 class AdminContainer extends Component {
@@ -50,7 +50,7 @@ class AdminContainer extends Component {
                             as={Segment}
                             loading={this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching}
                         >
-                            <List />
+                            <AdminList />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Modal, Input, Button, Icon } from 'semantic-ui-react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Modal, Input, Button, Icon} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 
@@ -71,7 +71,7 @@ class ConfirmPassword extends Component {
 
 const mapStateToProps = state => {
     return {
-        forms: state.forms
+        forms: state.admin.forms
     };
 };
 

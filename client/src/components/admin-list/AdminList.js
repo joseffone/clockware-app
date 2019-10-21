@@ -4,7 +4,7 @@ import {  } from 'semantic-ui-react';
 import ActionMenu from './action-menu';
 import DataGrid from './data-grid';
 
-class List extends Component {
+class AdminList extends Component {
     render () {
         
         return (
@@ -24,4 +24,4 @@ const mapDispatchToProps = dispatch => {
     return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminList);

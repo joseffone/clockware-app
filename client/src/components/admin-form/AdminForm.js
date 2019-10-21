@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Modal, Form, Button, Message, Icon, Confirm } from 'semantic-ui-react';
-import InputField from '../input-form/input-field';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Modal, Form, Button, Message, Icon, Confirm} from 'semantic-ui-react';
+import InputField from './input-field';
 import ConfirmPassword from './confirm-password';
-import { refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest, deleteDataRequest } from '../../store/actions';
-import { transformSelectOptions } from '../../util';
+import {refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest, deleteDataRequest, setReloadDataTrigger} from '../../store/actions';
+import {transformSelectOptions} from '../../util';
 import formTypesConfig from '../../util/presets/formTypesConfig';
 import PropTypes from 'prop-types';
 
-class InputForm extends Component {
+class AdminForm extends Component {
 
     state = {
         isModalOpen: false,
@@ -93,18 +93,7 @@ class InputForm extends Component {
     onModalCloseHandler = () => {
         this.setState({
             isModalOpen: false
-        }, () => {
-            if (this.props.refreshAfterClose) {
-                for (const key in this.props.forms[this.props.model]) {
-                    if (this.props.forms[this.props.model][key].config.source) {
-                        this.props.forms[this.props.model][key].config.source.forEach(src => {
-                            this.props.onFetchDataHandler(this.props.auth.accessToken, src);
-                        });
-                    }
-                }
-                this.props.onFetchDataHandler(this.props.auth.accessToken, this.props.model);
-            }
-        });
+        }, () => this.props.onSetReloadDataTriggerHandler(this.props.model, true));
     }
 
     onFormLoadHandler = () => {
@@ -355,8 +344,8 @@ class InputForm extends Component {
 const mapStateToProps = state => {
     return {
         global: state.global,
-        forms: state.forms,
         auth: state.auth,
+        forms: state.admin.forms,
         models: state.admin.models
     };
 };
@@ -369,16 +358,17 @@ const mapDispatchToProps = dispatch => {
         onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
         onCreateDataHandler: (accessToken, model, dataObj) => dispatch(createDataRequest(accessToken, model, dataObj)),
         onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(updateDataRequest(accessToken, model, id, dataObj)),
-        onDeleteDataHandler: (accessToken, model, id) => dispatch(deleteDataRequest(accessToken, model, id))
+        onDeleteDataHandler: (accessToken, model, id) => dispatch(deleteDataRequest(accessToken, model, id)),
+        onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag))
     };
 };
 
-InputForm.propTypes = {
+AdminForm.propTypes = {
     refreshAfterClose: PropTypes.bool,
     model: PropTypes.oneOf(Object.keys(formTypesConfig)).isRequired,
     trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired,
     update: PropTypes.object
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InputForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminForm);
 

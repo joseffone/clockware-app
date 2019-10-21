@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Table, Checkbox, Pagination, Dropdown, Button, Icon } from 'semantic-ui-react';
-import { fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState, searchDataRequest, setCustomFields, refreshInpFormState } from '../../../store/actions';
-import { transformDataSet } from '../../../util';
-import InputForm from '../../input-form';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Table, Checkbox, Pagination, Dropdown, Button, Icon} from 'semantic-ui-react';
+import {fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState, searchDataRequest, setCustomFields} from '../../../store/actions';
+import {transformDataSet} from '../../../util';
+import AdminForm from '../../admin-form';
 import FieldsCustomizer from './fields-customizer';
 import styles from './styles.module.css';
 
@@ -21,7 +21,7 @@ class DataGrid extends Component {
             if (this.props.admin.ui.reloadDataCounter === 0) {
                 this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false);
                 this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
-                this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models));
+                this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
                 if (this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value !== '') {
                     this.onSearchApplyHandler();
                 }
@@ -38,14 +38,14 @@ class DataGrid extends Component {
             this.onFiltersApplyHandler();
         }
         if (this.props.admin.lists[this.props.admin.ui.currentModel].dataSet.length !== this.props.admin.models[this.props.admin.ui.currentModel].items.length) {
-            this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.forms, this.props.admin.models));
+            this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
         }
     }
 
     onRefreshDataListHandler = () => {
-        for (const key in this.props.forms[this.props.admin.ui.currentModel]) {
-            if (this.props.forms[this.props.admin.ui.currentModel][key].config.source) {
-                this.props.forms[this.props.admin.ui.currentModel][key].config.source.forEach(src => {
+        for (const key in this.props.admin.forms[this.props.admin.ui.currentModel]) {
+            if (this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source) {
+                this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source.forEach(src => {
                     this.props.onFetchDataHandler(this.props.auth.accessToken, src);
                 });
             }
@@ -70,7 +70,7 @@ class DataGrid extends Component {
             this.props.admin.ui.currentModel,
             transformDataSet(
                 this.props.admin.ui.currentModel,
-                this.props.forms, 
+                this.props.admin.forms, 
                 this.props.admin.models, 
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
@@ -84,7 +84,7 @@ class DataGrid extends Component {
             this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value, 
             () => transformDataSet(
                 this.props.admin.ui.currentModel, 
-                this.props.forms, 
+                this.props.admin.forms, 
                 this.props.admin.models, 
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
@@ -194,7 +194,7 @@ class DataGrid extends Component {
                                 collapsing 
                                 textAlign={this.props.global.ui.mobile ? 'right' : 'center'}
                             >
-                                <InputForm 
+                                <AdminForm 
                                     trigger={
                                         (props) =>
                                             <Button
@@ -269,7 +269,6 @@ const mapStateToProps = state => {
     return {
         global: state.global,
         auth: state.auth,
-        forms: state.forms,
         admin: state.admin
     };
 }
