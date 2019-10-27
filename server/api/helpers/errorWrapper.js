@@ -32,6 +32,13 @@ export default (err, res, customMessage) => {
             }
         });
     }
+    if (err.status === 404) {
+        return res.status(404).json({
+            error: {
+                message: err.message
+            }
+        });
+    }
     return res.status(500).json({
         error: {
             message: err.message

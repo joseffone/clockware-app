@@ -9,7 +9,7 @@ export default (db) => {
         const dataObj = {};
         dataObj.city_id = req.query.city_id;
         dataObj.start_date = req.query.start_date;
-        dataObj.eхpiration_date = req.query.expiration_date;
+        dataObj.expiration_date = req.query.expiration_date;
 
         freeAgentsChecker(db, dataObj)
             .then((freeAgentsIds) => {

@@ -7,7 +7,7 @@
 }
 
 .fieldsCustomizer :global .header .content {
-    padding-left: 0.5em !important;
+    padding-left: 0.5rem !important;
 }
 
 .fieldsCustomizer :global .table {
@@ -15,7 +15,7 @@
 }
 
 .fieldsCustomizer :global .buttons .button {
-    padding-top: 0.25em !important;
-    padding-bottom: 0.25em !important;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
 }
 

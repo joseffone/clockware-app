@@ -1,0 +1,22 @@
+.startForm {
+    height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.startForm :global .column {
+    max-width: 30rem;
+}
+
+.startForm :global .selection {
+    border-radius: 10rem !important;
+}
+
+.startForm :global input {
+    border-radius: 10rem !important;
+}
+
+.startForm :global .header {
+    color: rgba(191,191,191,.87) !important;
+}
+

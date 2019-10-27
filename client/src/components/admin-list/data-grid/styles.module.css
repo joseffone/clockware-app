@@ -12,11 +12,11 @@
 }
 
 .dataGrid thead th:first-child {
-    padding: 1em;
+    padding: 1rem;
 }
 
 .dataGrid tbody tr td:first-child {
-    padding: 1em;
+    padding: 1rem;
 }
 
 .dataGrid tbody tr td:last-child :global .button {
@@ -24,12 +24,12 @@
 }
 
 .dataGrid tfoot th {
-    line-height: 3em;
+    line-height: 3rem;
 }
 
 .dataGrid tfoot :global .dropdown {
-    margin-left: 1em;
-    margin-right: 1em;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .dataGrid tfoot :global .pagination {

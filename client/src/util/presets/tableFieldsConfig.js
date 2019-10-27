@@ -487,7 +487,7 @@ const tableFieldsConfig = {
             ]
         },
         {
-            name: 'eхpiration_date',
+            name: 'expiration_date',
             alias: 'Exp date',
             visible: true,
             sortable: true,

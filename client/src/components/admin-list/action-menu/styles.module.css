@@ -1,5 +1,5 @@
 .mainPanel {
-    margin: 1em !important;
+    margin: 1rem !important;
 }
 
 .mainPanel :global .item {

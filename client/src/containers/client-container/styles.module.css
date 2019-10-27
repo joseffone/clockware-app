@@ -1,0 +1,19 @@
+.header {
+    height: 100%;
+    border: none !important;
+    border-radius: unset !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+}
+
+.footer {
+    border: none !important;
+    border-radius: unset !important;
+    margin: 0 !important;
+    padding: 3rem 0rem !important;
+}
+
+.footer :global .grid {
+    margin: 0 !important;
+    padding: 0 !important;
+}

@@ -162,11 +162,12 @@ class DataGrid extends Component {
         if (this.props.admin.ui.reloadDataCounter === 0 && dataSet.length > 0) {
             totalPages = Math.ceil(totalItems/itemsPerPage);
             this.props.admin.lists[this.props.admin.ui.currentModel].ids.forEach((id, index) => {
-                if (index >= startIndex && index <= endIndex) {
+                let dataSetItem = dataSet.filter(item => item.id === id)[0];
+                if (index >= startIndex && index <= endIndex && dataSetItem) {
                     bodyRows.push(
                         <Table.Row 
                             key={id}
-                            disabled={dataSet.filter(item => item.id === id)[0].deleted_at !== null}
+                            disabled={dataSetItem.deleted_at !== null}
                         >
                             <Table.Cell 
                                 collapsing
@@ -179,7 +180,7 @@ class DataGrid extends Component {
                                 />
                             </Table.Cell>
                             {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({name, alias, visible}) => {
-                                let fieldValue = dataSet.filter(item => item.id === id)[0][name];
+                                let fieldValue = dataSetItem[name];
                                 return visible && (
                                     <Table.Cell
                                         key={id + name}
@@ -202,7 +203,7 @@ class DataGrid extends Component {
                                                 basic
                                                 {...props}
                                              >
-                                                 <Icon name='pencil' color={dataSet.filter(item => item.id === id)[0].deleted_at !== null ? null : 'blue'} /> Edit
+                                                 <Icon name='pencil' color={dataSetItem.deleted_at !== null ? null : 'blue'} /> Edit
                                             </Button>
                                     }
                                     refreshAfterClose

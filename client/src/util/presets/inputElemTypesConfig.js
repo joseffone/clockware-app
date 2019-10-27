@@ -36,7 +36,7 @@ const inputElemTypesConfig = {
                 }
             },
             value: '',
-            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : false,
+            isValid: config.restrictions ? config.restrictions.disabled || config.restrictions.readOnly : true,
             touched: false
         };
     },
@@ -106,6 +106,7 @@ const inputElemTypesConfig = {
             elementType: 'datetime',
             config: {
                 label: config.label || 'Date-Time',
+                placeholder: config.placeholder || "Select Date and Time",
                 restrictions: {
                     requared: true,
                     disabled: config.restrictions ? config.restrictions.disabled : false

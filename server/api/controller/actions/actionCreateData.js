@@ -40,7 +40,7 @@ export default (db, modelName) => {
             queryParams.where.city_id = req.body.city_id;
             queryParams.where.agent_id = req.body.agent_id;
             queryParams.where.start_date = req.body.start_date;
-            queryParams.where.eхpiration_date = req.body.eхpiration_date;
+            queryParams.where.expiration_date = req.body.expiration_date;
             queryParams.defaults.note = req.body.note;
             break;
         case 'users':
@@ -90,11 +90,7 @@ export default (db, modelName) => {
                                 }
                                 return createdElem;
                             }, {transaction: t});
-                    }, (orders) => {
-                        let errMessage = 'Unable to create order with provided time interval';
-                        if (!orders) {
-                            errMessage = 'Request contains invalid data';
-                        }
+                    }, ({errMessage}) => {
                         const error = new Error(errMessage);
                         error.status = 404;
                         throw error;

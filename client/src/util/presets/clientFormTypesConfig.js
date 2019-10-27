@@ -8,7 +8,8 @@ const clientFormTypesConfig = {
             source: ['cities']
         }),
         start_date: configElem.dateTime({
-            label: 'Pick the date and time'
+            label: 'Pick the date and time',
+            placeholder: 'Pick the date and time'
         })
     },
     clientOrderForm: {

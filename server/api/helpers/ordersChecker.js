@@ -6,10 +6,10 @@ export default (db, modelName, dataObj, transaction, flag) => {
         if (modelName !== 'orders') {
             return resolve(transaction);
         }
-        
+
         let orderId = [];
         const startDate = new Date (dataObj.start_date);
-        const expDate = new Date (dataObj.eхpiration_date);
+        const expDate = new Date (dataObj.expiration_date);
         const duration = (expDate - startDate)/(1000*60*60);
 
         //if flag = true then it's update transaction
@@ -42,24 +42,24 @@ export default (db, modelName, dataObj, transaction, flag) => {
                                     id: {[db.Sequelize.Op.notIn]: orderId},
                                     agent_id: dataObj.agent_id,
                                     [db.Sequelize.Op.and]: [
-                                        {start_date: {[db.Sequelize.Op.lte]: expDate}},
-                                        {eхpiration_date: {[db.Sequelize.Op.gte]: startDate}}
+                                        {start_date: {[db.Sequelize.Op.lt]: expDate}},
+                                        {expiration_date: {[db.Sequelize.Op.gt]: startDate}}
                                     ]
                                 },
                                 transaction: transaction
                             }).then((orders) => {
                                 //check if conflict orders exist
                                 if (orders.length !== 0) {
-                                    return reject(orders);
+                                    return reject({errMessage: 'Unable to create order with provided time interval. Agent is reserved'});
                                 }
                                 return resolve(transaction);
                             });
                         }
                     }
-                    return reject();
+                    return reject({errMessage: 'Time interval does not match to provided clock type'});
                 });
             }
-            return reject();
+            return reject({errMessage: 'Chosen agent is not available in provided city'});
         });
 
     });

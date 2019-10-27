@@ -53,7 +53,7 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: false
         },
-        eхpiration_date: {
+        expiration_date: {
             type: DataTypes.DATE,
             allowNull: false
         },

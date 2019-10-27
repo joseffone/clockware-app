@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, TextArea, Select } from 'semantic-ui-react';
-import DatePicker from '../../date-picker';
+import DatePicker from '../date-picker';
 import PropTypes from 'prop-types';
 
 const InputField = (props) => {
@@ -50,6 +50,7 @@ const InputField = (props) => {
                     fluid
                     mobile={props.mobile}
                     disabled={props.disabled}
+                    placeholder={props.placeholder}
                     changed={props.changed}
                 />
             );

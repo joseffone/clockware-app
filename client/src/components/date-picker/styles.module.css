@@ -1,6 +1,6 @@
 .dateNavBar {
-    width: 21em !important;
-    height: 3em;
+    width: 21rem !important;
+    height: 3rem;
 }
 
 .dateNavBar td {
@@ -8,13 +8,13 @@
 }
 
 .dayPicker {
-    width: 21em !important;
-    height: 21em;
+    width: 21rem !important;
+    height: 21rem;
 }
 
 .dayPicker th {
     padding: 0 !important;
-    height: 3em;
+    height: 3rem;
 }
 
 .dayPicker td {
@@ -24,8 +24,8 @@
 }
 
 .timePicker {
-    width: 21em !important;
-    height: 18em;
+    width: 21rem !important;
+    height: 18rem;
 }
 
 .timePicker td {
@@ -39,7 +39,7 @@
 
 .datePickerModal {
     height: 100%; 
-    width: 21em !important;
+    width: 21rem !important;
     background: none !important; 
     box-shadow: none !important;
 }
@@ -56,7 +56,7 @@
 }
 
 .datePickerModal :global .container {
-    width: 21em;
+    width: 21rem;
     margin: 0; 
-    padding: 1em;
+    padding: 1rem;
 }

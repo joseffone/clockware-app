@@ -206,7 +206,7 @@ class DatePicker extends Component {
                 disabled={this.props.disabled}
                 iconPosition='left' 
                 icon='calendar alternate outline' 
-                placeholder='Date Time'
+                placeholder={this.props.placeholder ? this.props.placeholder : 'Date Time'}
                 value={this.state.value}
                 onKeyPress={(event) => event.preventDefault()}
                 onClick={this.onDatePickerInputFocusHandler}
@@ -273,6 +273,7 @@ DatePicker.propTypes = {
     mobile: PropTypes.bool,
     fluid: PropTypes.bool,
     disabled: PropTypes.bool,
+    placeholder: PropTypes.string,
     changed: PropTypes.func.isRequired
 };
 

@@ -9,7 +9,9 @@ export default (db, dataObj) => {
         db.users.findAll({where: {email: dataObj.email}})
             .then((user) => {
                 if (user.length === 0) {
-                    return reject();
+                    const error = new Error();
+                    error.status = 401;
+                    return reject(error);
                 }
                 bcrypt.compare(dataObj.password, user[0].password, (err, result) => {
                     if (err) {

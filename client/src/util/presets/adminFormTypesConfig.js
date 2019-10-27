@@ -1,6 +1,6 @@
 import configElem from './inputElemTypesConfig';
 
-const formTypesConfig = {
+const adminFormTypesConfig = {
     agents: {
         id: configElem.textField({
             label: 'ID',
@@ -248,12 +248,12 @@ const formTypesConfig = {
         city_id: configElem.select({
             label: 'City',
             placeholder: 'Select City',
-            source: ['cities']
+            source: ['cities', 'coverage']
         }),
         agent_id: configElem.select({
             label: 'Agent',
             placeholder: 'Select Agent',
-            source: ['agents', 'marks']
+            source: ['agents', 'marks', 'coverage']
         }),
         start_date: configElem.dateTime({
             label: 'Start Date'
@@ -505,4 +505,4 @@ const formTypesConfig = {
     }
 };
 
-export default formTypesConfig;
+export default adminFormTypesConfig;

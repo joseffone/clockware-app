@@ -6,7 +6,7 @@
 
 .adminContainerPCOpen {
     margin: 0 !important;
-    padding-left: 10.714em !important;
+    padding-left: 10.714rem !important;
     transition-property: padding-left;
     transition-duration: 0.5s;
 }
@@ -20,19 +20,19 @@
 
 .adminContainerMobile :global .message {
     border: none; 
-    margin: 1em 1em 0 1em !important;
+    margin: 1rem 1rem 0 1rem !important;
     width: 100%;
 }
 
 .adminContainerPCOpen :global .message {
     border: none; 
-    margin: 1em 1em 0 1em !important;
+    margin: 1rem 1rem 0 1rem !important;
     width: 100%;
 }
 
 .adminContainerPCClose :global .message {
     border: none; 
-    margin: 1em 1em 0 1em !important;
+    margin: 1rem 1rem 0 1rem !important;
     width: 100%;
 }
 
@@ -50,15 +50,15 @@
 
 .adminContainerMobile :global .column {
     padding: 0 !important;
-    margin: 1em !important;
+    margin: 1rem !important;
 }
 
 .adminContainerPCOpen :global .column {
     padding: 0 !important;
-    margin: 1em !important;
+    margin: 1rem !important;
 }
 
 .adminContainerPCClose :global .column {
     padding: 0 !important;
-    margin: 1em !important;
+    margin: 1rem !important;
 }

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Modal, Form, Button, Message, Icon, Confirm} from 'semantic-ui-react';
-import InputField from './input-field';
+import InputField from '../input-field';
 import ConfirmPassword from './confirm-password';
 import {refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest, deleteDataRequest, setReloadDataTrigger} from '../../store/actions';
 import {transformSelectOptions} from '../../util';
-import formTypesConfig from '../../util/presets/formTypesConfig';
+import adminFormTypesConfig from '../../util/presets/adminFormTypesConfig';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 
 class AdminForm extends Component {
@@ -93,7 +94,10 @@ class AdminForm extends Component {
     onModalCloseHandler = () => {
         this.setState({
             isModalOpen: false
-        }, () => this.props.onSetReloadDataTriggerHandler(this.props.model, true));
+        }, () => {
+            this.props.onFormRefreshStateHandler(this.props.model);
+            this.props.onSetReloadDataTriggerHandler(this.props.model, true);
+        });
     }
 
     onFormLoadHandler = () => {
@@ -126,6 +130,14 @@ class AdminForm extends Component {
             for (const key in this.props.forms[this.props.model]) {
                 if (key !== 'id' && key !== 'created_at' && key !== 'updated_at' && key !== 'deleted_at') {
                     if (key === 'password' && !this.props.forms[this.props.model][key].touched) {
+                        continue;
+                    }
+                    if (key === 'start_date' || key === 'expiration_date') {
+                        formDataObj[key] = moment(this.props.forms[this.props.model][key].value, 'DD-MM-YYYY HH:mm');
+                        continue;
+                    }
+                    if (key === 'note') {
+                        formDataObj[key] = this.props.forms[this.props.model][key].value === '' ? 'created by admin' : this.props.forms[this.props.model][key].value;
                         continue;
                     }
                     formDataObj[key] = this.props.forms[this.props.model][key].value;
@@ -263,8 +275,8 @@ class AdminForm extends Component {
                                     iconPosition={formField.config.iconPosition}
                                     placeholder={formField.config.placeholder}
                                     loading={formField.config.source ? formField.config.source.length !== 0 ? this.props.models[formField.config.source[0]].loading.isFetching : false : false}
-                                    options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
-                                    text={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
+                                    options={transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions)}
+                                    text={transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
                                     value={formField.value}
                                     changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
                                     blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
@@ -365,7 +377,7 @@ const mapDispatchToProps = dispatch => {
 
 AdminForm.propTypes = {
     refreshAfterClose: PropTypes.bool,
-    model: PropTypes.oneOf(Object.keys(formTypesConfig)).isRequired,
+    model: PropTypes.oneOf(Object.keys(adminFormTypesConfig)).isRequired,
     trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired,
     update: PropTypes.object
 };

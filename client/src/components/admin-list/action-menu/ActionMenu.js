@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Menu, Dropdown, Icon, Transition, Input} from 'semantic-ui-react';
-import {fetchDataRequest, deleteDataRequest, setSelectAllTrigger, changeSearchValue, searchDataRequest, addFilter, deleteFilter, loadFilterOptions, setFilterTargetValue} from '../../../store/actions';
+import {deleteDataRequest, setSelectAllTrigger, changeSearchValue, searchDataRequest, addFilter, deleteFilter, loadFilterOptions, setFilterTargetValue, setReloadDataTrigger} from '../../../store/actions';
 import {transformDataSet} from '../../../util';
 import AdminForm from '../../admin-form';
 import ConfirmDelete from './confirm-delete';
@@ -23,7 +23,8 @@ class ActionMenu extends Component {
     }
 
     onCommitDeleteHandler = () => {
-        this.props.onFetchDataHandler(this.props.auth.accessToken, this.props.admin.ui.currentModel);
+        //this.props.onFetchDataHandler(this.props.auth.accessToken, this.props.admin.ui.currentModel);
+        this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true);
         this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, false);
     }
 
@@ -222,7 +223,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
         onDeleteDataHandler: (accessToken, model, id, queryString) => dispatch(deleteDataRequest(accessToken, model, id, queryString)),
         onSetSelectAllTriggerHandler: (model, checked) => dispatch(setSelectAllTrigger(model, checked)),
         onChangeSearchValueHandler: (model, value) => dispatch(changeSearchValue(model, value)),
@@ -230,7 +230,8 @@ const mapDispatchToProps = dispatch => {
         onAddFilterHandler: (model, filterKey) => dispatch(addFilter(model, filterKey)),
         onDeleteFilterHandler: (model, filterKey) => dispatch(deleteFilter(model, filterKey)),
         onSetFilterTargetValueHandler: (model, filterKey, value) => dispatch(setFilterTargetValue(model, filterKey, value)),
-        onLoadFilterOptionsHandler: (filterKey, dataKey, model, getDataSet) => dispatch(loadFilterOptions(filterKey, dataKey, model, getDataSet))
+        onLoadFilterOptionsHandler: (filterKey, dataKey, model, getDataSet) => dispatch(loadFilterOptions(filterKey, dataKey, model, getDataSet)),
+        onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag))
     };
 };
 

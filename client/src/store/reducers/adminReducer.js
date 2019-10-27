@@ -1,6 +1,6 @@
 import * as actionTypes from '../actions/action-types';
 import {rewriteObjectProps, validateInput} from '../../util';
-import formTypesConfig from '../../util/presets/formTypesConfig';
+import adminFormTypesConfig from '../../util/presets/adminFormTypesConfig';
 import tableFieldsConfig from '../../util/presets/tableFieldsConfig';
 
 const initState = {
@@ -75,9 +75,9 @@ const initState = {
     }
 };
 
-for (const key in formTypesConfig) {
+for (const key in adminFormTypesConfig) {
     initState.forms[key] = {
-        ...formTypesConfig[key]
+        ...adminFormTypesConfig[key]
     };
     initState.models[key] = {
         items: [],
@@ -131,7 +131,7 @@ const adminReducer = (state = initState, action) => {
         case actionTypes.REFRESH_INPUT_FORM_STATE:
             return rewriteObjectProps(state, {
                 forms: rewriteObjectProps(state.forms, {
-                    [action.model]: {...formTypesConfig[action.model]}
+                    [action.model]: {...adminFormTypesConfig[action.model]}
                 })
             });
         
@@ -193,9 +193,15 @@ const adminReducer = (state = initState, action) => {
                         loading: rewriteObjectProps(state.models[action.model].loading, {
                             isFetching: false
                         }),
+                        items: [],
                         error: rewriteObjectProps(state.models[action.model].error, {
                             fetchError: action.error
                         })
+                    })
+                }),
+                lists: rewriteObjectProps(state.lists, {
+                    [action.model]: rewriteObjectProps(state.lists[action.model], {
+                        ids: []
                     })
                 }),
                 ui: rewriteObjectProps(state.ui, {
