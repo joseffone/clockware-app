@@ -1,0 +1,63 @@
+.adminForm :global .fields {
+    margin: 0 0 1rem !important;
+}
+
+.adminForm :global .unstackable .field:first-child {
+    padding-left: 0 !important;
+    width: 92% !important;
+}
+
+.adminForm :global .unstackable .field:last-child{
+    display: flex; 
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-right: 0 !important;
+    margin-bottom: 1px !important;
+    width: 8% !important;
+}
+
+.adminForm :global .auth .unstackable .field:first-child {
+    width: 88% !important;
+}
+
+.adminForm :global .auth .unstackable .field:last-child{
+    width: 12% !important;
+}
+
+.adminForm :global .mobile .unstackable .field:first-child {
+    width: 88% !important;
+}
+
+.adminForm :global .mobile .unstackable .field:last-child{
+    width: 12% !important;
+}
+
+.adminForm :global .unstackable .button {
+    margin-right: 0 !important;
+}
+
+.adminForm :global input:hover {
+    border-color: rgba(34,36,38,.35) !important;
+}
+
+.adminForm :global .fields:last-child {
+    padding-top: 1rem !important;
+    margin-bottom: 0 !important;
+}
+
+.adminForm :global .fields:last-child .field {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+}
+
+.adminForm :global .fields:last-child .field:first-child {
+    padding-left: 0 !important;
+}
+
+.adminForm :global .fields:last-child .field:last-child {
+    padding-right: 0 !important;
+}
+
+.adminForm :global .mobile .fields:last-child .field {
+    padding: 0 !important;
+}

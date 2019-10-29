@@ -7,6 +7,7 @@ import {refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest,
 import {transformSelectOptions} from '../../util';
 import adminFormTypesConfig from '../../util/presets/adminFormTypesConfig';
 import moment from 'moment';
+import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 
 class AdminForm extends Component {
@@ -91,6 +92,20 @@ class AdminForm extends Component {
         });
     }
 
+    onResetButtonClickHandler = () => {
+        this.setState({
+            isFormSubmited: false,
+            isFormDataValid: true,
+            update: this.props.update,
+            lastRequestType: null
+        }, () => this.onFormLoadHandler());
+    }
+
+    onClearFieldButtonClickHandler = (event, key) => {
+        event.preventDefault();
+        this.props.onInputChangeHandler({target: {value: ''}}, this.props.model, key, {value: null}, true);
+    }
+
     onModalCloseHandler = () => {
         this.setState({
             isModalOpen: false
@@ -113,7 +128,11 @@ class AdminForm extends Component {
         }
         if (this.props.update) {
             for (const key in this.props.update) {
-                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.update[key]}, false);
+                let value = this.props.update[key];
+                if (key === 'start_date' || key === 'expiration_date' || key === 'created_at' || key === 'updated_at') {
+                    value = moment(this.props.update[key]).format('DD-MM-YYYY HH:mm');
+                }
+                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value}, false);
             }
         }
     }
@@ -235,6 +254,7 @@ class AdminForm extends Component {
 
         return (
             <Modal 
+                className={styles.adminForm}
                 trigger={
                     <Trigger 
                         onClick={this.onModalOpenHandler} 
@@ -250,41 +270,60 @@ class AdminForm extends Component {
                     this.props.model.split('')[0].toUpperCase() + this.props.model.split('').slice(1).join('') : 
                     this.state.update ? this.props.model.toUpperCase() + ': editing' : this.props.model.toUpperCase() + ': adding'}
                 </Modal.Header>
-                <Modal.Content>
+                <Modal.Content
+                    className={`${this.props.model === 'authentication' ? 'auth' : null} ${this.props.global.ui.mobile ? 'mobile' : null}`}
+                >
                     <Form 
                         loading={this.props.auth.isLoading || this.props.models[this.props.model].loading.isCreating || this.props.models[this.props.model].loading.isUpdating || this.props.models[this.props.model].loading.isDeleting}
                         error={formDataError || fetchError || createError || updateError || deleteError || authError}
                         onSubmit={() => this.props.model === 'users' && isPasswordFieldTouched ? null : this.onFormSubmitHandler()}
                     >
-                        {formFieldsArray.map(formField => (
-                            <Form.Field
-                                key={formField.key}
-                                error={!formField.isValid && formField.touched}
-                                onChange={() => this.setState({isFormDataValid: true, isFormSubmited: false})}
-                                onFocus={() => (formField.elementType === 'select' || formField.elementType === 'datetime') ? this.setState({isFormDataValid: true, isFormSubmited: false}) : null}
-                            >
-                                <label>{formField.config.label}</label> 
-                                <InputField 
-                                    key={formField.key}
-                                    mobile={this.props.global.ui.mobile}
-                                    elementType={formField.elementType}
-                                    inputType={formField.config.type}
-                                    disabled={formField.config.restrictions.disabled}
-                                    readOnly={formField.config.restrictions.readOnly}
-                                    icon={formField.config.icon}
-                                    iconPosition={formField.config.iconPosition}
-                                    placeholder={formField.config.placeholder}
-                                    loading={formField.config.source ? formField.config.source.length !== 0 ? this.props.models[formField.config.source[0]].loading.isFetching : false : false}
-                                    options={transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions)}
-                                    text={transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
-                                    value={formField.value}
-                                    changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
-                                    blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
-                                        value: formField.elementType === 'select' ? formField.value : null
-                                    })}
-                                />
-                            </Form.Field>
-                        ))}
+                        {formFieldsArray.map(formField => {
+                            let loading = formField.config.source ? formField.config.source.length !== 0 ? this.props.models[formField.config.source[0]].loading.isFetching : false : false;
+                            let options = transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions);
+                            let text = transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : '';
+                            return (
+                                <Form.Group widths={2} unstackable>
+                                    <Form.Field
+                                        error={!formField.isValid && formField.touched}
+                                        onChange={() => this.setState({isFormDataValid: true, isFormSubmited: false})}
+                                        onFocus={() => (formField.elementType === 'select' || formField.elementType === 'datetime') ? this.setState({isFormDataValid: true, isFormSubmited: false}) : null}
+                                    >
+                                        <label>{formField.config.label}</label> 
+                                        <InputField 
+                                            key={formField.key}
+                                            mobile={this.props.global.ui.mobile}
+                                            elementType={formField.elementType}
+                                            inputType={formField.config.type}
+                                            disabled={formField.config.restrictions.disabled}
+                                            readOnly={formField.config.restrictions.readOnly}
+                                            icon={formField.config.icon}
+                                            iconPosition={formField.config.iconPosition}
+                                            placeholder={formField.config.placeholder}
+                                            loading={loading}
+                                            options={options}
+                                            text={text}
+                                            value={formField.value}
+                                            changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
+                                            blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
+                                                value: formField.elementType === 'select' ? formField.value : null
+                                            })}
+                                        />
+                                    </Form.Field>
+                                     <Form.Field 
+                                        disabled={formField.value === '' || formField.config.restrictions.readOnly}
+                                    >
+                                        <Button 
+                                            as='a' 
+                                            basic 
+                                            circular 
+                                            icon='eraser' 
+                                            onClick={(event) => this.onClearFieldButtonClickHandler(event, formField.key)}
+                                        />
+                                    </Form.Field>
+                                </Form.Group>
+                            );
+                         })}
                         <Message 
                             error
                             header={messageHeader}
@@ -320,7 +359,7 @@ class AdminForm extends Component {
                                     onClick={() => this.props.model === 'users' && isPasswordFieldTouched ? this.setState({isConfirmPasswordOpen: true}) : this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null})}
                                 >
                                     <Icon name={this.props.model === 'authentication' ? 'unlock' : this.state.update ? 'save' : 'add'} />
-                                    {this.props.model === 'authentication' ? 'LOGIN' : this.state.update ? 'SAVE' : 'ADD'}
+                                    {this.props.model === 'authentication' ? 'Login' : this.state.update ? 'Save' : 'Add'}
                                 </Button>
                             </Form.Field>
                             {this.state.update ?
@@ -331,9 +370,20 @@ class AdminForm extends Component {
                                         onClick={() => this.setState({isConfirmDeleteOpen: true})}
                                     >
                                         <Icon name='trash alternate' />
-                                        DELETE
+                                        Del
                                     </Button>
                                 </Form.Field>
+                            : null}
+                            {!isFieldsNotTouched && this.props.model !== 'authentication' ? 
+                                <Form.Field>
+                                    <Button
+                                        fluid
+                                        onClick={this.onResetButtonClickHandler}
+                                    >
+                                        <Icon name='recycle' />
+                                        Reset
+                                    </Button>
+                            </Form.Field>
                             : null}
                             <Form.Field>
                                 <Button
@@ -341,7 +391,7 @@ class AdminForm extends Component {
                                     onClick={this.onModalCloseHandler}
                                 >
                                     <Icon name='close' />
-                                    CLOSE
+                                    Close
                                 </Button>
                             </Form.Field>
                         </Form.Group>

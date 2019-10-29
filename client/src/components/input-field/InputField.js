@@ -8,6 +8,7 @@ const InputField = (props) => {
         case 'input':
             return (
                 <Input 
+                    {...props}
                     type={props.inputType} 
                     fluid 
                     disabled={props.disabled}
@@ -33,6 +34,7 @@ const InputField = (props) => {
         case 'select':
             return (
                 <Select
+                    {...props}
                     fluid
                     search
                     disabled={props.disabled}
@@ -40,6 +42,7 @@ const InputField = (props) => {
                     loading={props.loading}
                     options={props.options}
                     text={props.text}
+                    value={props.value}
                     onChange={props.changed}
                     onBlur={props.blurred}
                  />
@@ -47,10 +50,12 @@ const InputField = (props) => {
         case 'datetime':
             return (
                 <DatePicker 
+                    {...props}
                     fluid
                     mobile={props.mobile}
                     disabled={props.disabled}
                     placeholder={props.placeholder}
+                    value={props.value}
                     changed={props.changed}
                 />
             );

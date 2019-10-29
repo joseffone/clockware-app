@@ -6,8 +6,8 @@ export default (db, dataObj) => {
         db.orders.findAll({
             where: {
                 [db.Sequelize.Op.and]: [
-                    {start_date: {[db.Sequelize.Op.lte]: dataObj.eхpiration_date}},
-                    {eхpiration_date: {[db.Sequelize.Op.gte]: dataObj.start_date}}
+                    {start_date: {[db.Sequelize.Op.lt]: dataObj.eхpiration_date}},
+                    {eхpiration_date: {[db.Sequelize.Op.gt]: dataObj.start_date}}
                 ]
             },
             group: ['agent_id']

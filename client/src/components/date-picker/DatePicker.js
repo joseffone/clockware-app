@@ -16,7 +16,7 @@ class DatePicker extends Component {
         showDays: true,
         showHours: false,
         showMinutes: false,
-        value: this.props.value ? this.props.value : ''
+        value: this.props.value && this.props.value !== '' ? moment(this.props.value).format('DD-MM-YYYY HH:mm') : ''
     }
 
     inputFieldRef = React.createRef();
@@ -207,7 +207,7 @@ class DatePicker extends Component {
                 iconPosition='left' 
                 icon='calendar alternate outline' 
                 placeholder={this.props.placeholder ? this.props.placeholder : 'Date Time'}
-                value={this.state.value}
+                value={this.props.changed ? this.props.value : this.state.value}
                 onKeyPress={(event) => event.preventDefault()}
                 onClick={this.onDatePickerInputFocusHandler}
                 onFocus={this.onDatePickerInputFocusHandler}
@@ -274,6 +274,7 @@ DatePicker.propTypes = {
     fluid: PropTypes.bool,
     disabled: PropTypes.bool,
     placeholder: PropTypes.string,
+    value: PropTypes.string,
     changed: PropTypes.func.isRequired
 };
 
