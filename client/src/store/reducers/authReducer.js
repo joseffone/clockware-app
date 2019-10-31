@@ -14,13 +14,13 @@ const initState = {
 const authReducer = (state = initState, action) => {
     switch (action.type) {
 
-        case actionTypes.LOGIN_REQUEST:
+        case actionTypes.AUTH_LOGIN_REQUEST:
             return rewriteObjectProps(state, {
                 error: null,
                 isLoading: true
             });
 
-        case actionTypes.LOGIN_SUCCESS:
+        case actionTypes.AUTH_LOGIN_SUCCESS:
             return rewriteObjectProps(state, {
                 accessToken: action.authData.access_token,
                 accessTokenIat: action.authData.access_token_iat,
@@ -29,20 +29,20 @@ const authReducer = (state = initState, action) => {
                 pathToAutoRedirect: '/admin'
             });
 
-        case actionTypes.LOGIN_FAILURE:
+        case actionTypes.AUTH_LOGIN_FAILURE:
             return rewriteObjectProps(state, {
                 error: action.error,
                 isLoading: false,
                 pathToAutoRedirect: '/'
             });
 
-        case actionTypes.REFRESH_TOKENS_REQUEST:
+        case actionTypes.AUTH_REFRESH_TOKENS_REQUEST:
             return rewriteObjectProps(state, {
                 error: null,
                 isLoading: true
             });
 
-        case actionTypes.REFRESH_TOKENS_SUCCESS:
+        case actionTypes.AUTH_REFRESH_TOKENS_SUCCESS:
             return rewriteObjectProps(state, {
                 accessToken: action.authData.access_token,
                 accessTokenIat: action.authData.access_token_iat,
@@ -51,7 +51,7 @@ const authReducer = (state = initState, action) => {
                 pathToAutoRedirect: '/admin'
             });
 
-        case actionTypes.REFRESH_TOKENS_FAILURE:
+        case actionTypes.AUTH_REFRESH_TOKENS_FAILURE:
             return rewriteObjectProps(state, {
                 error: action.error,
                 accessToken: null,
@@ -61,13 +61,13 @@ const authReducer = (state = initState, action) => {
                 pathToAutoRedirect: '/'
             });
         
-        case actionTypes.LOGOUT_REQUEST:
+        case actionTypes.AUTH_LOGOUT_REQUEST:
             return rewriteObjectProps(state, {
                 error: null,
                 isLoading: true
             });
 
-        case actionTypes.LOGOUT_SUCCESS:
+        case actionTypes.AUTH_LOGOUT_SUCCESS:
             return rewriteObjectProps(state, {
                 accessToken: null,
                 accessTokenIat: null,
@@ -76,7 +76,7 @@ const authReducer = (state = initState, action) => {
                 pathToAutoRedirect: '/'
             });
 
-        case actionTypes.LOGOUT_FAILURE:
+        case actionTypes.AUTH_LOGOUT_FAILURE:
             return rewriteObjectProps(state, {
                 error: action.error,
                 isLoading: false

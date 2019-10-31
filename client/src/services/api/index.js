@@ -5,6 +5,7 @@ import deleteDataService from './deleteDataService';
 import loginUserService from './loginUserService';
 import logoutUserService from './logoutUserService';
 import refreshTokensService from './refreshTokensService';
+import fetchFreeAgentsDataService from './fetchFreeAgentsDataService';
 
 export {
     fetchDataService,
@@ -13,5 +14,6 @@ export {
     deleteDataService,
     loginUserService,
     logoutUserService,
-    refreshTokensService
+    refreshTokensService,
+    fetchFreeAgentsDataService
 };

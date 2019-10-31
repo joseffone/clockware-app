@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Select, Label, Button, Segment} from 'semantic-ui-react';
-import DatePicker from '../../../date-picker';
+import DatePicker from '../date-picker';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 

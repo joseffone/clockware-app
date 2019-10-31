@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Menu, Header, Button, Icon, Popup } from 'semantic-ui-react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Menu, Header, Button, Icon, Popup} from 'semantic-ui-react';
 import AdminForm from '../admin-form';
-import { logoutRequest, toggleSidebar, toggleSidebarButtonPress, setReloadDataTrigger } from '../../store/actions';
+import {adminActionCreator, authActionCreator, globalActionCreator} from '../../store/actions';
 import styles from './styles.module.css';
 
 class NavBar extends Component {
@@ -34,7 +34,7 @@ class NavBar extends Component {
                             inverted
                             as='h3'
                             icon='clock outline'
-                            content='Clockware'
+                            content={this.props.auth.pathToAutoRedirect === '/' ? 'Clockware' : this.props.admin.ui.currentModel.split('')[0].toUpperCase() + this.props.admin.ui.currentModel.split('').slice(1).join('')}
                         />
                     }
                 />
@@ -135,10 +135,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUserLogoutHandler: (accessToken) => dispatch(logoutRequest(accessToken)),
-        onToggleSideBarHandler: () => dispatch(toggleSidebar()),
-        onToggleSideBarButtonPressHandler: () => dispatch(toggleSidebarButtonPress()),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag))
+        onUserLogoutHandler: (accessToken) => dispatch(authActionCreator.logoutRequest(accessToken)),
+        onToggleSideBarHandler: () => dispatch(globalActionCreator.toggleSidebar()),
+        onToggleSideBarButtonPressHandler: () => dispatch(globalActionCreator.toggleSidebarButtonPress()),
+        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
     };
 };
 

@@ -1,3 +1,4 @@
-export * from './action-creators/authActions';
-export * from './action-creators/adminActions';
-export * from './action-creators/globalActions';
+import adminActionCreator from './action-creators/adminActionCreator';
+import authActionCreator from './action-creators/authActionCreator';
+import globalActionCreator from './action-creators/globalActionCreator';
+export {adminActionCreator, authActionCreator, globalActionCreator};

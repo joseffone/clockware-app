@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import moment from 'moment';
 import DayPicker from './ui/DayPicker';
 import TimePicker from './ui/TimePicker';
 import DateNavBar from './ui/DateNavBar';
-import { Grid, Popup, Modal, Input, Button, Container } from 'semantic-ui-react';
+import {Grid, Popup, Modal, Input, Button, Container} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 

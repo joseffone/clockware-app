@@ -12,14 +12,14 @@ const initState = {
 const globalReducer = (state = initState, action) => {
     switch (action.type) {
 
-        case actionTypes.CHANGE_DISPLAY_VIEW:
+        case actionTypes.GLOBAL_CHANGE_DISPLAY_VIEW:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     mobile: action.mobile
                 })
             });
 
-        case actionTypes.TOGGLE_SIDEBAR:
+        case actionTypes.GLOBAL_TOGGLE_SIDEBAR:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     isSideBarOpen: !state.ui.isSideBarOpen,
@@ -27,7 +27,7 @@ const globalReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.TOGGLE_SIDEBAR_BUTTON_PRESS:
+        case actionTypes.GLOBAL_TOGGLE_SIDEBAR_BUTTON_PRESS:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     isSideBarButtonPressed: !state.ui.isSideBarButtonPressed,

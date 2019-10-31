@@ -128,14 +128,14 @@ for (const key in adminFormTypesConfig) {
 const adminReducer = (state = initState, action) => {
     switch (action.type) {
 
-        case actionTypes.REFRESH_INPUT_FORM_STATE:
+        case actionTypes.ADMIN_REFRESH_FORM_STATE:
             return rewriteObjectProps(state, {
                 forms: rewriteObjectProps(state.forms, {
                     [action.model]: {...adminFormTypesConfig[action.model]}
                 })
             });
         
-        case actionTypes.CHANGE_INPUT_FORM_STATE:
+        case actionTypes.ADMIN_CHANGE_FORM_STATE:
                 return rewriteObjectProps(state, {
                     forms: rewriteObjectProps(state.forms, {
                         [action.model]:  rewriteObjectProps(state.forms[action.model], {
@@ -148,7 +148,7 @@ const adminReducer = (state = initState, action) => {
                     })
                 });
 
-        case actionTypes.FETCH_DATA_REQUEST:
+        case actionTypes.ADMIN_FETCH_DATA_REQUEST:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -166,7 +166,7 @@ const adminReducer = (state = initState, action) => {
                 }) 
             });
 
-        case actionTypes.FETCH_DATA_SUCCESS:
+        case actionTypes.ADMIN_FETCH_DATA_SUCCESS:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -186,7 +186,7 @@ const adminReducer = (state = initState, action) => {
                 }) 
             });
 
-        case actionTypes.FETCH_DATA_FAILURE:
+        case actionTypes.ADMIN_FETCH_DATA_FAILURE:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -210,7 +210,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.CREATE_DATA_REQUEST:
+        case actionTypes.ADMIN_CREATE_DATA_REQUEST:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -224,7 +224,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.CREATE_DATA_SUCCESS:
+        case actionTypes.ADMIN_CREATE_DATA_SUCCESS:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -236,7 +236,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
         
-        case actionTypes.CREATE_DATA_FAILURE:
+        case actionTypes.ADMIN_CREATE_DATA_FAILURE:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -251,7 +251,7 @@ const adminReducer = (state = initState, action) => {
             });
 
 
-        case actionTypes.UPDATE_DATA_REQUEST:
+        case actionTypes.ADMIN_UPDATE_DATA_REQUEST:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -265,7 +265,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
         
-        case actionTypes.UPDATE_DATA_SUCCESS:
+        case actionTypes.ADMIN_UPDATE_DATA_SUCCESS:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -277,7 +277,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.UPDATE_DATA_FAILURE:
+        case actionTypes.ADMIN_UPDATE_DATA_FAILURE:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -291,7 +291,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.DELETE_DATA_REQUEST:
+        case actionTypes.ADMIN_DELETE_DATA_REQUEST:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -306,7 +306,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.DELETE_DATA_SUCCESS:
+        case actionTypes.ADMIN_DELETE_DATA_SUCCESS:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -318,7 +318,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.DELETE_DATA_FAILURE:
+        case actionTypes.ADMIN_DELETE_DATA_FAILURE:
             return rewriteObjectProps(state, {
                 models: rewriteObjectProps(state.models, {
                     [action.model]: rewriteObjectProps(state.models[action.model], {
@@ -332,7 +332,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.CHANGE_CURRENT_MODEL:
+        case actionTypes.ADMIN_CHANGE_CURRENT_MODEL:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     currentModel: action.model,
@@ -350,7 +350,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SET_RELOAD_DATA_TRIGGER:
+        case actionTypes.ADMIN_SET_RELOAD_DATA_TRIGGER:
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     reloadDataTrigger: action.flag
@@ -366,7 +366,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SET_SELECT_ALL_TRIGGER:
+        case actionTypes.ADMIN_SET_SELECT_ALL_TRIGGER:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -375,7 +375,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
         
-        case actionTypes.TOGGLE_LIST_ITEM_SELECT:
+        case actionTypes.ADMIN_TOGGLE_LIST_ITEM_SELECT:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -384,7 +384,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SET_CURRENT_PAGE:
+        case actionTypes.ADMIN_SET_CURRENT_PAGE:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -397,7 +397,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
         
-        case actionTypes.SET_ITEMS_PER_PAGE:
+        case actionTypes.ADMIN_SET_ITEMS_PER_PAGE:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -410,7 +410,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SET_TOTAL_ITEMS:
+        case actionTypes.ADMIN_SET_TOTAL_ITEMS:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -423,7 +423,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SET_LIST_ITEMS_IDS:
+        case actionTypes.ADMIN_SET_LIST_ITEMS_IDS:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -432,7 +432,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SET_LIST_DATA:
+        case actionTypes.ADMIN_SET_LIST_DATA:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -441,7 +441,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SEARCH_DATA_INIT:
+        case actionTypes.ADMIN_SEARCH_DATA_INIT:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -455,7 +455,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.SEARCH_DATA_COMPLETE:
+        case actionTypes.ADMIN_SEARCH_DATA_COMPLETE:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -469,7 +469,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.CHANGE_SEARCH_VALUE:
+        case actionTypes.ADMIN_CHANGE_SEARCH_VALUE:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -482,7 +482,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.CHANGE_SORT_STATE:
+        case actionTypes.ADMIN_CHANGE_SORT_STATE:
             {
                 let isDate = state.lists[action.model].params.fields.find(({name}) => name === action.target).isDate;
                 return rewriteObjectProps(state, {
@@ -501,7 +501,7 @@ const adminReducer = (state = initState, action) => {
                 });
             }
 
-        case actionTypes.ADD_FILTER:
+        case actionTypes.ADMIN_ADD_FILTER:
             if (!state.lists[action.model].params.filters.find(filter => filter[action.filterKey])) {
                 let {type, dataKey, isDate, descriptor} = state.lists[action.model].params.fields
                     .filter(field => field.filterOperation)
@@ -534,7 +534,7 @@ const adminReducer = (state = initState, action) => {
             }
             return state;
 
-            case actionTypes.DELETE_FILTER:
+            case actionTypes.ADMIN_DELETE_FILTER:
             {
                 let filters = state.lists[action.model].params.filters;
                 let index = filters.findIndex(filter => filter[action.filterKey]);
@@ -549,7 +549,7 @@ const adminReducer = (state = initState, action) => {
                 });
             }
 
-            case actionTypes.SET_FILTER_OPTIONS:
+            case actionTypes.ADMIN_SET_FILTER_OPTIONS:
             {
                 let filters = state.lists[action.model].params.filters;
                 let index = filters.findIndex(filter => filter[action.filterKey]);
@@ -573,7 +573,7 @@ const adminReducer = (state = initState, action) => {
                 });
             }
 
-        case actionTypes.SET_FILTER_TARGET_VALUE:
+        case actionTypes.ADMIN_SET_FILTER_TARGET_VALUE:
             {
                 let filters = state.lists[action.model].params.filters;
                 let index = filters.findIndex(filter => filter[action.filterKey]);
@@ -594,7 +594,7 @@ const adminReducer = (state = initState, action) => {
                 });
             }
 
-        case actionTypes.SET_CUSTOM_FIELDS:
+        case actionTypes.ADMIN_SET_CUSTOM_FIELDS:
             {
                 let fields = state.lists[action.model].params.fields;
                 return rewriteObjectProps(state, {

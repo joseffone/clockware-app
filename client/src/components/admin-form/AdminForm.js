@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Modal, Form, Button, Message, Icon, Confirm} from 'semantic-ui-react';
 import InputField from '../input-field';
 import ConfirmPassword from './confirm-password';
-import {refreshInpFormState, changeInpFormState, loginRequest, fetchDataRequest, createDataRequest, updateDataRequest, deleteDataRequest, setReloadDataTrigger} from '../../store/actions';
+import {adminActionCreator, authActionCreator} from '../../store/actions';
 import {transformSelectOptions} from '../../util';
 import adminFormTypesConfig from '../../util/presets/adminFormTypesConfig';
 import moment from 'moment';
@@ -414,14 +414,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFormRefreshStateHandler: (model) => dispatch(refreshInpFormState(model)),
-        onInputChangeHandler: (event, model, formFieldKey, { value }, touched) => dispatch(changeInpFormState(event, model, formFieldKey, value, touched)),
-        onUserLoginHandler: (loginData) => dispatch(loginRequest(loginData)),
-        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
-        onCreateDataHandler: (accessToken, model, dataObj) => dispatch(createDataRequest(accessToken, model, dataObj)),
-        onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(updateDataRequest(accessToken, model, id, dataObj)),
-        onDeleteDataHandler: (accessToken, model, id) => dispatch(deleteDataRequest(accessToken, model, id)),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag))
+        onFormRefreshStateHandler: (model) => dispatch(adminActionCreator.refreshFormState(model)),
+        onInputChangeHandler: (event, model, formFieldKey, { value }, touched) => dispatch(adminActionCreator.changeFormState(event, model, formFieldKey, value, touched)),
+        onUserLoginHandler: (loginData) => dispatch(authActionCreator.loginRequest(loginData)),
+        onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
+        onCreateDataHandler: (accessToken, model, dataObj) => dispatch(adminActionCreator.createDataRequest(accessToken, model, dataObj)),
+        onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(adminActionCreator.updateDataRequest(accessToken, model, id, dataObj)),
+        onDeleteDataHandler: (accessToken, model, id) => dispatch(adminActionCreator.deleteDataRequest(accessToken, model, id)),
+        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
     };
 };
 

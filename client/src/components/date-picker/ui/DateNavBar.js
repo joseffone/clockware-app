@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Dropdown, Icon } from 'semantic-ui-react';
+import {Table, Dropdown, Icon} from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import styles from '../styles.module.css';
@@ -9,7 +9,9 @@ const DateNavBar = (props) => {
     let dateContext = moment(Object.assign({}, props.dateContext));
     let currentYear = dateContext.format('YYYY');
     let currentMonth  = dateContext.format('MMMM');
-    let monthsOptions = moment.months().map((elem) => { return {key: elem, value: elem, text: elem}; });
+    let monthsOptions = moment.months().map((elem) => {
+        return {key: elem, value: elem, text: elem};
+    });
     let dayCell = null;
 
     if (props.withDay) {

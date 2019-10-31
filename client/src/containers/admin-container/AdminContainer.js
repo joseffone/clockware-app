@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Grid, Segment, Message } from 'semantic-ui-react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Grid, Segment, Message} from 'semantic-ui-react';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
-import { AdminSideBar } from '../../components/sidebars/admin-sidebar';
+import {AdminSideBar} from '../../components/sidebars/admin-sidebar';
 import AdminList from '../../components/admin-list';
 import styles from './styles.module.css';
 

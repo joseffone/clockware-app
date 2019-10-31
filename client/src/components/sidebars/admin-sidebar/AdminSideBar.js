@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Sidebar, Menu, Icon } from 'semantic-ui-react';
-import { changeCurrentModel, toggleSidebar, toggleSidebarButtonPress } from '../../../store/actions';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Sidebar, Menu, Icon} from 'semantic-ui-react';
+import {adminActionCreator, globalActionCreator} from '../../../store/actions';
 import styles from './styles.module.css';
 
 class SideBar extends Component {
@@ -54,9 +54,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onChangeCurrentModelHandler: (event, { name }) => dispatch(changeCurrentModel(name)),
-        onToggleSideBarHandler: () => dispatch(toggleSidebar()),
-        onToggleSideBarButtonPressHandler: () => dispatch(toggleSidebarButtonPress())
+        onChangeCurrentModelHandler: (event, { name }) => dispatch(adminActionCreator.changeCurrentModel(name)),
+        onToggleSideBarHandler: () => dispatch(globalActionCreator.toggleSidebar()),
+        onToggleSideBarButtonPressHandler: () => dispatch(globalActionCreator.toggleSidebarButtonPress())
     };
 };
 

@@ -2,7 +2,6 @@
 
 import bcrypt from 'bcrypt';
 import tokensController from './tokensController';
-import errorWrapper from './errorWrapper';
 
 export default (db, dataObj) => {
     return new Promise((resolve, reject) => {

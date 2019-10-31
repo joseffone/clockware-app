@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar } from 'semantic-ui-react';
+import {Sidebar} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const SideBarWrapper = (props) => {

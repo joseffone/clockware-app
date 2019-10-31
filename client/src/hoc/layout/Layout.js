@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom'
-import { connect } from 'react-redux';
-import { refreshTokensRequest, changeDisplayView } from '../../store/actions';
-import { Responsive, Segment } from 'semantic-ui-react';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux';
+import {authActionCreator, globalActionCreator} from '../../store/actions';
+import {Responsive, Segment} from 'semantic-ui-react';
 import NavBar from '../../components/navbar';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
@@ -33,7 +33,6 @@ class Layout extends Component {
                 >
                     {this.props.children}
                 </Responsive>
-
             </React.Fragment>
         );
     }
@@ -47,8 +46,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRefreshTokensHandler: (refreshToken) => dispatch(refreshTokensRequest(refreshToken)),
-        onChangeDisplayViewHandler: (mobile) => dispatch(changeDisplayView(mobile))
+        onRefreshTokensHandler: (refreshToken) => dispatch(authActionCreator.refreshTokensRequest(refreshToken)),
+        onChangeDisplayViewHandler: (mobile) => dispatch(globalActionCreator.changeDisplayView(mobile))
     };
 };
 

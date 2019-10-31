@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Menu, Dropdown, Icon, Transition, Input} from 'semantic-ui-react';
-import {deleteDataRequest, setSelectAllTrigger, changeSearchValue, searchDataRequest, addFilter, deleteFilter, loadFilterOptions, setFilterTargetValue, setReloadDataTrigger} from '../../../store/actions';
+import {adminActionCreator} from '../../../store/actions';
 import {transformDataSet} from '../../../util';
 import AdminForm from '../../admin-form';
 import ConfirmDelete from './confirm-delete';
-import DataFilter from './data-filter';
+import DataFilter from '../../data-filter';
 import styles from './styles.module.css';
 
 class ActionMenu extends Component {
@@ -23,7 +23,6 @@ class ActionMenu extends Component {
     }
 
     onCommitDeleteHandler = () => {
-        //this.props.onFetchDataHandler(this.props.auth.accessToken, this.props.admin.ui.currentModel);
         this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true);
         this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, false);
     }
@@ -189,6 +188,7 @@ class ActionMenu extends Component {
                                         date={isDate}
                                         loading={options.isLoading && !isDate}
                                         description={filter[filterKey].description}
+                                        placeholder={filter[filterKey].description}
                                         options={options.payload}
                                         text={targetValue}
                                         value={targetValue}
@@ -223,15 +223,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onDeleteDataHandler: (accessToken, model, id, queryString) => dispatch(deleteDataRequest(accessToken, model, id, queryString)),
-        onSetSelectAllTriggerHandler: (model, checked) => dispatch(setSelectAllTrigger(model, checked)),
-        onChangeSearchValueHandler: (model, value) => dispatch(changeSearchValue(model, value)),
-        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(searchDataRequest(model, text, dataSet, key)),
-        onAddFilterHandler: (model, filterKey) => dispatch(addFilter(model, filterKey)),
-        onDeleteFilterHandler: (model, filterKey) => dispatch(deleteFilter(model, filterKey)),
-        onSetFilterTargetValueHandler: (model, filterKey, value) => dispatch(setFilterTargetValue(model, filterKey, value)),
-        onLoadFilterOptionsHandler: (filterKey, dataKey, model, getDataSet) => dispatch(loadFilterOptions(filterKey, dataKey, model, getDataSet)),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag))
+        onDeleteDataHandler: (accessToken, model, id, queryString) => dispatch(adminActionCreator.deleteDataRequest(accessToken, model, id, queryString)),
+        onSetSelectAllTriggerHandler: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
+        onChangeSearchValueHandler: (model, value) => dispatch(adminActionCreator.changeSearchValue(model, value)),
+        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(adminActionCreator.searchDataRequest(model, text, dataSet, key)),
+        onAddFilterHandler: (model, filterKey) => dispatch(adminActionCreator.addFilter(model, filterKey)),
+        onDeleteFilterHandler: (model, filterKey) => dispatch(adminActionCreator.deleteFilter(model, filterKey)),
+        onSetFilterTargetValueHandler: (model, filterKey, value) => dispatch(adminActionCreator.setFilterTargetValue(model, filterKey, value)),
+        onLoadFilterOptionsHandler: (filterKey, dataKey, model, getDataSet) => dispatch(adminActionCreator.loadFilterOptions(filterKey, dataKey, model, getDataSet)),
+        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
     };
 };
 

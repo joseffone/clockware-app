@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table, Checkbox, Pagination, Dropdown, Button, Icon} from 'semantic-ui-react';
-import {fetchDataRequest, setReloadDataTrigger, setSelectAllTrigger, toggleListItemSelect, setCurrentPage, setItemsPerPage, setTotalItems, setListItemsIds, setListData, changeSortState, searchDataRequest, setCustomFields} from '../../../store/actions';
+import {adminActionCreator} from '../../../store/actions';
 import {transformDataSet} from '../../../util';
 import AdminForm from '../../admin-form';
 import FieldsCustomizer from './fields-customizer';
@@ -276,18 +276,18 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchDataHandler: (accessToken, model) => dispatch(fetchDataRequest(accessToken, model)),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(setReloadDataTrigger(model, flag)),
-        onSetSelectAllTriggerHandler: (model, checked) => dispatch(setSelectAllTrigger(model, checked)),
-        onToggleListItemSelectHandler: (model, checked, id) => dispatch(toggleListItemSelect(model, checked, id)),
-        onSetCurrentPageHandler: (model, activePage) => dispatch(setCurrentPage(model, activePage)),
-        onSetItemsPerPageHandler: (model, value) => dispatch(setItemsPerPage(model, value)),
-        onSetTotalItemsHandler: (model, total) => dispatch(setTotalItems(model, total)),
-        onSetListItemsIdsHandler: (model, ids) => dispatch(setListItemsIds(model, ids)),
-        onSetListDataHandler: (model, dataSet) => dispatch(setListData(model, dataSet)),
-        onChangeSortStateHandler: (model, target, order, reverse) => dispatch(changeSortState(model, target, order, reverse)),
-        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(searchDataRequest(model, text, dataSet, key)),
-        onSetCustomFieldsHandler: (model, fields) => dispatch(setCustomFields(model, fields))
+        onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
+        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag)),
+        onSetSelectAllTriggerHandler: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
+        onToggleListItemSelectHandler: (model, checked, id) => dispatch(adminActionCreator.toggleListItemSelect(model, checked, id)),
+        onSetCurrentPageHandler: (model, activePage) => dispatch(adminActionCreator.setCurrentPage(model, activePage)),
+        onSetItemsPerPageHandler: (model, value) => dispatch(adminActionCreator.setItemsPerPage(model, value)),
+        onSetTotalItemsHandler: (model, total) => dispatch(adminActionCreator.setTotalItems(model, total)),
+        onSetListItemsIdsHandler: (model, ids) => dispatch(adminActionCreator.setListItemsIds(model, ids)),
+        onSetListDataHandler: (model, dataSet) => dispatch(adminActionCreator.setListData(model, dataSet)),
+        onChangeSortStateHandler: (model, target, order, reverse) => dispatch(adminActionCreator.changeSortState(model, target, order, reverse)),
+        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(adminActionCreator.searchDataRequest(model, text, dataSet, key)),
+        onSetCustomFieldsHandler: (model, fields) => dispatch(adminActionCreator.setCustomFields(model, fields))
     };
 };
 

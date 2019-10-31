@@ -1,110 +1,112 @@
 import * as actionTypes from '../action-types';
 import { loginUserService, logoutUserService, refreshTokensService } from '../../../services/api';
 
-export const loginSuccess = (authData) => {
+const authActionCreator = {};
+
+authActionCreator.loginSuccess = (authData) => {
     return {
-        type: actionTypes.LOGIN_SUCCESS,
+        type: actionTypes.AUTH_LOGIN_SUCCESS,
         authData
     };
 };
 
-export const loginFailure = (error) => {
+authActionCreator.loginFailure = (error) => {
     return {
-        type: actionTypes.LOGIN_FAILURE,
+        type: actionTypes.AUTH_LOGIN_FAILURE,
         error
     };
 };
 
-export const loginRequest = (loginData) => {
+authActionCreator.loginRequest = (loginData) => {
     return dispatch => {
         dispatch({
-            type: actionTypes.LOGIN_REQUEST
+            type: actionTypes.AUTH_LOGIN_REQUEST
         });
         loginUserService(loginData)
             .then(response => {
                 localStorage.setItem('refresh_token', response.data.refresh_token);
                 localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
-                dispatch(loginSuccess(response.data));
-                dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
+                dispatch(authActionCreator.loginSuccess(response.data));
+                dispatch(authActionCreator.setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
             })
             .catch(error => {
-                dispatch(loginFailure(error));
+                dispatch(authActionCreator.loginFailure(error));
             });
     };
 };
 
-export const refreshTokensSuccess = (authData) => {
+authActionCreator.refreshTokensSuccess = (authData) => {
     return {
-        type: actionTypes.REFRESH_TOKENS_SUCCESS,
+        type: actionTypes.AUTH_REFRESH_TOKENS_SUCCESS,
         authData
     };
 };
 
-export const refreshTokensFailure = (error) => {
+authActionCreator.refreshTokensFailure = (error) => {
     return {
-        type: actionTypes.REFRESH_TOKENS_FAILURE,
+        type: actionTypes.AUTH_REFRESH_TOKENS_FAILURE,
         error
     };
 };
 
-export const refreshTokensRequest = (refreshToken) => {
+authActionCreator.refreshTokensRequest = (refreshToken) => {
     return dispatch => {
         dispatch({
-            type: actionTypes.REFRESH_TOKENS_REQUEST
+            type: actionTypes.AUTH_REFRESH_TOKENS_REQUEST
         });
         refreshTokensService(refreshToken)
             .then(response => {
                 localStorage.setItem('refresh_token', response.data.refresh_token);
                 localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
                 localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
-                dispatch(refreshTokensSuccess(response.data));
-                dispatch(setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
+                dispatch(authActionCreator.refreshTokensSuccess(response.data));
+                dispatch(authActionCreator.setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
             })
             .catch(error => {
                 clearTimeout(localStorage.getItem('accessTimeoutID'));
                 localStorage.clear();
-                dispatch(refreshTokensFailure(error));
+                dispatch(authActionCreator.refreshTokensFailure(error));
             });
     };
 };
 
-export const logoutSuccess = () => {
+authActionCreator.logoutSuccess = () => {
     return {
-        type: actionTypes.LOGOUT_SUCCESS
+        type: actionTypes.AUTH_LOGOUT_SUCCESS
     };
 };
 
-export const logoutFailure = () => {
+authActionCreator.logoutFailure = () => {
     return {
-        type: actionTypes.LOGOUT_FAILURE
+        type: actionTypes.AUTH_LOGOUT_FAILURE
     };
 };
 
-export const logoutRequest = (accessToken) => {
+authActionCreator.logoutRequest = (accessToken) => {
     return dispatch => {
         dispatch({
-            type: actionTypes.LOGOUT_REQUEST
+            type: actionTypes.AUTH_LOGOUT_REQUEST
         });
         logoutUserService(accessToken)
             .then(response => {
                 clearTimeout(localStorage.getItem('accessTimeoutID'));
                 localStorage.clear();
-                dispatch(logoutSuccess());
+                dispatch(authActionCreator.logoutSuccess());
             })
             .catch(error => {
-                dispatch(logoutFailure(error));
+                dispatch(authActionCreator.logoutFailure(error));
             });
     };
 };
 
-export const setAccessTimeout = (refreshToken, delayInSec) => {
+authActionCreator.setAccessTimeout = (refreshToken, delayInSec) => {
     return dispatch => {
         localStorage.setItem(
             'accessTimeoutID',
             setTimeout(
                 () => {
-                    dispatch(refreshTokensRequest(refreshToken));
+                    dispatch(authActionCreator.refreshTokensRequest(refreshToken));
                 }, 
                 delayInSec*1000
             )
@@ -112,3 +114,4 @@ export const setAccessTimeout = (refreshToken, delayInSec) => {
     };
 };
 
+export default authActionCreator;

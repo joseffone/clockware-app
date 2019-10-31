@@ -1,6 +1,6 @@
 import axios from './axios';
 
-const deleteDataService = (accessToken, model, id, queryString) => {
+const deleteDataService = (accessToken, model, id, queryString = '') => {
     let url;
 
     switch (model) {

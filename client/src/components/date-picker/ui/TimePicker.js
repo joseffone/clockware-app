@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'semantic-ui-react';
+import {Table} from 'semantic-ui-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import styles from '../styles.module.css';
