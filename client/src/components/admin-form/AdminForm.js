@@ -82,6 +82,42 @@ class AdminForm extends Component {
         }
     }
 
+    checkFetchSuccessByKey = (key) => {
+        let result = true;
+        if (this.props.forms[this.props.model][key].config.source) {
+            this.props.forms[this.props.model][key].config.source.forEach(src => {
+                result = result && this.props.models[src].error.fetchError === null;
+            });
+        }
+        return result;
+    }
+
+    checkOptionsLoading = (key) => {
+        let result = true;
+        if (this.props.forms[this.props.model][key].config.source) {
+            this.props.forms[this.props.model][key].config.source.forEach(src => {
+                result = result && this.props.models[src].loading.isFetching;
+            });
+            return result;
+        }
+        return false;
+    }
+
+    loadFieldsData = () => {
+        for (const key in this.props.forms[this.props.model]) {
+            if (this.props.forms[this.props.model][key].config.source) {
+                this.props.forms[this.props.model][key].config.source.forEach(src => {
+                    this.props.onFetchDataHandler(this.props.auth.accessToken, src);
+                });
+            }
+        }
+    }
+
+    onReloadFieldsDataButtonClickHandler = (event) => {
+        event.preventDefault();
+        this.loadFieldsData();
+    }
+
     onModalOpenHandler = () => {
         this.setState({
             isModalOpen: true,
@@ -111,21 +147,15 @@ class AdminForm extends Component {
             isModalOpen: false
         }, () => {
             this.props.onFormRefreshStateHandler(this.props.model);
-            this.props.onSetReloadDataTriggerHandler(this.props.model, true);
+            if (this.props.refreshAfterClose) {
+                this.props.onSetReloadDataTriggerHandler(this.props.model, true);
+            }
         });
     }
 
     onFormLoadHandler = () => {
         this.props.onFormRefreshStateHandler(this.props.model);
-        if (!this.props.refreshAfterClose) {
-            for (const key in this.props.forms[this.props.model]) {
-                if (this.props.forms[this.props.model][key].config.source) {
-                    this.props.forms[this.props.model][key].config.source.forEach(src => {
-                        this.props.onFetchDataHandler(this.props.auth.accessToken, src);
-                    });
-                }
-            }
-        }
+        this.loadFieldsData();
         if (this.props.update) {
             for (const key in this.props.update) {
                 let value = this.props.update[key];
@@ -213,7 +243,6 @@ class AdminForm extends Component {
                         messageContent = `${this.props.models[src].error.fetchError.response.data.error ? this.props.models[src].error.fetchError.response.data.error.message + '.' : 'Not able to get data.'}`;
                     }
                 });
-                if (fetchError) break;
             }
         }
 
@@ -279,7 +308,7 @@ class AdminForm extends Component {
                         onSubmit={() => this.props.model === 'users' && isPasswordFieldTouched ? null : this.onFormSubmitHandler()}
                     >
                         {formFieldsArray.map(formField => {
-                            let loading = formField.config.source ? formField.config.source.length !== 0 ? this.props.models[formField.config.source[0]].loading.isFetching : false : false;
+                            let loading = (this.checkOptionsLoading(formField.key) || !this.checkFetchSuccessByKey(formField.key)) && this.props.reloadDataCounter > 0;
                             let options = transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions);
                             let text = transformSelectOptions(formField.config.source, this.props.models, this.props.forms, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : '';
                             return (
@@ -324,11 +353,20 @@ class AdminForm extends Component {
                                 </Form.Group>
                             );
                          })}
-                        <Message 
-                            error
-                            header={messageHeader}
-                            content={messageContent}
-                        />
+                        <Message error icon>
+                            <Message.Content>
+                                <Message.Header>{messageHeader}</Message.Header>
+                                {messageContent}
+                            </Message.Content>
+                            {formDataError ?
+                                null
+                            :
+                                <Button
+                                    content={'Try Again'}
+                                    onClick={this.onReloadFieldsDataButtonClickHandler}
+                                />
+                            }
+                        </Message>
                         <Message
                             positive
                             hidden={!this.state.lastRequestType || this.state.lastRequestType === 'delete'}
@@ -408,7 +446,8 @@ const mapStateToProps = state => {
         global: state.global,
         auth: state.auth,
         forms: state.admin.forms,
-        models: state.admin.models
+        models: state.admin.models,
+        reloadDataCounter: state.admin.ui.reloadDataCounter
     };
 };
 

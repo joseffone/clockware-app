@@ -8,6 +8,10 @@
     max-width: 30rem;
 }
 
+.startForm :global .message {
+    border-radius: 10rem;
+}
+
 .startForm :global .selection {
     border-radius: 10rem !important;
 }
@@ -16,7 +20,10 @@
     border-radius: 10rem !important;
 }
 
+.startForm :global .notempty .icon {
+    opacity: 1 !important;
+}
+
 .startForm :global h2 {
     color: rgba(191,191,191,.87) !important;
 }
-

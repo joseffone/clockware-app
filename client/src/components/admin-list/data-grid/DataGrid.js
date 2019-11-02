@@ -159,7 +159,7 @@ class DataGrid extends Component {
             </Table.HeaderCell>
         );
 
-        if (this.props.admin.ui.reloadDataCounter === 0 && dataSet.length > 0) {
+        if (dataSet.length > 0) {
             totalPages = Math.ceil(totalItems/itemsPerPage);
             this.props.admin.lists[this.props.admin.ui.currentModel].ids.forEach((id, index) => {
                 let dataSetItem = dataSet.filter(item => item.id === id)[0];

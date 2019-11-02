@@ -7,6 +7,19 @@ import AdminList from '../../components/admin-list';
 import styles from './styles.module.css';
 
 class AdminContainer extends Component {
+
+    checkFetchSuccess = () => {
+        let result = true;
+        let mask = [this.props.admin.ui.currentModel];
+        for (const key in this.props.admin.forms[this.props.admin.ui.currentModel]) {
+            if (this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source) {
+                this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source.forEach(src => mask.push(src));
+            }
+        }
+        mask.forEach(src => result = result && !this.props.admin.ui.errorDataCounter.includes(src));
+        return result;
+    }
+
     render () {
         let emptyDataFlag = false, noAccessFlag = false;
         let messageHeader = 'Cannot fetch data from the server';
@@ -23,7 +36,6 @@ class AdminContainer extends Component {
                 messageContent = 'This register does not contain data yet.';
             }
         }
-
         return (
             <SideBarWrapper 
                 sidebar={AdminSideBar}
@@ -35,7 +47,7 @@ class AdminContainer extends Component {
                     className={this.props.global.ui.mobile ? styles.adminContainerMobile : this.props.global.ui.isSideBarOpen ? styles.adminContainerPCOpen : styles.adminContainerPCClose}
                 >
                     <Grid.Row>
-                        {this.props.admin.ui.errorDataCounter.length > 0 && !this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching ? 
+                        {!this.checkFetchSuccess() && !this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching ? 
                             <Message
                                 info={emptyDataFlag}
                                 warning={noAccessFlag}

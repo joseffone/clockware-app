@@ -8,17 +8,69 @@ import styles from './styles.module.css';
 
 class StartForm extends Component {
 
-    componentDidMount () {
-        this.onFormLoadHandler();
+    state = {
+        isFormSubmited: false,
+        isFormDataValid: false
     }
 
-    onFormLoadHandler = () => {
+    componentDidMount () {
+        this.loadFieldsData();
+    }
+
+    componentDidUpdate () {
+        if (this.props.reloadDataCounter === 0) {
+            if (!this.checkFetchSuccessAll()) {
+                this.loadFieldsData();
+            }
+        }
+    }
+
+    checkFetchSuccessAll = () => {
+        let result = true;
+        for (const key in this.props.form) {
+            if (this.props.form[key].config.source) {
+                this.props.form[key].config.source.forEach(src => {
+                    result = result && this.props.models[src].error.fetchError === null;
+                });
+            }
+        }
+        return result;
+    }
+
+    checkFetchSuccessByKey = (key) => {
+        let result = true;
+        if (this.props.form[key].config.source) {
+            this.props.form[key].config.source.forEach(src => {
+                result = result && this.props.models[src].error.fetchError === null;
+            });
+        }
+        return result;
+    }
+
+    checkOptionsLoading = (key) => {
+        let result = true;
+        if (this.props.form[key].config.source) {
+            this.props.form[key].config.source.forEach(src => {
+                result = result && this.props.models[src].loading.isFetching;
+            });
+            return result;
+        }
+        return false;
+    }
+
+    loadFieldsData = () => {
         for (const key in this.props.form) {
             if (this.props.form[key].config.source) {
                 this.props.form[key].config.source.forEach(src => {
                     this.props.onFetchDataHandler(this.props.auth.accessToken, src);
                 });
             }
+        }
+    }
+
+    onFormSubmitHandler = () => {
+        if (this.state.isFormDataValid) {
+            alert('!!!');
         }
     }
 
@@ -42,7 +94,7 @@ class StartForm extends Component {
             >
                 <Grid.Column>
                     <Message 
-                        style={{borderRadius: '10rem'}}
+                        hidden={this.state.isFormSubmited ? isFormDataValid : true}
                         error
                         header='Warning!'
                         content='You must specify a city, date and time before search running'
@@ -56,10 +108,14 @@ class StartForm extends Component {
                     </Header>
                     <Form 
                         size='large'
+                        onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => (
-                            <Form.Field>
+                            <Form.Field
+                                onFocus={() => this.setState({isFormSubmited: false})}
+                            >
                                 <InputField 
+                                    className={formField.value !== '' ? 'notempty' : null}
                                     key={formField.key}
                                     mobile={this.props.global.ui.mobile}
                                     elementType={formField.elementType}
@@ -67,26 +123,25 @@ class StartForm extends Component {
                                     icon={formField.config.icon}
                                     iconPosition={formField.config.iconPosition}
                                     placeholder={formField.config.placeholder}
-                                    loading={formField.config.source ? formField.config.source.length !== 0 ? this.props.models[formField.config.source[0]].loading.isFetching : false : false}
+                                    loading={this.checkOptionsLoading(formField.key) || !this.checkFetchSuccessByKey(formField.key)}
                                     options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
                                     text={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
                                     value={formField.value}
-                                    //changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
-/*                                     blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
-                                        value: formField.elementType === 'select' ? formField.value : null
-                                    })} */
+                                    changed={(event, { value }) => this.props.onInputChangeHandler(event, 'clientStartForm', formField.key, { value })}
                                 />
                             </Form.Field>
                         ))}
-                        <Button 
-                            as='a'
-                            size='large'
-                            secondary 
-                            fluid 
-                            circular
-                            content='Go >>'
-                        />
-
+                        <Form.Field>
+                            <Button 
+                                size='large'
+                                secondary 
+                                fluid 
+                                circular
+                                onClick={() => this.setState({isFormSubmited: true, isFormDataValid})}
+                            >
+                                Go >>
+                            </Button>
+                        </Form.Field>
                     </Form>
                 </Grid.Column>
             </Grid>
@@ -99,18 +154,17 @@ const mapStateToProps = state => {
         global: state.global,
         auth: state.auth,
         form: state.client.forms.clientStartForm,
-        models: state.admin.models
+        models: state.admin.models,
+        reloadDataCounter: state.admin.ui.reloadDataCounter
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        onFormRefreshStateHandler: (formKey) => dispatch(clientActionCreator.refreshFormState(formKey)),
+        onInputChangeHandler: (event, formKey, formFieldKey, { value }, touched) => dispatch(clientActionCreator.changeFormState(event, formKey, formFieldKey, value, touched)),
         onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model))
     };
-};
-
-StartForm.propTypes = {
-
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartForm);
