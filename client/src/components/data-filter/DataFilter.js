@@ -7,11 +7,9 @@ import PropTypes from 'prop-types';
  class DataFilter extends Component {
 
     componentDidMount () {
-        setTimeout(() => {
-            if (!this.props.date && this.props.mounted) {
-                this.props.mounted();
-            }
-        });
+        if (!this.props.date && this.props.mounted) {
+            return new Promise(handle => handle()).then(() => this.props.mounted());
+        }
     }
 
     render () {

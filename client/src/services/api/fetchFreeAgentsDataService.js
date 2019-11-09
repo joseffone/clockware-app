@@ -2,8 +2,9 @@ import axios from './axios';
 
 const fetchFreeAgentsService = (queryString) => {
     let url = '/freeagents' + queryString;
+    
     return new Promise ((resolve, reject) => {
-        axios().get(url)
+        axios(null).get(url)
             .then((response) => {
                 resolve(response);
             })

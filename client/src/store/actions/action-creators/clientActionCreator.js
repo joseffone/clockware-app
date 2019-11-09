@@ -1,4 +1,5 @@
 import * as actionTypes from '../action-types';
+import {fetchFreeAgentsDataService} from '../../../services/api';
 
 const clientActionCreator = {};
 
@@ -17,6 +18,54 @@ clientActionCreator.changeFormState = (event, formKey, formFieldKey, value = nul
         formFieldKey,
         value,
         touched
+    };
+};
+
+clientActionCreator.fetchFreeAgentsSuccess = (fetchedData) => {
+    return {
+        type: actionTypes.CLIENT_FETCH_FREE_AGENTS_SUCCESS,
+        fetchedData
+    };
+};
+
+clientActionCreator.fetchFreeAgentsFailure = (error) => {
+    return {
+        type: actionTypes.CLIENT_FETCH_FREE_AGENTS_FAILURE,
+        error
+    };
+};
+
+clientActionCreator.fetchFreeAgentsRequest = (queryString) => {
+    return dispatch => {
+        dispatch({
+            type: actionTypes.CLIENT_FETCH_FREE_AGENTS_REQUEST
+        });
+        fetchFreeAgentsDataService(queryString)
+            .then(response => {
+                dispatch(clientActionCreator.fetchFreeAgentsSuccess(response.data));
+            })
+            .catch(error => {
+                dispatch(clientActionCreator.fetchFreeAgentsFailure(error));
+            });
+    };
+};
+
+clientActionCreator.setReloadDataTrigger = (flag) => {
+    return {
+        type: actionTypes.CLIENT_SET_RELOAD_DATA_TRIGGER,
+        flag
+    };
+};
+
+clientActionCreator.showStartForm = () => {
+    return {
+        type: actionTypes.CLIENT_SHOW_START_FORM
+    };
+};
+
+clientActionCreator.hideStartForm = () => {
+    return {
+        type: actionTypes.CLIENT_HIDE_START_FORM
     };
 };
 

@@ -1,6 +1,6 @@
 import * as actionTypes from '../action-types';
-import { fetchDataService, createDataService, updateDataService, deleteDataService } from '../../../services/api';
-import { debounce, search, promiseToGetUniqueKeyValues } from '../../../util';
+import {fetchDataService, createDataService, updateDataService, deleteDataService} from '../../../services/api';
+import {debounce, search, promiseToGetUniqueKeyValues} from '../../../util';
 
 const adminActionCreator = {};
 

@@ -81,10 +81,10 @@ class NavBar extends Component {
                                     circular
                                     content={
                                         this.props.global.ui.mobile ?
-                                            <Icon name='sync alternate' loading={this.props.admin.ui.reloadDataCounter > 0}/>
+                                            <Icon name='sync alternate' loading={this.props.admin.ui.fetchRequestsCounter.length > 0}/>
                                         :
                                             <Popup 
-                                                trigger={<Icon name='sync alternate' loading={this.props.admin.ui.reloadDataCounter > 0}/>}
+                                                trigger={<Icon name='sync alternate' loading={this.props.admin.ui.fetchRequestsCounter.length > 0}/>}
                                                 content='Refresh'
                                             />
                                     }

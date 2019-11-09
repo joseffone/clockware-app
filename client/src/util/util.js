@@ -208,7 +208,8 @@ export const transformDataSet = (model, forms, models, sort = null, filters = nu
                 markName = models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0] ? models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0].mark_name : false;
                 markValue = models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0] ? models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0].mark_value : false;
                 return rewriteObjectProps(transformedItem, {
-                    raiting: markName === false || markValue === false ? false : `${markName} (${markValue})`
+                    raiting: markName === false || markValue === false ? false : `${markName} (${markValue})`,
+                    raitingValue: markValue === false ? false : markValue
                 });
             
             case 'coverage':

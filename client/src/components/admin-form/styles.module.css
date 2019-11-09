@@ -72,3 +72,20 @@
     background-color: #e0b4b4;
     color: #fff6f6;
 }
+
+.adminForm :global .warningICO {
+    cursor: pointer;
+    position: absolute;
+    width: auto;
+    height: auto;
+    line-height: 1.21428571em;
+    top: .78571429em;
+    right: 1em;
+    z-index: 3;
+    margin: -.78571429em;
+    padding: .91666667em;
+    opacity: .8;
+    transition: opacity .1s ease;
+    font-size: .85714286em;
+    color: #9f3a38;
+}

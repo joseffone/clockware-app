@@ -10,8 +10,8 @@ const initState = {
     ui: {
         currentModel: 'users',
         reloadDataTrigger: false,
-        reloadDataCounter: 0,
-        errorDataCounter: [],
+        fetchRequestsCounter: [],
+        fetchErrorsCounter: [],
         models: [
             {
                 name: 'users',
@@ -163,8 +163,8 @@ const adminReducer = (state = initState, action) => {
                     })
                 }),
                 ui: rewriteObjectProps(state.ui, {
-                    reloadDataCounter: state.ui.reloadDataCounter + 1,
-                    errorDataCounter: state.ui.errorDataCounter.filter(item => item !== action.model)
+                    fetchRequestsCounter: [...state.ui.fetchRequestsCounter.slice(), action.model],
+                    fetchErrorsCounter: state.ui.fetchErrorsCounter.filter(item => item !== action.model)
                 }) 
             });
 
@@ -180,11 +180,11 @@ const adminReducer = (state = initState, action) => {
                 }),
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
-                        ids: action.fetchedData.map(({ id }) => id)
+                        ids: action.fetchedData.map(({id}) => id)
                     })
                 }),
                 ui: rewriteObjectProps(state.ui, {
-                    reloadDataCounter: state.ui.reloadDataCounter - 1
+                    fetchRequestsCounter: state.ui.fetchRequestsCounter.filter(item => item !== action.model)
                 }) 
             });
 
@@ -207,8 +207,8 @@ const adminReducer = (state = initState, action) => {
                     })
                 }),
                 ui: rewriteObjectProps(state.ui, {
-                    reloadDataCounter: state.ui.reloadDataCounter - 1,
-                    errorDataCounter: [...state.ui.errorDataCounter.slice(), action.model]
+                    fetchRequestsCounter: state.ui.fetchRequestsCounter.filter(item => item !== action.model),
+                    fetchErrorsCounter: [...state.ui.fetchErrorsCounter.slice(), action.model]
                 })
             });
 
@@ -339,7 +339,7 @@ const adminReducer = (state = initState, action) => {
                 ui: rewriteObjectProps(state.ui, {
                     currentModel: action.model,
                     reloadDataTrigger: true,
-                    errorDataCounter: []
+                    fetchErrorsCounter: []
                 }),
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {

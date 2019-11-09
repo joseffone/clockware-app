@@ -4,6 +4,7 @@ import {Button, Form, Grid, Header, Message} from 'semantic-ui-react';
 import InputField from '../input-field';
 import {transformSelectOptions} from '../../util';
 import {adminActionCreator, clientActionCreator} from '../../store/actions';
+import moment from 'moment';
 import styles from './styles.module.css';
 
 class StartForm extends Component {
@@ -14,34 +15,20 @@ class StartForm extends Component {
     }
 
     componentDidMount () {
-        this.loadFieldsData();
+        this.onReloadFieldsDataHandler();
     }
 
     componentDidUpdate () {
-        if (this.props.reloadDataCounter === 0) {
-            if (!this.checkFetchSuccessAll()) {
-                this.loadFieldsData();
-            }
+        if (this.props.fetchErrorsCounter.length > 0) {
+            this.onReloadFieldsDataHandler(this.props.fetchErrorsCounter);
         }
-    }
-
-    checkFetchSuccessAll = () => {
-        let result = true;
-        for (const key in this.props.form) {
-            if (this.props.form[key].config.source) {
-                this.props.form[key].config.source.forEach(src => {
-                    result = result && this.props.models[src].error.fetchError === null;
-                });
-            }
-        }
-        return result;
     }
 
     checkFetchSuccessByKey = (key) => {
         let result = true;
         if (this.props.form[key].config.source) {
             this.props.form[key].config.source.forEach(src => {
-                result = result && this.props.models[src].error.fetchError === null;
+                result = result && !this.props.fetchErrorsCounter.includes(src);
             });
         }
         return result;
@@ -51,18 +38,21 @@ class StartForm extends Component {
         let result = true;
         if (this.props.form[key].config.source) {
             this.props.form[key].config.source.forEach(src => {
-                result = result && this.props.models[src].loading.isFetching;
+                result = result && !this.props.fetchRequestsCounter.includes(src);
             });
-            return result;
         }
-        return false;
+        return !result;
     }
 
-    loadFieldsData = () => {
+    onReloadFieldsDataHandler = (source) => {
+        if (source) {
+            source.forEach(src => this.props.onFetchDataHandler(null, src));
+            return;
+        }
         for (const key in this.props.form) {
             if (this.props.form[key].config.source) {
                 this.props.form[key].config.source.forEach(src => {
-                    this.props.onFetchDataHandler(this.props.auth.accessToken, src);
+                    this.props.onFetchDataHandler(null, src);
                 });
             }
         }
@@ -70,13 +60,14 @@ class StartForm extends Component {
 
     onFormSubmitHandler = () => {
         if (this.state.isFormDataValid) {
-            alert('!!!');
+            this.props.onHideStartFormHandler();
         }
     }
 
     render() {
         const formFieldsArray = [];
         let isFormDataValid = true;
+        let messageContent = 'You must specify a city, a type of clock and date/time before search running';
 
         for (const key in this.props.form) {
             formFieldsArray.push({
@@ -84,7 +75,16 @@ class StartForm extends Component {
                 ...this.props.form[key]
             });
             isFormDataValid = isFormDataValid && this.props.form[key].isValid;
+            if (key === 'start_date' && this.props.form[key].value !== '') {
+                let currentDate = moment();
+                let startDate = moment(this.props.form[key].value, 'DD-MM-YYYY HH:mm');
+                if (startDate < currentDate) {
+                    isFormDataValid = false;
+                    messageContent = 'Reserving date and time can not be erlier than the current one'
+                }
+            }
         }
+
 
         return (
             <Grid 
@@ -97,7 +97,7 @@ class StartForm extends Component {
                         hidden={this.state.isFormSubmited ? isFormDataValid : true}
                         error
                         header='Warning!'
-                        content='You must specify a city, date and time before search running'
+                        content={messageContent}
                     />
                     <Header 
                         as='h2'
@@ -155,7 +155,8 @@ const mapStateToProps = state => {
         auth: state.auth,
         form: state.client.forms.clientStartForm,
         models: state.admin.models,
-        reloadDataCounter: state.admin.ui.reloadDataCounter
+        fetchRequestsCounter: state.admin.ui.fetchRequestsCounter,
+        fetchErrorsCounter: state.admin.ui.fetchErrorsCounter
     };
 };
 
@@ -163,7 +164,9 @@ const mapDispatchToProps = dispatch => {
     return {
         onFormRefreshStateHandler: (formKey) => dispatch(clientActionCreator.refreshFormState(formKey)),
         onInputChangeHandler: (event, formKey, formFieldKey, { value }, touched) => dispatch(clientActionCreator.changeFormState(event, formKey, formFieldKey, value, touched)),
-        onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model))
+        onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
+        onSetReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
+        onHideStartFormHandler: () => dispatch(clientActionCreator.hideStartForm())
     };
 };
 

@@ -1,25 +1,30 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table, Checkbox, Pagination, Dropdown, Button, Icon} from 'semantic-ui-react';
-import {adminActionCreator} from '../../../store/actions';
-import {transformDataSet} from '../../../util';
-import AdminForm from '../../admin-form';
+import {adminActionCreator} from '../../store/actions';
+import {transformDataSet} from '../../util';
+import AdminForm from '../admin-form';
 import FieldsCustomizer from './fields-customizer';
 import styles from './styles.module.css';
 
-class DataGrid extends Component {
+class AdminDataGrid extends Component {
+
+    tableRef = React.createRef();
 
     componentDidMount () {
-        this.onRefreshDataListHandler();
+        let promise = new Promise(handle => handle());
+        promise.then(() => this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false));
+        promise.then(() => this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true));
     }
 
     componentDidUpdate (prevProps) {
         if (this.props.admin.ui.reloadDataTrigger) {
             if (prevProps.admin.ui.reloadDataTrigger !== this.props.admin.ui.reloadDataTrigger) {
-                return this.onRefreshDataListHandler();
+                this.tableRef.current.scrollIntoView({inline: 'start', block: 'center'});
+                return this.onReloadDataHandler();
             }
-            if (this.props.admin.ui.reloadDataCounter === 0) {
-                this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false);
+            if (this.props.admin.ui.fetchRequestsCounter.length === 0) {
+                this.tableRef.current.scrollIntoView({block: 'end'});
                 this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
                 this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
                 if (this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value !== '') {
@@ -28,6 +33,7 @@ class DataGrid extends Component {
                 if (this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.length !== 0) {
                     this.onFiltersApplyHandler();
                 }
+                this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false);
             }
         }
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].ids.length !== this.props.admin.lists[this.props.admin.ui.currentModel].ids.length) {
@@ -42,7 +48,7 @@ class DataGrid extends Component {
         }
     }
 
-    onRefreshDataListHandler = () => {
+    onReloadDataHandler = () => {
         for (const key in this.props.admin.forms[this.props.admin.ui.currentModel]) {
             if (this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source) {
                 this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source.forEach(src => {
@@ -219,49 +225,55 @@ class DataGrid extends Component {
         }
  
         return (
-            <Table
-                selectable
-                sortable
-                className={styles.dataGrid}
-            >
-                <Table.Header>
-                    <Table.Row>{headerFields}</Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {bodyRows}
-                </Table.Body>
-                <Table.Footer>
-                    <Table.Row>
-                        <Table.HeaderCell 
-                            colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.filter(({visible}) => visible).length + 2}
-                        >   
-                            {this.props.global.ui.mobile ? null : <span>Rows per page:</span>}
-                            {this.props.global.ui.mobile ? null :
-                                <Dropdown
-                                    options={this.props.admin.ui.itemsPerPageOptions}
-                                    defaultValue={itemsPerPage}
-                                    text={'' + itemsPerPage}
-                                    inline
-                                    onChange={(event, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
+            <div ref={this.tableRef}>
+                <Table
+                    ref={elem => this.tableRef = elem}
+                    stackable
+                    selectable
+                    sortable
+                    className={styles.dataGrid}
+                >
+                    <Table.Header>
+                        <Table.Row>{headerFields}</Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {bodyRows}
+                    </Table.Body>
+                    <Table.Footer>
+                        <Table.Row>
+                            <Table.HeaderCell 
+                                colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.filter(({visible}) => visible).length + 2}
+                            >   
+                                {this.props.global.ui.mobile ? null : <span>Rows per page:</span>}
+                                {this.props.global.ui.mobile ? null :
+                                    <Dropdown
+                                        upward
+                                        pointing='top'
+                                        options={this.props.admin.ui.itemsPerPageOptions}
+                                        defaultValue={itemsPerPage}
+                                        text={'' + itemsPerPage}
+                                        inline
+                                        onChange={(event, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
+                                    />
+                                }
+                                {totalItems > 0 ? <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span> : <span>0-0 of 0</span>}
+                                <Pagination
+                                    totalPages={totalPages}
+                                    activePage={currentPage}
+                                    pageItem={this.props.global.ui.mobile ? null : undefined}
+                                    ellipsisItem={this.props.global.ui.mobile ? null : undefined}
+                                    firstItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
+                                    lastItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
+                                    boundaryRange={1}
+                                    siblingRange={1}
+                                    floated='right'
+                                    onPageChange={(event, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
                                 />
-                            }
-                            {totalItems > 0 ? <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span> : <span>0-0 of 0</span>}
-                            <Pagination
-                                totalPages={totalPages}
-                                activePage={currentPage}
-                                pageItem={this.props.global.ui.mobile ? null : undefined}
-                                ellipsisItem={this.props.global.ui.mobile ? null : undefined}
-                                firstItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
-                                lastItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
-                                boundaryRange={1}
-                                siblingRange={1}
-                                floated='right'
-                                onPageChange={(event, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
-                            />
-                        </Table.HeaderCell>
-                    </Table.Row>
-                </Table.Footer>
-            </Table>
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Footer>
+                </Table>
+            </div>
         );
     }
 }
@@ -291,4 +303,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataGrid);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminDataGrid);

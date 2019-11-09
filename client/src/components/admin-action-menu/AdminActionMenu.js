@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Menu, Dropdown, Icon, Transition, Input} from 'semantic-ui-react';
-import {adminActionCreator} from '../../../store/actions';
-import {transformDataSet} from '../../../util';
-import AdminForm from '../../admin-form';
+import {adminActionCreator} from '../../store/actions';
+import {transformDataSet} from '../../util';
+import AdminForm from '../admin-form';
 import ConfirmDelete from './confirm-delete';
-import DataFilter from '../../data-filter';
+import DataFilter from '../data-filter';
 import styles from './styles.module.css';
 
-class ActionMenu extends Component {
+class AdminActionMenu extends Component {
 
     state = {
         isConfirmDeleteOpen: false
@@ -235,4 +235,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActionMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminActionMenu);

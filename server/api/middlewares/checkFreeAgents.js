@@ -5,7 +5,7 @@ import errorWrapper from '../helpers/errorWrapper';
 
 export default (db) => {
     return (req, res, next) => {
-
+        
         const dataObj = {};
         dataObj.city_id = req.query.city_id;
         dataObj.start_date = req.query.start_date;

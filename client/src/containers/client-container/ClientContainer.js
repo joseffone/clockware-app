@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Segment} from 'semantic-ui-react';
 import StartForm from '../../components/start-form';
+import ClientDataGrid from '../../components/client-data-grid';
 import Footer from '../../components/footer';
 import styles from './styles.module.css';
 
@@ -12,7 +13,11 @@ class ClientContainer extends Component {
                 <Segment 
                     className={styles.header}
                 >
-                    <StartForm />
+                    {this.props.client.ui.isStartPageShown ?
+                        <StartForm />
+                    :
+                        <ClientDataGrid />
+                    }
                 </Segment>
                 <Segment
                     className={styles.footer}

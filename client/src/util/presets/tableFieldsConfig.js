@@ -143,7 +143,7 @@ const tableFieldsConfig = {
         {
             name: 'status',
             alias: 'Status',
-            visible: true,
+            visible: false,
             sortable: false,
             isDate: false,
             filterable: true,

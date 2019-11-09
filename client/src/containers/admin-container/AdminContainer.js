@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import {Grid, Segment, Message} from 'semantic-ui-react';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
 import {AdminSideBar} from '../../components/sidebars/admin-sidebar';
-import AdminList from '../../components/admin-list';
+import AdminDataGrid from '../../components/admin-data-grid';
+import AdminActionMenu from '../../components/admin-action-menu';
 import styles from './styles.module.css';
 
 class AdminContainer extends Component {
@@ -16,15 +17,15 @@ class AdminContainer extends Component {
                 this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source.forEach(src => mask.push(src));
             }
         }
-        mask.forEach(src => result = result && !this.props.admin.ui.errorDataCounter.includes(src));
+        mask.forEach(src => result = result && !this.props.admin.ui.fetchErrorsCounter.includes(src));
         return result;
     }
 
     render () {
         let emptyDataFlag = false, noAccessFlag = false;
         let messageHeader = 'Cannot fetch data from the server';
-        let messageContent = 'Something went wrong while receiving data so displayed info may be outdated and incomplete. Please, try to refresh the page. If it does not help, visit this resource later.';
-        if (this.props.admin.models[this.props.admin.ui.currentModel].error.fetchError) {
+        let messageContent = 'Something went wrong while receiving data so displayed info may be incomplete or be absent at all. Please, try to refresh the page. If it does not help, visit this resource later.';
+        if (this.props.admin.ui.fetchErrorsCounter.includes(this.props.admin.ui.currentModel)) {
             if (this.props.admin.models[this.props.admin.ui.currentModel].error.fetchError.response.status === 403) {
                 noAccessFlag = true;
                 messageHeader = 'No access to read data';
@@ -47,7 +48,7 @@ class AdminContainer extends Component {
                     className={this.props.global.ui.mobile ? styles.adminContainerMobile : this.props.global.ui.isSideBarOpen ? styles.adminContainerPCOpen : styles.adminContainerPCClose}
                 >
                     <Grid.Row>
-                        {!this.checkFetchSuccess() && !this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching ? 
+                        {!this.checkFetchSuccess() && !this.props.admin.ui.fetchRequestsCounter.includes(this.props.admin.ui.currentModel) ? 
                             <Message
                                 info={emptyDataFlag}
                                 warning={noAccessFlag}
@@ -58,11 +59,18 @@ class AdminContainer extends Component {
                         : null}
                     </Grid.Row>
                     <Grid.Row>
+                        <Grid.Column
+                            as={Segment}
+                        >
+                            <AdminActionMenu />
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
                         <Grid.Column 
                             as={Segment}
-                            loading={this.props.admin.models[this.props.admin.ui.currentModel].loading.isFetching}
+                            loading={this.props.admin.ui.fetchRequestsCounter.includes(this.props.admin.ui.currentModel)}
                         >
-                            <AdminList />
+                            <AdminDataGrid />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

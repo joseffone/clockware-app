@@ -4,6 +4,21 @@
     transition: none;
 }
 
+.adminContainerMobile :global .row:last-child .column {
+    overflow-x: auto;
+    border-top-left-radius: unset;
+    border-top-right-radius: unset;
+    margin-top: 0 !important;
+}
+
+.adminContainerMobile :global .row:nth-child(2) .column {
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: unset;
+    border-bottom: unset;
+    box-shadow: unset;
+    margin-bottom: 0 !important;
+}
+
 .adminContainerPCOpen {
     margin: 0 !important;
     padding-left: 10.714rem !important;
@@ -11,11 +26,41 @@
     transition-duration: 0.5s;
 }
 
+.adminContainerPCOpen :global .row:last-child .column {
+    overflow-x: auto;
+    border-top-left-radius: unset;
+    border-top-right-radius: unset;
+    margin-top: 0 !important;
+}
+
+.adminContainerPCOpen :global .row:nth-child(2) .column {
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: unset;
+    border-bottom: unset;
+    box-shadow: unset;
+    margin-bottom: 0 !important;
+}
+
 .adminContainerPCClose {
     margin: 0 !important;
     padding-left: 0 !important;
     transition-property: padding-left;
     transition-duration: 0.5s;
+}
+
+.adminContainerPCClose :global .row:last-child .column {
+    overflow-x: auto;
+    border-top-left-radius: unset;
+    border-top-right-radius: unset;
+    margin-top: 0 !important;
+}
+
+.adminContainerPCClose :global .row:nth-child(2) .column {
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: unset;
+    border-bottom: unset;
+    box-shadow: unset;
+    margin-bottom: 0 !important;
 }
 
 .adminContainerMobile :global .message {

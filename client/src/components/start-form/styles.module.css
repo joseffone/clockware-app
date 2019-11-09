@@ -1,11 +1,11 @@
 .startForm {
-    height: 100%;
+    width: 100%;
     margin: 0 !important;
     padding: 0 !important;
 }
 
 .startForm :global .column {
-    max-width: 30rem;
+    max-width: 30rem !important;
 }
 
 .startForm :global .message {
