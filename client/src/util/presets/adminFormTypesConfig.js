@@ -1,15 +1,15 @@
-import configElem from './inputElemTypesConfig';
+import inputElemTypesConfig from './inputElemTypesConfig';
 
 const adminFormTypesConfig = {
     agents: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        nickname: configElem.textField({
+        nickname: inputElemTypesConfig.textField({
             label: 'Nickname',
             placeholder: 'Enter nickname',
             restrictions: {
@@ -17,40 +17,40 @@ const adminFormTypesConfig = {
                 maxLength: 20
             }
         }),
-        first_name: configElem.textField({
+        first_name: inputElemTypesConfig.textField({
             label: 'First Name',
             placeholder: 'Enter First Name',
             restrictions: {
                 requared: true
             }
         }),
-        last_name: configElem.textField({
+        last_name: inputElemTypesConfig.textField({
             label: 'Last Name',
             placeholder: 'Enter Last Name',
             restrictions: {
                 requared: true
             }
         }),
-        mark_id: configElem.select({
+        mark_id: inputElemTypesConfig.select({
             label: 'Mark',
             placeholder: 'Select mark',
             source: ['marks']
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -59,35 +59,35 @@ const adminFormTypesConfig = {
         })
     },
     cities: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        city_name: configElem.textField({
+        city_name: inputElemTypesConfig.textField({
             label: 'City Name',
             placeholder: 'Enter City Name',
             restrictions: {
                 requared: true
             }
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -96,21 +96,21 @@ const adminFormTypesConfig = {
         })
     },
     clocks: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        clock_type: configElem.textField({
+        clock_type: inputElemTypesConfig.textField({
             label: 'Clock Type',
             placeholder: 'Enter Clock Type',
             restrictions: {
                 requared: true
             }
         }),
-        hours_of_repair: configElem.textField({
+        hours_of_repair: inputElemTypesConfig.textField({
             label: 'Repair Time (in hours)',
             placeholder: 'Enter Repair Time',
             restrictions: {
@@ -119,21 +119,21 @@ const adminFormTypesConfig = {
                 maxLength: 1
             }
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -142,38 +142,38 @@ const adminFormTypesConfig = {
         })
     },
     coverage: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        agent_id: configElem.select({
+        agent_id: inputElemTypesConfig.select({
             label: 'Agent',
             placeholder: 'Select Agent',
             source: ['agents', 'marks']
         }),
-        city_id: configElem.select({
+        city_id: inputElemTypesConfig.select({
             label: 'City',
             placeholder: 'Select City',
             source: ['cities']
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -182,21 +182,21 @@ const adminFormTypesConfig = {
         })
     },
     marks: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        mark_name: configElem.textField({
+        mark_name: inputElemTypesConfig.textField({
             label: 'Mark Name',
             placeholder: 'Enter Mark Name',
             restrictions: {
                 requared: true
             }
         }),
-        mark_value: configElem.textField({
+        mark_value: inputElemTypesConfig.textField({
             label: 'Mark Value',
             placeholder: 'Enter Mark Value',
             restrictions: {
@@ -205,21 +205,21 @@ const adminFormTypesConfig = {
                 maxLength: 3
             }
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -228,58 +228,58 @@ const adminFormTypesConfig = {
         })
     },
     orders: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        user_id: configElem.select({
+        user_id: inputElemTypesConfig.select({
             label: 'Client',
             placeholder: 'Select Client',
             source: ['users', 'roles']
         }),
-        clock_id: configElem.select({
+        clock_id: inputElemTypesConfig.select({
             label: 'Clock Type',
             placeholder: 'Select Clock Type',
             source: ['clocks']
         }),
-        city_id: configElem.select({
+        city_id: inputElemTypesConfig.select({
             label: 'City',
             placeholder: 'Select City',
             source: ['cities', 'coverage']
         }),
-        agent_id: configElem.select({
+        agent_id: inputElemTypesConfig.select({
             label: 'Agent',
             placeholder: 'Select Agent',
             source: ['agents', 'marks', 'coverage']
         }),
-        start_date: configElem.dateTime({
+        start_date: inputElemTypesConfig.dateTime({
             label: 'Start Date'
         }),
-        expiration_date: configElem.dateTime({
+        expiration_date: inputElemTypesConfig.dateTime({
             label: 'Expiration Date'
         }),
-        note: configElem.textArea({
+        note: inputElemTypesConfig.textArea({
             label: 'Note',
             placeholder: 'Enter Notes'
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -288,35 +288,35 @@ const adminFormTypesConfig = {
         })
     },
     roles: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        role: configElem.textField({
+        role: inputElemTypesConfig.textField({
             label: 'User Role',
             placeholder: 'Enter User Role',
             restrictions: {
                 requared: true
             }
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -325,19 +325,19 @@ const adminFormTypesConfig = {
         })
     },
     permissions: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        role_id: configElem.select({
+        role_id: inputElemTypesConfig.select({
             label: 'User Role',
             placeholder: 'Select User Role',
             source: ['roles']
         }),
-        model: configElem.select({
+        model: inputElemTypesConfig.select({
             label: 'Register',
             placeholder: 'Select Register',
             defaultOptions: [
@@ -388,7 +388,7 @@ const adminFormTypesConfig = {
                 }
             ]
         }),
-        action: configElem.select({
+        action: inputElemTypesConfig.select({
             label: 'Action Type',
             placeholder: 'Select Action Type',
             defaultOptions: [
@@ -414,21 +414,21 @@ const adminFormTypesConfig = {
                 }
             ]
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -437,55 +437,55 @@ const adminFormTypesConfig = {
         })
     },
     users: {
-        id: configElem.textField({
+        id: inputElemTypesConfig.textField({
             label: 'ID',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        email: configElem.email({
+        email: inputElemTypesConfig.email({
             label: 'E-Mail',
             placeholder: 'Enter E-Mail Address'
         }),
-        first_name: configElem.textField({
+        first_name: inputElemTypesConfig.textField({
             label: 'First Name',
             placeholder: 'Enter First Name',
             restrictions: {
                 requared: true
             }
         }),
-        last_name: configElem.textField({
+        last_name: inputElemTypesConfig.textField({
             label: 'Last Name',
             placeholder: 'Enter Last Name',
             restrictions: {
                 requared: true
             }
         }),
-        password: configElem.password({
+        password: inputElemTypesConfig.password({
             label: 'Password',
             placeholder: 'Enter Password (at least 8 symbols)'
         }),
-        role_id: configElem.select({
+        role_id: inputElemTypesConfig.select({
             label: 'User Role',
             placeholder: 'Select User Role',
             source: ['roles']
         }),
-        created_at: configElem.textField({
+        created_at: inputElemTypesConfig.textField({
             label: 'CREATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        updated_at: configElem.textField({
+        updated_at: inputElemTypesConfig.textField({
             label: 'UPDATED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
                 readOnly: true
             }
         }),
-        deleted_at: configElem.textField({
+        deleted_at: inputElemTypesConfig.textField({
             label: 'DELETED AT',
             placeholder: 'Autocomplete data',
             restrictions: {
@@ -494,11 +494,11 @@ const adminFormTypesConfig = {
         })
     },
     authentication: {
-        email: configElem.email({
+        email: inputElemTypesConfig.email({
             label: 'User E-Mail',
             placeholder: 'Enter E-Mail Address'
         }),
-        password: configElem.password({
+        password: inputElemTypesConfig.password({
             label: 'Password',
             placeholder: 'Enter Password (at least 5 symbols)'
         })

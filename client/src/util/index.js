@@ -1,4 +1,10 @@
-export {
+import adminFormTypesConfig from './presets/adminFormTypesConfig';
+import clientFormTypesConfig from './presets/clientFormTypesConfig';
+import inputElemTypesConfig from './presets/inputElemTypesConfig';
+import tableFieldsConfig from './presets/tableFieldsConfig';
+import apiServicesConfig from './presets/apiServicesConfig';
+
+import {
     rewriteObjectProps,
     validateInput,
     transformSelectOptions,
@@ -8,3 +14,19 @@ export {
     search,
     getUniqueKeyValues
 } from './util';
+
+export {
+    rewriteObjectProps,
+    validateInput,
+    transformSelectOptions,
+    transformDataSet,
+    promiseToGetUniqueKeyValues,
+    debounce,
+    search,
+    getUniqueKeyValues,
+    adminFormTypesConfig,
+    clientFormTypesConfig,
+    inputElemTypesConfig,
+    tableFieldsConfig,
+    apiServicesConfig
+};

@@ -1,5 +1,6 @@
 import * as actionTypes from '../action-types';
-import {fetchFreeAgentsDataService} from '../../../services/api';
+import {apiServiceController} from '../../../services';
+import {apiServicesConfig} from '../../../util';
 
 const clientActionCreator = {};
 
@@ -40,13 +41,14 @@ clientActionCreator.fetchFreeAgentsRequest = (queryString) => {
         dispatch({
             type: actionTypes.CLIENT_FETCH_FREE_AGENTS_REQUEST
         });
-        fetchFreeAgentsDataService(queryString)
-            .then(response => {
-                dispatch(clientActionCreator.fetchFreeAgentsSuccess(response.data));
-            })
-            .catch(error => {
-                dispatch(clientActionCreator.fetchFreeAgentsFailure(error));
-            });
+        apiServiceController(apiServicesConfig.crud.fetchDataOptions)
+            .fetchFreeAgentsData(queryString)
+                .then(response => {
+                    dispatch(clientActionCreator.fetchFreeAgentsSuccess(response.data));
+                })
+                .catch(error => {
+                    dispatch(clientActionCreator.fetchFreeAgentsFailure(error));
+                });
     };
 };
 

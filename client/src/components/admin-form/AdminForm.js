@@ -4,8 +4,7 @@ import {Modal, Form, Button, Message, Icon, Confirm} from 'semantic-ui-react';
 import InputField from '../input-field';
 import ConfirmPassword from './confirm-password';
 import {adminActionCreator, authActionCreator} from '../../store/actions';
-import {transformSelectOptions} from '../../util';
-import adminFormTypesConfig from '../../util/presets/adminFormTypesConfig';
+import {transformSelectOptions, adminFormTypesConfig} from '../../util';
 import moment from 'moment';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
@@ -361,13 +360,13 @@ class AdminForm extends Component {
                                 <Message.Header>{messageHeader}</Message.Header>
                                 {messageContent}
                             </Message.Content>
-                            {formDataError ?
-                                null
-                            :
+                            {fetchError ?
                                 <Button
                                     content={'Try Again'}
                                     onClick={this.onReonReloadFieldsDataButtonClickHandler}
                                 />
+                            :
+                                null
                             }
                         </Message>
                         <Message

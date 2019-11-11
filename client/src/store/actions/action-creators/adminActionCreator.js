@@ -1,6 +1,6 @@
 import * as actionTypes from '../action-types';
-import {fetchDataService, createDataService, updateDataService, deleteDataService} from '../../../services/api';
-import {debounce, search, promiseToGetUniqueKeyValues} from '../../../util';
+import {apiServiceController} from '../../../services';
+import {debounce, search, promiseToGetUniqueKeyValues, apiServicesConfig} from '../../../util';
 
 const adminActionCreator = {};
 
@@ -44,13 +44,14 @@ adminActionCreator.fetchDataRequest = (accessToken, model, id, queryString) => {
             type: actionTypes.ADMIN_FETCH_DATA_REQUEST,
             model
         });
-        fetchDataService(accessToken, model, id, queryString)
-            .then(response => {
-                dispatch(adminActionCreator.fetchDataSuccess(model, response.data));
-            })
-            .catch(error => {
-                dispatch(adminActionCreator.fetchDataFailure(model, error));
-            });
+        apiServiceController(apiServicesConfig.crud.fetchDataOptions)
+            .fetchData(accessToken, model, id, queryString)
+                .then(response => {
+                    dispatch(adminActionCreator.fetchDataSuccess(model, response.data));
+                })
+                .catch(error => {
+                    dispatch(adminActionCreator.fetchDataFailure(model, error));
+                });
     };
 };
 
@@ -76,13 +77,14 @@ adminActionCreator.createDataRequest = (accessToken, model, dataObj) => {
             type: actionTypes.ADMIN_CREATE_DATA_REQUEST,
             model
         });
-        createDataService(accessToken, model, dataObj)
-            .then(response => {
-                dispatch(adminActionCreator.createDataSuccess(model, response.data));
-            })
-            .catch(error => {
-                dispatch(adminActionCreator.createDataFailure(model, error));
-            });
+        apiServiceController(apiServicesConfig.crud.createDataOptions)
+            .createData(accessToken, model, dataObj)
+                .then(response => {
+                    dispatch(adminActionCreator.createDataSuccess(model, response.data));
+                })
+                .catch(error => {
+                    dispatch(adminActionCreator.createDataFailure(model, error));
+                });
     };
 };
 
@@ -108,13 +110,14 @@ adminActionCreator.updateDataRequest = (accessToken, model, id, dataObj) => {
             type: actionTypes.ADMIN_UPDATE_DATA_REQUEST,
             model
         });
-        updateDataService(accessToken, model, id, dataObj)
-            .then(response => {
-                dispatch(adminActionCreator.updateDataSuccess(model, response.data));
-            })
-            .catch(error => {
-                dispatch(adminActionCreator.updateDataFailure(model, error));
-            });
+        apiServiceController(apiServicesConfig.crud.updateDataOptions)
+            .updateData(accessToken, model, id, dataObj)
+                .then(response => {
+                    dispatch(adminActionCreator.updateDataSuccess(model, response.data));
+                })
+                .catch(error => {
+                    dispatch(adminActionCreator.updateDataFailure(model, error));
+                });
     };
 };
 
@@ -140,13 +143,14 @@ adminActionCreator.deleteDataRequest = (accessToken, model, id, queryString) => 
             type: actionTypes.ADMIN_DELETE_DATA_REQUEST,
             model
         });
-        deleteDataService(accessToken, model, id, queryString)
-            .then(response => {
-                dispatch(adminActionCreator.deleteDataSuccess(model, response.data));
-            })
-            .catch(error => {
-                dispatch(adminActionCreator.deleteDataFailure(model, error));
-            });
+        apiServiceController(apiServicesConfig.crud.deleteDataOptions)
+            .deleteData(accessToken, model, id, queryString)
+                .then(response => {
+                    dispatch(adminActionCreator.deleteDataSuccess(model, response.data));
+                })
+                .catch(error => {
+                    dispatch(adminActionCreator.deleteDataFailure(model, error));
+                });
     };
 };
 

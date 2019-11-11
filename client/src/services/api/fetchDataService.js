@@ -1,7 +1,7 @@
 import axios from './axios';
 
-const fetchDataService = (accessToken, model, repeat, id, queryString = '') => {
-    let url, tryNumber = repeat ? repeat : 1;
+const fetchDataService = (accessToken, model, id, queryString = '') => {
+    let url;
 
     switch (model) {
         case 'agents':
@@ -35,23 +35,14 @@ const fetchDataService = (accessToken, model, repeat, id, queryString = '') => {
             url = '/';
     }
 
-    return new Promise (async (resolve, reject) => {
-        let success = null, failure = null, tryCounter = 0;
-        while (tryCounter < tryNumber) {
-            await axios(accessToken).get(url)
-                .then((response) => {
-                    success = response;
-                    tryCounter = tryNumber;
-                })
-                .catch((error) => {
-                    failure = error;
-                    tryCounter += 1;
-                });
-        }
-        if (success) {
-            return resolve(success);
-        }
-        return reject(failure);
+    return new Promise ((resolve, reject) => {
+        axios(accessToken).get(url)
+            .then((response) => {
+                resolve(response);
+            })
+            .catch((error) => {
+                reject(error);
+            });
     });
 };
 

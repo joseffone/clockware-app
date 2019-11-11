@@ -1,5 +1,6 @@
 import * as actionTypes from '../action-types';
-import { loginUserService, logoutUserService, refreshTokensService } from '../../../services/api';
+import {apiServiceController} from '../../../services';
+import {apiServicesConfig} from '../../../util';
 
 const authActionCreator = {};
 
@@ -22,17 +23,18 @@ authActionCreator.loginRequest = (loginData) => {
         dispatch({
             type: actionTypes.AUTH_LOGIN_REQUEST
         });
-        loginUserService(loginData)
-            .then(response => {
-                localStorage.setItem('refresh_token', response.data.refresh_token);
-                localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
-                localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
-                dispatch(authActionCreator.loginSuccess(response.data));
-                dispatch(authActionCreator.setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
-            })
-            .catch(error => {
-                dispatch(authActionCreator.loginFailure(error));
-            });
+        apiServiceController(apiServicesConfig.auth.loginUserOptions)
+            .loginUser(loginData)
+                .then(response => {
+                    localStorage.setItem('refresh_token', response.data.refresh_token);
+                    localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
+                    localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
+                    dispatch(authActionCreator.loginSuccess(response.data));
+                    dispatch(authActionCreator.setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
+                })
+                .catch(error => {
+                    dispatch(authActionCreator.loginFailure(error));
+                });
     };
 };
 
@@ -55,19 +57,20 @@ authActionCreator.refreshTokensRequest = (refreshToken) => {
         dispatch({
             type: actionTypes.AUTH_REFRESH_TOKENS_REQUEST
         });
-        refreshTokensService(refreshToken)
-            .then(response => {
-                localStorage.setItem('refresh_token', response.data.refresh_token);
-                localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
-                localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
-                dispatch(authActionCreator.refreshTokensSuccess(response.data));
-                dispatch(authActionCreator.setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
-            })
-            .catch(error => {
-                clearTimeout(localStorage.getItem('accessTimeoutID'));
-                localStorage.clear();
-                dispatch(authActionCreator.refreshTokensFailure(error));
-            });
+        apiServiceController(apiServicesConfig.auth.refreshTokensOptions)
+            .refreshTokens(refreshToken)
+                .then(response => {
+                    localStorage.setItem('refresh_token', response.data.refresh_token);
+                    localStorage.setItem('refresh_token_iat', response.data.refresh_token_iat);
+                    localStorage.setItem('refresh_token_exp', response.data.refresh_token_exp);
+                    dispatch(authActionCreator.refreshTokensSuccess(response.data));
+                    dispatch(authActionCreator.setAccessTimeout(response.data.refresh_token, response.data.access_token_exp - response.data.access_token_iat));
+                })
+                .catch(error => {
+                    clearTimeout(localStorage.getItem('accessTimeoutID'));
+                    localStorage.clear();
+                    dispatch(authActionCreator.refreshTokensFailure(error));
+                });
     };
 };
 
@@ -88,15 +91,16 @@ authActionCreator.logoutRequest = (accessToken) => {
         dispatch({
             type: actionTypes.AUTH_LOGOUT_REQUEST
         });
-        logoutUserService(accessToken)
-            .then(response => {
-                clearTimeout(localStorage.getItem('accessTimeoutID'));
-                localStorage.clear();
-                dispatch(authActionCreator.logoutSuccess());
-            })
-            .catch(error => {
-                dispatch(authActionCreator.logoutFailure(error));
-            });
+        apiServiceController(apiServicesConfig.auth.logoutUserOptions)
+            .logoutUser(accessToken)
+                .then(response => {
+                    clearTimeout(localStorage.getItem('accessTimeoutID'));
+                    localStorage.clear();
+                    dispatch(authActionCreator.logoutSuccess());
+                })
+                .catch(error => {
+                    dispatch(authActionCreator.logoutFailure(error));
+                });
     };
 };
 

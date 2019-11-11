@@ -1,6 +1,5 @@
 import * as actionTypes from '../actions/action-types';
-import {rewriteObjectProps, validateInput} from '../../util';
-import clientFormTypesConfig from '../../util/presets/clientFormTypesConfig';
+import {rewriteObjectProps, validateInput, clientFormTypesConfig} from '../../util';
 
 const initState = {
     forms: {},

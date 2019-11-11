@@ -1,18 +1,18 @@
-import configElem from './inputElemTypesConfig';
+import inputElemTypesConfig from './inputElemTypesConfig';
 
 const clientFormTypesConfig = {
     clientStartForm: {
-        city_id: configElem.select({
+        city_id: inputElemTypesConfig.select({
             label: 'City',
             placeholder: 'Select your city',
             source: ['cities']
         }),
-        clock_id: configElem.select({
+        clock_id: inputElemTypesConfig.select({
             label: 'Clock type',
             placeholder: 'Select type of clock',
             source: ['clocks']
         }),
-        start_date: configElem.dateTime({
+        start_date: inputElemTypesConfig.dateTime({
             label: 'Pick the date and time',
             placeholder: 'Pick the date and time'
         })

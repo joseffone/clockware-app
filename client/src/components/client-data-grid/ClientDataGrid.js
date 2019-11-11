@@ -12,21 +12,19 @@ class ClientDataGrid extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        debugger;
         if (this.props.client.ui.reloadDataTrigger) {
             if (prevProps.client.ui.reloadDataTrigger !== this.props.client.ui.reloadDataTrigger) {
                 return this.onReloadAuxDataHandler();
             }
             if (this.props.admin.ui.fetchRequestsCounter.length === 0) {
                 if (this.props.admin.ui.fetchErrorsCounter.length === 0) {
-                    return this.onReloadFreeAgentsHandler();
+                    if (!this.props.client.data.loading.isFetching) {
+                        return this.onReloadFreeAgentsHandler();
+                    }
                 }
-                return this.onReloadAuxDataHandler(this.props.admin.ui.fetchErrorsCounter);
-            }
-        }
-        if (!this.props.client.data.loading.isFetching) {
-            if (this.props.client.data.error.fetchError) {
-                //return this.props.onSetReloadDataTrigger(true);
+                if (this.props.admin.ui.fetchErrorsCounter.length > 0) {
+                    return this.props.onSetReloadDataTrigger(false);
+                }
             }
         }
     }

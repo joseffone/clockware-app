@@ -1,7 +1,5 @@
 import * as actionTypes from '../actions/action-types';
-import {rewriteObjectProps, validateInput} from '../../util';
-import adminFormTypesConfig from '../../util/presets/adminFormTypesConfig';
-import tableFieldsConfig from '../../util/presets/tableFieldsConfig';
+import {rewriteObjectProps, validateInput, adminFormTypesConfig, tableFieldsConfig} from '../../util';
 
 const initState = {
     forms: {},
