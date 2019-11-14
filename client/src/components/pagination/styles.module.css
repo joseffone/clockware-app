@@ -1,0 +1,13 @@
+.customPagination {
+    height: 3rem;
+    line-height: 3rem;
+}
+
+.customPagination :global .dropdown {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.customPagination :global .pagination {
+    box-shadow: none;
+}

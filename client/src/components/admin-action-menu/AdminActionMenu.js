@@ -19,17 +19,17 @@ class AdminActionMenu extends Component {
         this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.forEach((id) => {
             queryString += `id=${id}&`;
         });
-        this.props.onDeleteDataHandler(this.props.auth.accessToken, this.props.admin.ui.currentModel, false, queryString);
+        this.props.deleteData(this.props.auth.accessToken, this.props.admin.ui.currentModel, false, queryString);
     }
 
     onCommitDeleteHandler = () => {
-        this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true);
-        this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, false);
+        this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, true);
+        this.props.setSelectAllTrigger(this.props.admin.ui.currentModel, false);
     }
 
     onSearchInputChangeHandler = (event, {value}) => {
-        this.props.onChangeSearchValueHandler(this.props.admin.ui.currentModel, value);
-        this.props.onSearchDataRequestHandler(
+        this.props.changeSearchValue(this.props.admin.ui.currentModel, value);
+        this.props.searchData(
             this.props.admin.ui.currentModel, 
             value, 
             () => transformDataSet(
@@ -43,15 +43,15 @@ class AdminActionMenu extends Component {
     }
 
     onFilterMenuItemClickHandler = (event, {name}) => {
-        this.props.onAddFilterHandler(this.props.admin.ui.currentModel, name);
+        this.props.addFilter(this.props.admin.ui.currentModel, name);
     }
 
     onFilterCloseButtonClickHandler = (event, {id}) => {
-        this.props.onDeleteFilterHandler(this.props.admin.ui.currentModel, id);
+        this.props.deleteFilter(this.props.admin.ui.currentModel, id);
     }
 
     onFilterMountedHandler = (filterKey, dataKey, tailIndex) => {
-        this.props.onLoadFilterOptionsHandler(
+        this.props.loadFilterOptions(
             filterKey,
             dataKey,
             this.props.admin.ui.currentModel, 
@@ -67,7 +67,7 @@ class AdminActionMenu extends Component {
     }
 
     onFilterChangeHandler = (filterKey, value) => {
-        this.props.onSetFilterTargetValueHandler(this.props.admin.ui.currentModel, filterKey, value);
+        this.props.setFilterTargetValue(this.props.admin.ui.currentModel, filterKey, value);
     }
 
     actions = (props) => {
@@ -112,7 +112,7 @@ class AdminActionMenu extends Component {
                 icon={<span><Icon name='filter' />Filter</span>}
             >
                 <Dropdown.Menu>
-                    {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({ filterable, filterOperation }) => {
+                    {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({filterable, filterOperation}) => {
                         if (filterable) {
                             return filterOperation.map((filterItem) => (
                                 <Dropdown.Item
@@ -203,6 +203,8 @@ class AdminActionMenu extends Component {
                 : null}
                 <ConfirmDelete
                     open={this.state.isConfirmDeleteOpen}
+                    error={this.props.admin.models[this.props.admin.ui.currentModel].error.deleteError}
+                    deleting={this.props.admin.models[this.props.admin.ui.currentModel].loading.isDeleting}
                     onClose={() => this.setState({isConfirmDeleteOpen: false})}
                     onCancel={() => this.setState({isConfirmDeleteOpen: false})}
                     onConfirm={this.onConfirmDeleteHandler}
@@ -223,15 +225,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onDeleteDataHandler: (accessToken, model, id, queryString) => dispatch(adminActionCreator.deleteDataRequest(accessToken, model, id, queryString)),
-        onSetSelectAllTriggerHandler: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
-        onChangeSearchValueHandler: (model, value) => dispatch(adminActionCreator.changeSearchValue(model, value)),
-        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(adminActionCreator.searchDataRequest(model, text, dataSet, key)),
-        onAddFilterHandler: (model, filterKey) => dispatch(adminActionCreator.addFilter(model, filterKey)),
-        onDeleteFilterHandler: (model, filterKey) => dispatch(adminActionCreator.deleteFilter(model, filterKey)),
-        onSetFilterTargetValueHandler: (model, filterKey, value) => dispatch(adminActionCreator.setFilterTargetValue(model, filterKey, value)),
-        onLoadFilterOptionsHandler: (filterKey, dataKey, model, getDataSet) => dispatch(adminActionCreator.loadFilterOptions(filterKey, dataKey, model, getDataSet)),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
+        deleteData: (accessToken, model, id, queryString) => dispatch(adminActionCreator.deleteDataRequest(accessToken, model, id, queryString)),
+        setSelectAllTrigger: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
+        changeSearchValue: (model, value) => dispatch(adminActionCreator.changeSearchValue(model, value)),
+        searchData: (model, text, dataSet, key) => dispatch(adminActionCreator.searchDataRequest(model, text, dataSet, key)),
+        addFilter: (model, filterKey) => dispatch(adminActionCreator.addFilter(model, filterKey)),
+        deleteFilter: (model, filterKey) => dispatch(adminActionCreator.deleteFilter(model, filterKey)),
+        setFilterTargetValue: (model, filterKey, value) => dispatch(adminActionCreator.setFilterTargetValue(model, filterKey, value)),
+        loadFilterOptions: (filterKey, dataKey, model, getDataSet) => dispatch(adminActionCreator.loadFilterOptions(filterKey, dataKey, model, getDataSet)),
+        setReloadDataTrigger: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
     };
 };
 

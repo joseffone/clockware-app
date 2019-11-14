@@ -20,18 +20,5 @@
     box-shadow: none !important;
 }
 
-.dataGrid tfoot th {
-    line-height: 3rem;
-}
-
-.dataGrid tfoot :global .dropdown {
-    margin-left: 1rem;
-    margin-right: 1rem;
-}
-
-.dataGrid tfoot :global .pagination {
-    box-shadow: none;
-}
-
 
 

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
     componentDidMount () {
         if (!this.props.date && this.props.mounted) {
-            return new Promise(handle => handle()).then(() => this.props.mounted());
+            return new Promise(resolve => resolve()).then(() => this.props.mounted());
         }
     }
 

@@ -71,4 +71,39 @@ clientActionCreator.hideStartForm = () => {
     };
 };
 
+clientActionCreator.setCurrentPage = (activePage) => {
+    return {
+        type: actionTypes.CLIENT_SET_CURRENT_PAGE,
+        activePage
+    };
+};
+
+clientActionCreator.setItemsPerPage = (value) => {
+    return {
+        type: actionTypes.CLIENT_SET_ITEMS_PER_PAGE,
+        value
+    };
+};
+
+clientActionCreator.setTotalItems = (total) => {
+    return {
+        type: actionTypes.CLIENT_SET_TOTAL_ITEMS,
+        total
+    };
+};
+
+clientActionCreator.setListItemsIds = (ids) => {
+    return {
+        type: actionTypes.CLIENT_SET_LIST_ITEMS_IDS,
+        ids
+    };
+};
+
+clientActionCreator.setListData = (dataSet) => {
+    return {
+        type: actionTypes.CLIENT_SET_LIST_DATA,
+        dataSet
+    };
+};
+
 export default clientActionCreator;

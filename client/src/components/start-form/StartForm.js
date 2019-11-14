@@ -46,13 +46,13 @@ class StartForm extends Component {
 
     onReloadFieldsDataHandler = (source) => {
         if (source) {
-            source.forEach(src => this.props.onFetchDataHandler(null, src));
+            source.forEach(src => this.props.fetchData(null, src));
             return;
         }
         for (const key in this.props.form) {
             if (this.props.form[key].config.source) {
                 this.props.form[key].config.source.forEach(src => {
-                    this.props.onFetchDataHandler(null, src);
+                    this.props.fetchData(null, src);
                 });
             }
         }
@@ -60,7 +60,7 @@ class StartForm extends Component {
 
     onFormSubmitHandler = () => {
         if (this.state.isFormDataValid) {
-            this.props.onHideStartFormHandler();
+            this.props.hideStartForm();
         }
     }
 
@@ -127,7 +127,7 @@ class StartForm extends Component {
                                     options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
                                     text={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
                                     value={formField.value}
-                                    changed={(event, { value }) => this.props.onInputChangeHandler(event, 'clientStartForm', formField.key, { value })}
+                                    changed={(event, { value }) => this.props.changeFormState(event, 'clientStartForm', formField.key, { value })}
                                 />
                             </Form.Field>
                         ))}
@@ -162,11 +162,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFormRefreshStateHandler: (formKey) => dispatch(clientActionCreator.refreshFormState(formKey)),
-        onInputChangeHandler: (event, formKey, formFieldKey, { value }, touched) => dispatch(clientActionCreator.changeFormState(event, formKey, formFieldKey, value, touched)),
-        onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
-        onSetReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
-        onHideStartFormHandler: () => dispatch(clientActionCreator.hideStartForm())
+        refreshFormState: (formKey) => dispatch(clientActionCreator.refreshFormState(formKey)),
+        changeFormState: (event, formKey, formFieldKey, { value }, touched) => dispatch(clientActionCreator.changeFormState(event, formKey, formFieldKey, value, touched)),
+        fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
+        setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
+        hideStartForm: () => dispatch(clientActionCreator.hideStartForm())
     };
 };
 

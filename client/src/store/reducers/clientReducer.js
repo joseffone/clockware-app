@@ -4,7 +4,7 @@ import {rewriteObjectProps, validateInput, clientFormTypesConfig} from '../../ut
 const initState = {
     forms: {},
     data: {
-        freeAgentsIds: [],
+        freeAgents: [],
         order: null,
         error: {
             fetchError: null,
@@ -18,8 +18,6 @@ const initState = {
     list: {
         dataSet: [],
         ids: [],
-        activeId: null,
-        selectedIds: [],
         params: {
             fields: [],
             filters: [],
@@ -114,7 +112,7 @@ const clientReducer = (state = initState, action) => {
                     loading: rewriteObjectProps(state.data.loading, {
                         isFetching: false
                     }),
-                    freeAgentsIds: [...action.fetchedData]
+                    freeAgents: [...action.fetchedData]
                 }),
                 list: rewriteObjectProps(state.list, {
                     ids: action.fetchedData.map(({id}) => id)
@@ -133,7 +131,7 @@ const clientReducer = (state = initState, action) => {
                     error: rewriteObjectProps(state.data.error, {
                         fetchError: action.error
                     }),
-                    freeAgentsIds: []
+                    freeAgents: []
                 }),
                 list: rewriteObjectProps(state.list, {
                     ids: []
@@ -168,6 +166,53 @@ const clientReducer = (state = initState, action) => {
             return rewriteObjectProps(state, {
                 ui: rewriteObjectProps(state.ui, {
                     isStartPageShown: false
+                })
+            });
+
+        case actionTypes.CLIENT_SET_CURRENT_PAGE:
+            return rewriteObjectProps(state, {
+                list: rewriteObjectProps(state.list, {
+                    params: rewriteObjectProps(state.list.params, {
+                        pagination: rewriteObjectProps(state.list.params.pagination, {
+                            currentPage: action.activePage
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.CLIENT_SET_ITEMS_PER_PAGE:
+            return rewriteObjectProps(state, {
+                list: rewriteObjectProps(state.list, {
+                    params: rewriteObjectProps(state.list.params, {
+                        pagination: rewriteObjectProps(state.list.params.pagination, {
+                            itemsPerPage: action.value
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.CLIENT_SET_TOTAL_ITEMS:
+            return rewriteObjectProps(state, {
+                list: rewriteObjectProps(state.list, {
+                    params: rewriteObjectProps(state.list.params, {
+                        pagination: rewriteObjectProps(state.list.params.pagination, {
+                            totalItems: action.total
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.CLIENT_SET_LIST_ITEMS_IDS:
+            return rewriteObjectProps(state, {
+                list: rewriteObjectProps(state.list, {
+                    ids: action.ids.slice()
+                })
+            });
+
+        case actionTypes.CLIENT_SET_LIST_DATA:
+            return rewriteObjectProps(state, {
+                list: rewriteObjectProps(state.list, {
+                    dataSet: action.dataSet.slice()
                 })
             });
     

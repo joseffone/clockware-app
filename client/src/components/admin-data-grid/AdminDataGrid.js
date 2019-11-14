@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Table, Checkbox, Pagination, Dropdown, Button, Icon} from 'semantic-ui-react';
+import {Table, Checkbox, Button, Icon} from 'semantic-ui-react';
 import {adminActionCreator} from '../../store/actions';
 import {transformDataSet} from '../../util';
 import AdminForm from '../admin-form';
 import FieldsCustomizer from './fields-customizer';
+import Pagination from '../pagination';
 import styles from './styles.module.css';
 
 class AdminDataGrid extends Component {
@@ -13,8 +14,8 @@ class AdminDataGrid extends Component {
 
     componentDidMount () {
         let promise = new Promise(handle => handle());
-        promise.then(() => this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false));
-        promise.then(() => this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true));
+        promise.then(() => this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, false));
+        promise.then(() => this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, true));
     }
 
     componentDidUpdate (prevProps) {
@@ -25,26 +26,26 @@ class AdminDataGrid extends Component {
             }
             if (this.props.admin.ui.fetchRequestsCounter.length === 0) {
                 this.tableRef.current.scrollIntoView({block: 'end'});
-                this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
-                this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
+                this.props.setTotalItems(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
+                this.props.setListData(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
                 if (this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value !== '') {
                     this.onSearchApplyHandler();
                 }
                 if (this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.length !== 0) {
                     this.onFiltersApplyHandler();
                 }
-                this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, false);
+                this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, false);
             }
         }
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].ids.length !== this.props.admin.lists[this.props.admin.ui.currentModel].ids.length) {
-            this.props.onSetTotalItemsHandler(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
+            this.props.setTotalItems(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
         }
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].params.sort !== this.props.admin.lists[this.props.admin.ui.currentModel].params.sort ||
             prevProps.admin.lists[this.props.admin.ui.currentModel].params.filters !== this.props.admin.lists[this.props.admin.ui.currentModel].params.filters) {
             this.onFiltersApplyHandler();
         }
         if (this.props.admin.lists[this.props.admin.ui.currentModel].dataSet.length !== this.props.admin.models[this.props.admin.ui.currentModel].items.length) {
-            this.props.onSetListDataHandler(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
+            this.props.setListData(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
         }
     }
 
@@ -52,18 +53,18 @@ class AdminDataGrid extends Component {
         for (const key in this.props.admin.forms[this.props.admin.ui.currentModel]) {
             if (this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source) {
                 this.props.admin.forms[this.props.admin.ui.currentModel][key].config.source.forEach(src => {
-                    this.props.onFetchDataHandler(this.props.auth.accessToken, src);
+                    this.props.fetchData(this.props.auth.accessToken, src);
                 });
             }
         }
-        this.props.onFetchDataHandler(this.props.auth.accessToken, this.props.admin.ui.currentModel);
+        this.props.fetchData(this.props.auth.accessToken, this.props.admin.ui.currentModel);
     }
 
     onHeaderColumnClickHandler = (clickedColumnName) => {
         if (clickedColumnName !== this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target) {
-            return this.props.onChangeSortStateHandler(this.props.admin.ui.currentModel, clickedColumnName, 'ascending', false);
+            return this.props.changeSortState(this.props.admin.ui.currentModel, clickedColumnName, 'ascending', false);
         }
-        return this.props.onChangeSortStateHandler(
+        return this.props.changeSortState(
             this.props.admin.ui.currentModel,
             clickedColumnName,
             this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.order === 'ascending' ? 'descending' : 'ascending',
@@ -72,7 +73,7 @@ class AdminDataGrid extends Component {
     }
 
     onFiltersApplyHandler = () => {
-        this.props.onSetListItemsIdsHandler(
+        this.props.setListItemsIds(
             this.props.admin.ui.currentModel,
             transformDataSet(
                 this.props.admin.ui.currentModel,
@@ -85,7 +86,7 @@ class AdminDataGrid extends Component {
     }
 
     onSearchApplyHandler = () => {
-        this.props.onSearchDataRequestHandler(
+        this.props.searchData(
             this.props.admin.ui.currentModel, 
             this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value, 
             () => transformDataSet(
@@ -99,7 +100,7 @@ class AdminDataGrid extends Component {
     }
 
     onCustomFieldsApplyHandler = (fields) => {
-        this.props.onSetCustomFieldsHandler(this.props.admin.ui.currentModel, fields);
+        this.props.setCustomFields(this.props.admin.ui.currentModel, fields);
     }
 
     render() {
@@ -135,7 +136,7 @@ class AdminDataGrid extends Component {
             >
                 <Checkbox 
                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length === this.props.admin.lists[this.props.admin.ui.currentModel].ids.length} 
-                    onChange={(event, { checked }) => this.props.onSetSelectAllTriggerHandler(this.props.admin.ui.currentModel, checked)} 
+                    onChange={(event, { checked }) => this.props.setSelectAllTrigger(this.props.admin.ui.currentModel, checked)} 
                 />
             </Table.HeaderCell>
         );
@@ -182,7 +183,7 @@ class AdminDataGrid extends Component {
                                 <Checkbox 
                                     id={id}
                                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.filter(selectedId => selectedId === id).length === 1}
-                                    onChange={(event, { checked}) => this.props.onToggleListItemSelectHandler(this.props.admin.ui.currentModel, checked, event.target.id)}
+                                    onChange={(event, { checked}) => this.props.toggleListItemSelect(this.props.admin.ui.currentModel, checked, event.target.id)}
                                 />
                             </Table.Cell>
                             {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({name, alias, visible}) => {
@@ -244,30 +245,17 @@ class AdminDataGrid extends Component {
                             <Table.HeaderCell 
                                 colSpan={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.filter(({visible}) => visible).length + 2}
                             >   
-                                {this.props.global.ui.mobile ? null : <span>Rows per page:</span>}
-                                {this.props.global.ui.mobile ? null :
-                                    <Dropdown
-                                        upward
-                                        pointing='top'
-                                        options={this.props.admin.ui.itemsPerPageOptions}
-                                        defaultValue={itemsPerPage}
-                                        text={'' + itemsPerPage}
-                                        inline
-                                        onChange={(event, { value }) => this.props.onSetItemsPerPageHandler(this.props.admin.ui.currentModel, value)}
-                                    />
-                                }
-                                {totalItems > 0 ? <span>{startIndex + 1}-{endIndex + 1 > totalItems ? totalItems : endIndex + 1} of {totalItems}</span> : <span>0-0 of 0</span>}
-                                <Pagination
+                                <Pagination 
+                                    mobile={this.props.global.ui.mobile}
+                                    totalItems={totalItems}
+                                    startIndex={startIndex}
+                                    endIndex={endIndex}
+                                    itemsPerPage={itemsPerPage}
+                                    itemsPerPageOptions={this.props.admin.ui.itemsPerPageOptions}
                                     totalPages={totalPages}
-                                    activePage={currentPage}
-                                    pageItem={this.props.global.ui.mobile ? null : undefined}
-                                    ellipsisItem={this.props.global.ui.mobile ? null : undefined}
-                                    firstItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
-                                    lastItem={totalPages > 2 ? this.props.global.ui.mobile ? null : undefined : null}
-                                    boundaryRange={1}
-                                    siblingRange={1}
-                                    floated='right'
-                                    onPageChange={(event, { activePage }) => this.props.onSetCurrentPageHandler(this.props.admin.ui.currentModel, activePage)}
+                                    currentPage={currentPage}
+                                    itemsPerPageChanged={(event, { value }) => this.props.setItemsPerPage(this.props.admin.ui.currentModel, value)}
+                                    currentPageChanged={(event, { activePage }) => this.props.setCurrentPage(this.props.admin.ui.currentModel, activePage)}
                                 />
                             </Table.HeaderCell>
                         </Table.Row>
@@ -288,18 +276,18 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag)),
-        onSetSelectAllTriggerHandler: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
-        onToggleListItemSelectHandler: (model, checked, id) => dispatch(adminActionCreator.toggleListItemSelect(model, checked, id)),
-        onSetCurrentPageHandler: (model, activePage) => dispatch(adminActionCreator.setCurrentPage(model, activePage)),
-        onSetItemsPerPageHandler: (model, value) => dispatch(adminActionCreator.setItemsPerPage(model, value)),
-        onSetTotalItemsHandler: (model, total) => dispatch(adminActionCreator.setTotalItems(model, total)),
-        onSetListItemsIdsHandler: (model, ids) => dispatch(adminActionCreator.setListItemsIds(model, ids)),
-        onSetListDataHandler: (model, dataSet) => dispatch(adminActionCreator.setListData(model, dataSet)),
-        onChangeSortStateHandler: (model, target, order, reverse) => dispatch(adminActionCreator.changeSortState(model, target, order, reverse)),
-        onSearchDataRequestHandler: (model, text, dataSet, key) => dispatch(adminActionCreator.searchDataRequest(model, text, dataSet, key)),
-        onSetCustomFieldsHandler: (model, fields) => dispatch(adminActionCreator.setCustomFields(model, fields))
+        fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
+        setReloadDataTrigger: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag)),
+        setSelectAllTrigger: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
+        toggleListItemSelect: (model, checked, id) => dispatch(adminActionCreator.toggleListItemSelect(model, checked, id)),
+        setCurrentPage: (model, activePage) => dispatch(adminActionCreator.setCurrentPage(model, activePage)),
+        setItemsPerPage: (model, value) => dispatch(adminActionCreator.setItemsPerPage(model, value)),
+        setTotalItems: (model, total) => dispatch(adminActionCreator.setTotalItems(model, total)),
+        setListItemsIds: (model, ids) => dispatch(adminActionCreator.setListItemsIds(model, ids)),
+        setListData: (model, dataSet) => dispatch(adminActionCreator.setListData(model, dataSet)),
+        changeSortState: (model, target, order, reverse) => dispatch(adminActionCreator.changeSortState(model, target, order, reverse)),
+        searchData: (model, text, dataSet, key) => dispatch(adminActionCreator.searchDataRequest(model, text, dataSet, key)),
+        setCustomFields: (model, fields) => dispatch(adminActionCreator.setCustomFields(model, fields))
     };
 };
 

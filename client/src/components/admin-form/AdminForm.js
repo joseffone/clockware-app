@@ -38,14 +38,14 @@ class AdminForm extends Component {
                     for (const key in this.props.models[this.props.model].updatedItem) {
                         if (!prevProps.models[this.props.model].updatedItem) {
                             updateFlag = true;
-                            this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
+                            this.props.changeFormState({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
                             continue;
                         }
                         if (!!prevProps.models[this.props.model].updatedItem[key] &&
                             !!this.props.models[this.props.model].updatedItem[key] &&
                             (prevProps.models[this.props.model].updatedItem[key] !== this.props.models[this.props.model].updatedItem[key])) {
                             updateFlag = true;
-                            this.props.onInputChangeHandler(null, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
+                            this.props.changeFormState(null, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
                         }
                     }
                 }
@@ -55,14 +55,14 @@ class AdminForm extends Component {
                     for (const key in this.props.models[this.props.model].createdItem) {
                         if (!prevProps.models[this.props.model].createdItem) {
                             createFlag = true;
-                            this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
+                            this.props.changeFormState({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
                             continue;
                         }
                         if (!!prevProps.models[this.props.model].createdItem[key] &&
                             !!this.props.models[this.props.model].createdItem[key] &&
                             (prevProps.models[this.props.model].createdItem[key] !== this.props.models[this.props.model].createdItem[key])) {
                             createFlag = true;
-                            this.props.onInputChangeHandler(null, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
+                            this.props.changeFormState(null, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
                         }
                     }
                 }
@@ -75,7 +75,7 @@ class AdminForm extends Component {
             }
             if (deleteFlag) {
                 this.setState({lastRequestType: null, isFormSubmited: false, update: false}, () => {
-                    this.props.onFormRefreshStateHandler(this.props.model);
+                    this.props.refreshFormState(this.props.model);
                 });
             }
         }
@@ -103,19 +103,19 @@ class AdminForm extends Component {
 
     onReloadFieldsDataHandler = (source) => {
         if (source) {
-            source.forEach(src => this.props.onFetchDataHandler(this.props.auth.accessToken, src));
+            source.forEach(src => this.props.fetchData(this.props.auth.accessToken, src));
             return;
         }
         for (const key in this.props.forms[this.props.model]) {
             if (this.props.forms[this.props.model][key].config.source) {
                 this.props.forms[this.props.model][key].config.source.forEach(src => {
-                    this.props.onFetchDataHandler(this.props.auth.accessToken, src);
+                    this.props.fetchData(this.props.auth.accessToken, src);
                 });
             }
         }
     }
 
-    onReonReloadFieldsDataButtonClickHandler = (event) => {
+    onReloadFieldsDataButtonClickHandler = (event) => {
         event.preventDefault();
         this.onReloadFieldsDataHandler(this.props.fetchErrorsCounter);
     }
@@ -141,22 +141,22 @@ class AdminForm extends Component {
 
     onClearFieldButtonClickHandler = (event, key) => {
         event.preventDefault();
-        this.props.onInputChangeHandler({target: {value: ''}}, this.props.model, key, {value: null}, true);
+        this.props.changeFormState({target: {value: ''}}, this.props.model, key, {value: null}, true);
     }
 
     onModalCloseHandler = () => {
         this.setState({
             isModalOpen: false
         }, () => {
-            this.props.onFormRefreshStateHandler(this.props.model);
+            this.props.refreshFormState(this.props.model);
             if (this.props.refreshAfterClose) {
-                this.props.onSetReloadDataTriggerHandler(this.props.model, true);
+                this.props.setReloadDataTrigger(this.props.model, true);
             }
         });
     }
 
     onFormLoadHandler = () => {
-        this.props.onFormRefreshStateHandler(this.props.model);
+        this.props.refreshFormState(this.props.model);
         this.onReloadFieldsDataHandler();
         if (this.props.update) {
             for (const key in this.props.update) {
@@ -164,7 +164,7 @@ class AdminForm extends Component {
                 if (key === 'start_date' || key === 'expiration_date' || key === 'created_at' || key === 'updated_at') {
                     value = moment(this.props.update[key]).format('DD-MM-YYYY HH:mm');
                 }
-                this.props.onInputChangeHandler({target: {value: null}}, this.props.model, key, {value}, false);
+                this.props.changeFormState({target: {value: null}}, this.props.model, key, {value}, false);
             }
         }
     }
@@ -172,7 +172,7 @@ class AdminForm extends Component {
     onFormSubmitHandler = () => {
         if (this.state.isFormDataValid && !this.state.isConfirmDeleteOpen) {
             if (this.props.model === 'authentication') {
-                return this.props.onUserLoginHandler({
+                return this.props.loginUser({
                     email: this.props.forms.authentication.email.value,
                     password: this.props.forms.authentication.password.value
                 });
@@ -195,15 +195,15 @@ class AdminForm extends Component {
                 }
             }
             if (this.state.update) {
-                return this.props.onUpdateDataHandler(this.props.auth.accessToken, this.props.model, this.props.forms[this.props.model].id.value, formDataObj);
+                return this.props.updateData(this.props.auth.accessToken, this.props.model, this.props.forms[this.props.model].id.value, formDataObj);
             }
-            return this.props.onCreateDataHandler(this.props.auth.accessToken, this.props.model, formDataObj);
+            return this.props.createData(this.props.auth.accessToken, this.props.model, formDataObj);
         }
     }
 
     onDeleteRequestHandler = () => {
         this.setState({isFormSubmited: true, lastRequestType: 'delete', isConfirmDeleteOpen: false}, () => {
-            this.props.onDeleteDataHandler(this.props.auth.accessToken, this.props.model, this.props.forms[this.props.model].id.value);
+            this.props.deleteData(this.props.auth.accessToken, this.props.model, this.props.forms[this.props.model].id.value);
         });
     }
 
@@ -335,8 +335,8 @@ class AdminForm extends Component {
                                             options={options}
                                             text={text}
                                             value={formField.value}
-                                            changed={(event, { value }) => this.props.onInputChangeHandler(event, this.props.model, formField.key, { value })}
-                                            blurred={(event) => this.props.onInputChangeHandler(event, this.props.model, formField.key, {
+                                            changed={(event, { value }) => this.props.changeFormState(event, this.props.model, formField.key, { value })}
+                                            blurred={(event) => this.props.changeFormState(event, this.props.model, formField.key, {
                                                 value: formField.elementType === 'select' ? formField.value : null
                                             })}
                                         />
@@ -362,8 +362,8 @@ class AdminForm extends Component {
                             </Message.Content>
                             {fetchError ?
                                 <Button
-                                    content={'Try Again'}
-                                    onClick={this.onReonReloadFieldsDataButtonClickHandler}
+                                    content={'Retry'}
+                                    onClick={this.onReloadFieldsDataButtonClickHandler}
                                 />
                             :
                                 null
@@ -385,6 +385,7 @@ class AdminForm extends Component {
                         />
                         <ConfirmPassword
                             open={this.state.isConfirmPasswordOpen}
+                            currentPasswordValue={this.props.forms[this.props.model].password ? this.props.forms[this.props.model].password.value : ''}
                             onClose={() => this.setState({isConfirmPasswordOpen: false})}
                             onCancel={() => this.setState({isConfirmPasswordOpen: false})}
                             onConfirm={() => this.setState({isFormDataValid: isFormDataValid, isFormSubmited: true, lastRequestType: null, isConfirmPasswordOpen: false}, () => this.onFormSubmitHandler())}
@@ -456,14 +457,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFormRefreshStateHandler: (model) => dispatch(adminActionCreator.refreshFormState(model)),
-        onInputChangeHandler: (event, model, formFieldKey, { value }, touched) => dispatch(adminActionCreator.changeFormState(event, model, formFieldKey, value, touched)),
-        onUserLoginHandler: (loginData) => dispatch(authActionCreator.loginRequest(loginData)),
-        onFetchDataHandler: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
-        onCreateDataHandler: (accessToken, model, dataObj) => dispatch(adminActionCreator.createDataRequest(accessToken, model, dataObj)),
-        onUpdateDataHandler: (accessToken, model, id, dataObj) => dispatch(adminActionCreator.updateDataRequest(accessToken, model, id, dataObj)),
-        onDeleteDataHandler: (accessToken, model, id) => dispatch(adminActionCreator.deleteDataRequest(accessToken, model, id)),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
+        refreshFormState: (model) => dispatch(adminActionCreator.refreshFormState(model)),
+        changeFormState: (event, model, formFieldKey, { value }, touched) => dispatch(adminActionCreator.changeFormState(event, model, formFieldKey, value, touched)),
+        loginUser: (loginData) => dispatch(authActionCreator.loginRequest(loginData)),
+        fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
+        createData: (accessToken, model, dataObj) => dispatch(adminActionCreator.createDataRequest(accessToken, model, dataObj)),
+        updateData: (accessToken, model, id, dataObj) => dispatch(adminActionCreator.updateDataRequest(accessToken, model, id, dataObj)),
+        deleteData: (accessToken, model, id) => dispatch(adminActionCreator.deleteDataRequest(accessToken, model, id)),
+        setReloadDataTrigger: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
     };
 };
 

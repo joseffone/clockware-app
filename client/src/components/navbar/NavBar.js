@@ -9,14 +9,14 @@ class NavBar extends Component {
 
     onClickSideBarButtonHandler = () => {
         if (this.props.global.ui.mobile && this.props.global.ui.isSideBarButtonPressed) {
-            return this.props.onToggleSideBarButtonPressHandler();
+            return this.props.toggleSideBarButtonPress();
         }
-        this.props.onToggleSideBarHandler();
-        this.props.onToggleSideBarButtonPressHandler();
+        this.props.toggleSideBar();
+        this.props.toggleSideBarButtonPress();
     }
 
     onLogoutButtonClickHandler = () => {
-        this.props.onUserLogoutHandler(this.props.auth.accessToken);
+        this.props.logoutUser(this.props.auth.accessToken);
         window.location.reload(true);
     }
 
@@ -88,7 +88,7 @@ class NavBar extends Component {
                                                 content='Refresh'
                                             />
                                     }
-                                    onClick={() => this.props.onSetReloadDataTriggerHandler(this.props.admin.ui.currentModel, true)}
+                                    onClick={() => this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, true)}
                                 />
                             }
                         />
@@ -135,10 +135,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUserLogoutHandler: (accessToken) => dispatch(authActionCreator.logoutRequest(accessToken)),
-        onToggleSideBarHandler: () => dispatch(globalActionCreator.toggleSidebar()),
-        onToggleSideBarButtonPressHandler: () => dispatch(globalActionCreator.toggleSidebarButtonPress()),
-        onSetReloadDataTriggerHandler: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
+        logoutUser: (accessToken) => dispatch(authActionCreator.logoutRequest(accessToken)),
+        toggleSideBar: () => dispatch(globalActionCreator.toggleSidebar()),
+        toggleSideBarButtonPress: () => dispatch(globalActionCreator.toggleSidebarButtonPress()),
+        setReloadDataTrigger: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
     };
 };
 

@@ -1,12 +1,18 @@
 .header {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     min-height: 100%;
     border: none !important;
     border-radius: unset !important;
     margin: 0 !important;
     padding: 1rem !important;
+}
+
+.header :global .grid {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .footer {

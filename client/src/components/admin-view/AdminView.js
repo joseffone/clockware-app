@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Segment, Message} from 'semantic-ui-react';
+import {AdminSideBar} from '../sidebars/admin-sidebar';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
-import {AdminSideBar} from '../../components/sidebars/admin-sidebar';
-import AdminDataGrid from '../../components/admin-data-grid';
-import AdminActionMenu from '../../components/admin-action-menu';
+import AdminDataGrid from '../admin-data-grid';
+import AdminActionMenu from '../admin-action-menu';
 import styles from './styles.module.css';
 
-class AdminContainer extends Component {
+class AdminView extends Component {
 
     checkFetchSuccess = () => {
         let result = true;
@@ -45,7 +45,7 @@ class AdminContainer extends Component {
                 <Grid
                     textAlign='center'
                     verticalAlign='middle'
-                    className={this.props.global.ui.mobile ? styles.adminContainerMobile : this.props.global.ui.isSideBarOpen ? styles.adminContainerPCOpen : styles.adminContainerPCClose}
+                    className={this.props.global.ui.mobile ? styles.adminViewMobile : this.props.global.ui.isSideBarOpen ? styles.adminViewPCOpen : styles.adminViewPCClose}
                 >
                     <Grid.Row>
                         {!this.checkFetchSuccess() && !this.props.admin.ui.fetchRequestsCounter.includes(this.props.admin.ui.currentModel) ? 
@@ -86,8 +86,4 @@ const mapStateToProps = state => {
     };
 }
 
-const mapDispatchToProps = dispatch => {
-    return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AdminContainer);
+export default connect(mapStateToProps, null)(AdminView);

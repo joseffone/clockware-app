@@ -1,17 +1,16 @@
-import React, { Component } from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import React, {Component} from 'react';
+import {Route, Redirect, Switch} from 'react-router-dom';
 import Layout from './hoc/layout';
-import AdminContainer from './containers/admin-container';
-import ClientContainer from './containers/client-container';
+import AdminView from './components/admin-view';
+import ClientView from './components/client-view';
 
 class App extends Component {
-
     render() {
         return (
             <Layout>
                 <Switch>
-                    <Route path="/admin" component={AdminContainer} />
-                    <Route path="/" exact component={ClientContainer} />
+                    <Route path="/admin" component={AdminView} />
+                    <Route path="/" exact component={ClientView} />
                     <Redirect to="/" />
                 </Switch>
             </Layout>

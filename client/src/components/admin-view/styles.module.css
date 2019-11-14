@@ -1,17 +1,17 @@
-.adminContainerMobile {
+.adminViewMobile {
     margin: 0 !important;
     padding-left: 0 !important;
     transition: none;
 }
 
-.adminContainerMobile :global .row:last-child .column {
+.adminViewMobile :global .row:last-child .column {
     overflow-x: auto;
     border-top-left-radius: unset;
     border-top-right-radius: unset;
     margin-top: 0 !important;
 }
 
-.adminContainerMobile :global .row:nth-child(2) .column {
+.adminViewMobile :global .row:nth-child(2) .column {
     border-bottom-left-radius: unset;
     border-bottom-right-radius: unset;
     border-bottom: unset;
@@ -19,21 +19,21 @@
     margin-bottom: 0 !important;
 }
 
-.adminContainerPCOpen {
+.adminViewPCOpen {
     margin: 0 !important;
     padding-left: 10.714rem !important;
     transition-property: padding-left;
     transition-duration: 0.5s;
 }
 
-.adminContainerPCOpen :global .row:last-child .column {
+.adminViewPCOpen :global .row:last-child .column {
     overflow-x: auto;
     border-top-left-radius: unset;
     border-top-right-radius: unset;
     margin-top: 0 !important;
 }
 
-.adminContainerPCOpen :global .row:nth-child(2) .column {
+.adminViewPCOpen :global .row:nth-child(2) .column {
     border-bottom-left-radius: unset;
     border-bottom-right-radius: unset;
     border-bottom: unset;
@@ -41,21 +41,21 @@
     margin-bottom: 0 !important;
 }
 
-.adminContainerPCClose {
+.adminViewPCClose {
     margin: 0 !important;
     padding-left: 0 !important;
     transition-property: padding-left;
     transition-duration: 0.5s;
 }
 
-.adminContainerPCClose :global .row:last-child .column {
+.adminViewPCClose :global .row:last-child .column {
     overflow-x: auto;
     border-top-left-radius: unset;
     border-top-right-radius: unset;
     margin-top: 0 !important;
 }
 
-.adminContainerPCClose :global .row:nth-child(2) .column {
+.adminViewPCClose :global .row:nth-child(2) .column {
     border-bottom-left-radius: unset;
     border-bottom-right-radius: unset;
     border-bottom: unset;
@@ -63,47 +63,47 @@
     margin-bottom: 0 !important;
 }
 
-.adminContainerMobile :global .message {
+.adminViewMobile :global .message {
     border: none; 
     margin: 1rem 1rem 0 1rem !important;
     width: 100%;
 }
 
-.adminContainerPCOpen :global .message {
+.adminViewPCOpen :global .message {
     border: none; 
     margin: 1rem 1rem 0 1rem !important;
     width: 100%;
 }
 
-.adminContainerPCClose :global .message {
+.adminViewPCClose :global .message {
     border: none; 
     margin: 1rem 1rem 0 1rem !important;
     width: 100%;
 }
 
-.adminContainerMobile :global .row {
+.adminViewMobile :global .row {
     padding: 0 !important;
 }
 
-.adminContainerPCOpen :global .row {
+.adminViewPCOpen :global .row {
     padding: 0 !important;
 }
 
-.adminContainerPCClose :global .row {
+.adminViewPCClose :global .row {
     padding: 0 !important;
 }
 
-.adminContainerMobile :global .column {
+.adminViewMobile :global .column {
     padding: 0 !important;
     margin: 1rem !important;
 }
 
-.adminContainerPCOpen :global .column {
+.adminViewPCOpen :global .column {
     padding: 0 !important;
     margin: 1rem !important;
 }
 
-.adminContainerPCClose :global .column {
+.adminViewPCClose :global .column {
     padding: 0 !important;
     margin: 1rem !important;
 }

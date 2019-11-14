@@ -6,7 +6,6 @@ import styles from './styles.module.css';
 
 class SideBar extends Component {
     render () {
-
         let menuItems = [];
 
         this.props.admin.ui.models.map((item, index) => menuItems.push(
@@ -14,7 +13,7 @@ class SideBar extends Component {
                 key={index}
                 name={item.name}
                 active={this.props.admin.ui.currentModel === item.name}
-                onClick={this.props.onChangeCurrentModelHandler}
+                onClick={this.props.changeCurrentModel}
             >
                 <Icon name={item.icon} />
                 {item.name.split('')[0].toUpperCase() + item.name.split('').slice(1).join('')}
@@ -29,8 +28,8 @@ class SideBar extends Component {
                 direction={this.props.global.ui.mobile ? 'top' : 'left'}
                 visible={this.props.global.ui.isSideBarOpen}
                 width='thin'
-                onHide={this.props.global.ui.mobile ? this.props.onToggleSideBarHandler : null}
-                onHidden={this.props.global.ui.mobile &&  this.props.global.ui.isSideBarButtonPressed ? this.props.onToggleSideBarButtonPressHandler : null}
+                onHide={this.props.global.ui.mobile ? this.props.toggleSideBar : null}
+                onHidden={this.props.global.ui.mobile &&  this.props.global.ui.isSideBarButtonPressed ? this.props.toggleSideBarButtonPress : null}
             >
                 <Menu 
                     icon={this.props.global.ui.mobile ? null : 'labeled'}
@@ -54,9 +53,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onChangeCurrentModelHandler: (event, { name }) => dispatch(adminActionCreator.changeCurrentModel(name)),
-        onToggleSideBarHandler: () => dispatch(globalActionCreator.toggleSidebar()),
-        onToggleSideBarButtonPressHandler: () => dispatch(globalActionCreator.toggleSidebarButtonPress())
+        changeCurrentModel: (event, { name }) => dispatch(adminActionCreator.changeCurrentModel(name)),
+        toggleSideBar: () => dispatch(globalActionCreator.toggleSidebar()),
+        toggleSideBarButtonPress: () => dispatch(globalActionCreator.toggleSidebarButtonPress())
     };
 };
 

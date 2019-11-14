@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Modal, Input, Button, Icon} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
@@ -14,7 +13,7 @@ class ConfirmPassword extends Component {
     passInput = React.createRef();
 
     onConfirmButtonClickHandler = () => {
-        if (this.state.passwordToConfirm === this.props.forms['users'].password.value) {
+        if (this.state.passwordToConfirm === this.props.currentPasswordValue) {
             return this.setState({isPasswordValid: true}, () => this.props.onConfirm());
         }
         return this.setState({isPasswordValid: false});
@@ -69,21 +68,12 @@ class ConfirmPassword extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        forms: state.admin.forms
-    };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {};
-};
-
 ConfirmPassword.propTypes = {
     open: PropTypes.bool.isRequired,
+    currentPasswordValue: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConfirmPassword);
+export default ConfirmPassword;

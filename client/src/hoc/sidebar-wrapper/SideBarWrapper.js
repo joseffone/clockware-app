@@ -17,7 +17,7 @@ const SideBarWrapper = (props) => {
 
 SideBarWrapper.propTypes = {
     dimmed: PropTypes.bool,
-    sidebar: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired,
+    sidebar: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired
 };
 
