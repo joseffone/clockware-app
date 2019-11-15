@@ -6,6 +6,7 @@ import {transformDataSet, rewriteObjectProps} from '../../util';
 import Pagination from '../pagination';
 import img from '../../images/secret-agent-icon.jpg';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 class ClientDataGrid extends Component {
 
@@ -171,6 +172,10 @@ const mapDispatchToProps = dispatch => {
         setListItemsIds: (ids) => dispatch(clientActionCreator.setListItemsIds(ids)),
         setListData: (dataSet) => dispatch(clientActionCreator.setListData(dataSet))
     };
+};
+
+ClientDataGrid.propTypes = {
+    refreshAfterMount: PropTypes.bool
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientDataGrid);

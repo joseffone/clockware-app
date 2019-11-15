@@ -1,6 +1,6 @@
 .header {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     justify-content: center;
     min-height: 100%;
     border: none !important;
@@ -13,6 +13,14 @@
     width: 100%;
     margin: 0 !important;
     padding: 0 !important;
+}
+
+.header :global .pushable {
+    width: 100%;
+}
+
+.header :global .items > .item:last-child {
+    padding-top: 1.5rem;
 }
 
 .footer {
