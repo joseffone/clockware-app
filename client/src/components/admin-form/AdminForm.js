@@ -335,7 +335,7 @@ class AdminForm extends Component {
                                             options={options}
                                             text={text}
                                             value={formField.value}
-                                            changed={(event, { value }) => this.props.changeFormState(event, this.props.model, formField.key, { value })}
+                                            changed={(event, {value}) => this.props.changeFormState(event, this.props.model, formField.key, {value})}
                                             blurred={(event) => this.props.changeFormState(event, this.props.model, formField.key, {
                                                 value: formField.elementType === 'select' ? formField.value : null
                                             })}

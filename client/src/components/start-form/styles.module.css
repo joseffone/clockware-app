@@ -20,6 +20,14 @@
     border-radius: 10rem !important;
 }
 
+.startForm :global .sidebarView {
+    border-radius: 0.28571429rem !important;
+}
+
+.startForm :global .sidebarView input {
+    border-radius: 0.28571429rem !important;
+}
+
 .startForm :global .notempty .icon {
     opacity: 1 !important;
 }

@@ -24,8 +24,24 @@ const initState = {
             sort: {
                 target: null,
                 isDate: false,
-                order: null,
-                reverse: false
+                reverse: false,
+                options: [
+                    {
+                        key: 'first_name',
+                        text: 'First name',
+                        value: 'first_name'
+                    },
+                    {
+                        key: 'last_name',
+                        text: 'Last name',
+                        value: 'last_name'
+                    },
+                    {
+                        key: 'raiting',
+                        text: 'Raiting',
+                        value: 'raiting'
+                    }
+                ]
             },
             search: {
                 isLoading: false,
@@ -213,6 +229,28 @@ const clientReducer = (state = initState, action) => {
             return rewriteObjectProps(state, {
                 list: rewriteObjectProps(state.list, {
                     dataSet: action.dataSet.slice()
+                })
+            });
+
+        case actionTypes.CLIENT_CHANGE_SORT_TARGET:
+            return rewriteObjectProps(state, {
+                list: rewriteObjectProps(state.list, {
+                    params: rewriteObjectProps(state.list.params, {
+                        sort: rewriteObjectProps(state.list.params.sort, {
+                            target: action.target
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.CLIENT_CHANGE_SORT_ORDER:
+            return rewriteObjectProps(state, {
+                list: rewriteObjectProps(state.list, {
+                    params: rewriteObjectProps(state.list.params, {
+                        sort: rewriteObjectProps(state.list.params.sort, {
+                            reverse: action.reverse
+                        })
+                    })
                 })
             });
     

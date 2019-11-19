@@ -1,4 +1,4 @@
-.dataFilter {
+.dropFilter {
     display: inline-block !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -6,11 +6,11 @@
     box-shadow: none !important;
 }
 
-.dataFilter :global .label {
+.dropFilter :global .label {
     background: none;
     color: rgba(0, 0, 0, 0.54);
 }
 
-.dataFilter :global .button {
+.dropFilter :global .button {
     margin-left: 0.25rem;
 }

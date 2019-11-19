@@ -13,7 +13,7 @@ const clientFormTypesConfig = {
             source: ['clocks']
         }),
         start_date: inputElemTypesConfig.dateTime({
-            label: 'Pick the date and time',
+            label: 'Date/Time',
             placeholder: 'Pick the date and time'
         })
     },

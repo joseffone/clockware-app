@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Form, Grid, Header, Message} from 'semantic-ui-react';
+import {Button, Form, Grid, Header, Message, Icon} from 'semantic-ui-react';
 import InputField from '../input-field';
 import {transformSelectOptions} from '../../util';
 import {adminActionCreator, clientActionCreator} from '../../store/actions';
 import moment from 'moment';
 import styles from './styles.module.css';
+import PropTypes from 'prop-types';
 
 class StartForm extends Component {
 
@@ -61,6 +62,7 @@ class StartForm extends Component {
     onFormSubmitHandler = () => {
         if (this.state.isFormDataValid) {
             this.props.hideStartForm();
+            this.props.setReloadDataTrigger(true);
         }
     }
 
@@ -89,7 +91,7 @@ class StartForm extends Component {
         return (
             <Grid 
                 className={styles.startForm}
-                textAlign='center'
+                textAlign={this.props.sidebarView ? 'left' : 'center'}
                 verticalAlign='middle'
             >
                 <Grid.Column>
@@ -99,23 +101,28 @@ class StartForm extends Component {
                         header='Warning!'
                         content={messageContent}
                     />
-                    <Header 
-                        as='h2'
-                        icon='clock outline'
-                        textAlign='center'
-                    >
-                        Start searching for watchmakers
-                    </Header>
-                    <Form 
-                        size='large'
+                    {this.props.sidebarView ? null :
+                        <Header 
+                            as='h2'
+                            icon='clock outline'
+                            textAlign='center'
+                        >
+                            Start searching for watchmakers
+                        </Header>
+                    }
+                    <Form
+                        size={this.props.sidebarView ? null : 'large'}
                         onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => (
                             <Form.Field
                                 onFocus={() => this.setState({isFormSubmited: false})}
                             >
+                                {this.props.sidebarView ? 
+                                    <label>{formField.config.label}</label> 
+                                : null}
                                 <InputField 
-                                    className={formField.value !== '' ? 'notempty' : null}
+                                    className={`${formField.value !== '' ? 'notempty' : null} ${this.props.sidebarView ? 'sidebarView' : null}`}
                                     key={formField.key}
                                     mobile={this.props.global.ui.mobile}
                                     elementType={formField.elementType}
@@ -133,13 +140,15 @@ class StartForm extends Component {
                         ))}
                         <Form.Field>
                             <Button 
-                                size='large'
-                                secondary 
-                                fluid 
-                                circular
+                                floated='right'
+                                size={this.props.sidebarView ? null : 'large'}
+                                fluid={!this.props.sidebarView}
+                                secondary={!this.props.sidebarView}
+                                circular={!this.props.sidebarView}
                                 onClick={() => this.setState({isFormSubmited: true, isFormDataValid})}
                             >
-                                Go >>
+                                Find
+                                <Icon name='right chevron' />
                             </Button>
                         </Form.Field>
                     </Form>
@@ -168,6 +177,10 @@ const mapDispatchToProps = dispatch => {
         setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
         hideStartForm: () => dispatch(clientActionCreator.hideStartForm())
     };
+};
+
+StartForm.propTypes = {
+    sidebarView: PropTypes.bool
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartForm);

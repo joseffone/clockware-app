@@ -5,7 +5,7 @@ import {adminActionCreator} from '../../store/actions';
 import {transformDataSet} from '../../util';
 import AdminForm from '../admin-form';
 import ConfirmDelete from './confirm-delete';
-import DataFilter from '../data-filter';
+import DropFilter from '../drop-filter';
 import styles from './styles.module.css';
 
 class AdminActionMenu extends Component {
@@ -178,22 +178,23 @@ class AdminActionMenu extends Component {
                     >
                         {this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.map((filter, index) => {
                             let filterKey = Object.keys(filter)[0];
-                            let {dataKey, isDate, options, targetValue} = Object.values(filter)[0];
+                            let {rank, dataKey, isDate, options, targetValue} = Object.values(filter)[0];
                             return (
                                 <Menu.Item>
-                                    <DataFilter
+                                    <DropFilter
                                         key={filterKey}
-                                        id={filterKey}
                                         mobile={this.props.global.ui.mobile}
-                                        date={isDate}
                                         loading={options.isLoading && !isDate}
+                                        id={filterKey}
+                                        rank={rank}
+                                        date={isDate}
                                         description={filter[filterKey].description}
                                         placeholder={filter[filterKey].description}
                                         options={options.payload}
                                         text={targetValue}
                                         value={targetValue}
                                         closed={this.onFilterCloseButtonClickHandler}
-                                        mounted={() => this.onFilterMountedHandler(filterKey, dataKey, index)}
+                                        updated={(tailIndex) => this.onFilterMountedHandler(filterKey, dataKey, tailIndex)}
                                         changed={(event, {value}) => this.onFilterChangeHandler(filterKey, value)}
                                     />
                                 </Menu.Item>

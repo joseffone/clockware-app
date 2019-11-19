@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Item, Rating, Button, Icon, Label} from 'semantic-ui-react';
+import moment from 'moment';
 import {adminActionCreator, clientActionCreator} from '../../store/actions';
 import {transformDataSet, rewriteObjectProps} from '../../util';
+import SearchMenu from '../search-menu';
 import Pagination from '../pagination';
 import img from '../../images/secret-agent-icon.jpg';
-import moment from 'moment';
-import PropTypes from 'prop-types';
+import styles from './styles.module.css';
 
 class ClientDataGrid extends Component {
 
@@ -120,6 +121,20 @@ class ClientDataGrid extends Component {
                     );
                 }
             });
+            items.unshift(
+                <Item 
+                    key={-1}
+                >
+                    <Item.Content>
+                        <SearchMenu 
+                            mobile={this.props.global.ui.mobile}
+                            options={this.props.client.list.params.sort.options}
+                            targetChanged={this.props.changeSortTarget}
+                            orderChanged={this.props.changeSortOrder}
+                        />
+                    </Item.Content>
+                </Item>
+            );
             items.push(
                 <Item 
                     key={this.props.client.list.ids.length}
@@ -143,12 +158,15 @@ class ClientDataGrid extends Component {
         }
 
         return (
-            <Item.Group
-                divided
-                style={{width: '100%'}}
+            <div 
+                className={styles.clientDataGrid}
             >
-                {items}
-            </Item.Group>
+                <Item.Group
+                    divided
+                >
+                    {items}
+                </Item.Group>
+            </div>
         );
     }
 }
@@ -170,12 +188,10 @@ const mapDispatchToProps = dispatch => {
         setItemsPerPage: (value) => dispatch(clientActionCreator.setItemsPerPage(value)),
         setTotalItems: (total) => dispatch(clientActionCreator.setTotalItems(total)),
         setListItemsIds: (ids) => dispatch(clientActionCreator.setListItemsIds(ids)),
-        setListData: (dataSet) => dispatch(clientActionCreator.setListData(dataSet))
+        setListData: (dataSet) => dispatch(clientActionCreator.setListData(dataSet)),
+        changeSortTarget: (target) => dispatch(clientActionCreator.changeSortTarget(target)),
+        changeSortOrder: (reverse) => dispatch(clientActionCreator.changeSortOrder(reverse))
     };
-};
-
-ClientDataGrid.propTypes = {
-    refreshAfterMount: PropTypes.bool
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientDataGrid);

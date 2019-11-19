@@ -13,7 +13,7 @@ class ClientView extends Component {
         const Sidebar = sidebar;
         return (
             <SideBarWrapper 
-                sidebar={sidebar}
+                sidebar={() => null}
             >
                 <Grid 
                     centered 
@@ -26,7 +26,7 @@ class ClientView extends Component {
                             <Grid.Column 
                                 width={4}
                             >
-                                <Sidebar />
+                                <Sidebar sidebarView />
                             </Grid.Column>
                         : null}
                         <Grid.Column 
@@ -68,7 +68,7 @@ class ClientView extends Component {
                         <StartForm />
                     :
                         <ClientContent 
-                            sidebar={() => null}
+                            sidebar={StartForm}
                             mobile={this.props.global.ui.mobile}
                             error={!this.props.client.ui.reloadDataTrigger && (
                                     this.props.client.data.error.fetchError || this.props.admin.ui.fetchErrorsCounter.length > 0

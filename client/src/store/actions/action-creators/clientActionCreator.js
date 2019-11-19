@@ -106,4 +106,18 @@ clientActionCreator.setListData = (dataSet) => {
     };
 };
 
+clientActionCreator.changeSortTarget = (target) => {
+    return {
+        type: actionTypes.CLIENT_CHANGE_SORT_TARGET,
+        target
+    };
+};
+
+clientActionCreator.changeSortOrder = (reverse) => {
+    return {
+        type: actionTypes.CLIENT_CHANGE_SORT_ORDER,
+        reverse
+    };
+};
+
 export default clientActionCreator;

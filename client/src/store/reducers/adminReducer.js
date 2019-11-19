@@ -503,19 +503,22 @@ const adminReducer = (state = initState, action) => {
 
         case actionTypes.ADMIN_ADD_FILTER:
             if (!state.lists[action.model].params.filters.find(filter => filter[action.filterKey])) {
+                let rank = state.lists[action.model].params.filters
+                    .filter(filter => Object.values(filter)[0].targetValue !== null).length;
                 let {type, dataKey, isDate, descriptor} = state.lists[action.model].params.fields
                     .filter(field => field.filterOperation)
                     .map(field => field.filterOperation.map(operation => {
                         return Object.assign({dataKey: field.name, isDate: field.isDate}, operation);
                     }))
                     .reduce((prevItem, item) => prevItem.concat(item))
-                    .find(({ key }) => key === action.filterKey);
+                    .find(({key}) => key === action.filterKey);
                 return rewriteObjectProps(state, {
                     lists: rewriteObjectProps(state.lists, {
                         [action.model]: rewriteObjectProps(state.lists[action.model], {
                             params: rewriteObjectProps(state.lists[action.model].params, {
                                 filters: state.lists[action.model].params.filters.concat({
                                     [action.filterKey]: {
+                                        rank,
                                         operatorType: type,
                                         dataKey,
                                         isDate,
@@ -538,11 +541,23 @@ const adminReducer = (state = initState, action) => {
             {
                 let filters = state.lists[action.model].params.filters;
                 let index = filters.findIndex(filter => filter[action.filterKey]);
+                let excludedRank = Object.values(filters.find(filter => filter[action.filterKey]))[0].rank;
                 return rewriteObjectProps(state, {
                     lists: rewriteObjectProps(state.lists, {
                         [action.model]: rewriteObjectProps(state.lists[action.model], {
                             params: rewriteObjectProps(state.lists[action.model].params, {
                                 filters: [].concat(filters.slice(0, index), filters.slice(index + 1, filters.length))
+                                    .map(filter => {
+                                        if (Object.values(filter)[0].rank > excludedRank) {
+                                            return rewriteObjectProps(filter, {
+                                                [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
+                                                    rank: filter[Object.keys(filter)[0]].rank - 1,
+                                                    targetValue: null
+                                                })
+                                            })
+                                        }
+                                        return filter;
+                                    })
                             })
                         })
                     })
@@ -578,6 +593,8 @@ const adminReducer = (state = initState, action) => {
                 let filters = state.lists[action.model].params.filters;
                 let index = filters.findIndex(filter => filter[action.filterKey]);
                 let filter = filters.find(filter => filter[action.filterKey]);
+                let initialValue = filter[action.filterKey].targetValue;
+                let promotedRank = filter[action.filterKey].rank;
                 let newFilter = rewriteObjectProps(filter, {
                     [action.filterKey]: rewriteObjectProps(filter[action.filterKey], {
                         targetValue: action.value
@@ -588,6 +605,24 @@ const adminReducer = (state = initState, action) => {
                         [action.model]: rewriteObjectProps(state.lists[action.model], {
                             params: rewriteObjectProps(state.lists[action.model].params, {
                                 filters: [].concat(filters.slice(0, index), newFilter, filters.slice(index + 1, filters.length))
+                                    .map(filter => {
+                                        if (Object.values(filter)[0].rank >= promotedRank && Object.keys(filter)[0] !== action.filterKey) {
+                                            if (initialValue === null) {
+                                                return rewriteObjectProps(filter, {
+                                                    [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
+                                                        rank: filter[Object.keys(filter)[0]].rank + 1
+                                                    })
+                                                })
+                                            }
+                                            return rewriteObjectProps(filter, {
+                                                [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
+                                                    targetValue: null
+                                                })
+                                            })
+                                        }
+                                        return filter;
+                                    })
+                                    .sort((objA, objB) => Object.values(objA)[0].rank - Object.values(objB)[0].rank)
                             })
                         })
                     })

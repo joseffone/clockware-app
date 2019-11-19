@@ -4,17 +4,33 @@ import DatePicker from '../date-picker';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 
- class DataFilter extends Component {
+ class DropFilter extends Component {
 
-    componentDidMount () {
-        if (!this.props.date && this.props.mounted) {
-            return new Promise(resolve => resolve()).then(() => this.props.mounted());
+    state = {
+        isSelectChanged: false
+    }
+
+    componentDidMount() {
+        if (!this.props.date && this.props.updated) {
+            return new Promise(resolve => resolve()).then(() => this.props.updated(this.props.rank));
         }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.rank !== this.props.rank || prevProps.value !== this.props.value) {
+            if (!this.props.date && this.props.updated) {
+                this.props.updated(this.props.rank);
+            }
+        }
+    }
+
+    onSelectChangeHandler = (event, {value}) => {
+        this.setState({isSelectChanged: !this.state.isSelectChanged}, () => this.props.changed(event, {value}));
     }
 
     render () {
         return (
-            <Segment compact className={styles.dataFilter}>
+            <Segment compact className={styles.dropFilter}>
                 <Label attached='top left'>{this.props.description}</Label>
                 {this.props.date ?
                     <DatePicker 
@@ -28,7 +44,7 @@ import PropTypes from 'prop-types';
                         options={this.props.options ? this.props.options.map(opt => {
                             return {key: opt, text: opt, value: opt};
                         }) : []}
-                        onChange={this.props.changed}
+                        onChange={this.onSelectChangeHandler}
                     />
                 }
                 <Button 
@@ -43,15 +59,16 @@ import PropTypes from 'prop-types';
     }
 }
 
-DataFilter.propTypes = {
+DropFilter.propTypes = {
     mobile: PropTypes.bool,
-    date: PropTypes.bool,
     loading: PropTypes.bool,
+    date: PropTypes.bool,
+    description: PropTypes.string,
+    options: PropTypes.array,
+    rank: PropTypes.number,
     changed: PropTypes.func,
     closed: PropTypes.func,
-    mounted: PropTypes.func,
-    options: PropTypes.array,
-    description: PropTypes.string
+    updated: PropTypes.func
 };
 
-export default DataFilter;
+export default DropFilter;
