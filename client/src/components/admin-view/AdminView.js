@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Segment, Message} from 'semantic-ui-react';
-import {AdminSideBar} from '../sidebars/admin-sidebar';
+import {SideBar} from '../sidebar';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
 import AdminDataGrid from '../admin-data-grid';
 import AdminActionMenu from '../admin-action-menu';
@@ -39,7 +39,8 @@ class AdminView extends Component {
         }
         return (
             <SideBarWrapper 
-                sidebar={AdminSideBar}
+                admin={true}
+                sidebar={SideBar}
                 dimmed={this.props.global.ui.mobile && this.props.global.ui.isSideBarOpen}
             >
                 <Grid

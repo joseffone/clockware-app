@@ -84,7 +84,7 @@ export const transformSelectOptions = (source = [], models, forms, defaultOption
             result = models[source[0]].items.map((item) => {
                 return {
                     key: item.id,
-                    text: `${item.nickname} [${item.last_name} ${item.first_name}, raiting: ${models[source[1]].items.filter(obj => obj.id === item.mark_id).map(obj => obj.mark_name)}]`,
+                    text: `${item.nickname} [${item.last_name} ${item.first_name}, rating: ${models[source[1]].items.filter(obj => obj.id === item.mark_id).map(obj => obj.mark_name)}]`,
                     value: item.id
                 };
             });
@@ -130,8 +130,8 @@ export const sortByKey = (data, config) => {
     const compareByKey = (key, isDate = false, isDesc = false) => {
         let orderFlag = isDesc ? -1 : 1;
         return (a, b) => {
-            let valA = typeof a[key] === 'string' ? a[key].toUpperCase() : typeof a[key] ===  'number' ? a[key] : '';
-            let valB = typeof b[key] === 'string' ? b[key].toUpperCase() : typeof b[key] ===  'number' ? b[key] : '';
+            let valA = typeof a[key] === 'string' ? a[key].toLowerCase() : typeof a[key] ===  'number' ? a[key] : '';
+            let valB = typeof b[key] === 'string' ? b[key].toLowerCase() : typeof b[key] ===  'number' ? b[key] : '';
             if (isDate) {
                 valA = valA === '' ? moment(+valA) : moment(valA, 'DD-MM-YYYY HH:mm');
                 valB = valB === '' ? moment(+valB) : moment(valB, 'DD-MM-YYYY HH:mm');
@@ -147,10 +147,11 @@ export const configFilterPreset = (preset, tailIndex = null) => {
     let tIndex = isNaN(parseInt(tailIndex)) ? preset.length : parseInt(tailIndex);
     return preset
         .map(item => {
-            let {operatorType, dataKey, targetValue} = Object.values(item)[0];
+            let {operatorType, dataKey, isDate, targetValue} = Object.values(item)[0];
             return {
                 operatorType, 
                 dataKey, 
+                isDate,
                 targetValue
             };
         })
@@ -162,39 +163,48 @@ export const filterDataSet = (data, config) => {
     const operate = (type, value, targetValue) => {
         switch (type) {
             case 'equal':
-                return value === targetValue;
+                return Array.isArray(value) ? value.includes(targetValue) : value === targetValue;
             case 'notEqual':
-                return value !== targetValue;
+                return Array.isArray(value) ? !value.includes(targetValue) : value !== targetValue;
             case 'more':
-                return value > targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem > targetValue) !== -1 : value > targetValue;
             case 'less':
-                return value < targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem < targetValue) !== -1 : value < targetValue;
             case 'moreOrEqual':
-                return value >= targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem >= targetValue) !== -1 : value >= targetValue;
             case 'lessOrEqual':
-                return value <= targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem <= targetValue) !== -1 : value <= targetValue;
             default:
-                return value === targetValue;
+                return Array.isArray(value) ? value.includes(targetValue) : value === targetValue;
         }
     };
     const compare = (item, masks) => {
         let result = true;
         for (let mask of masks) {
             let {operatorType, dataKey, isDate, targetValue} = mask;
-            let xVal = typeof item[dataKey] === 'string' ? item[dataKey].toUpperCase() : typeof item[dataKey] ===  'number' ? item[dataKey] : '';
-            let tVal = typeof targetValue === 'string' ? targetValue.toUpperCase() : typeof targetValue ===  'number' ? targetValue : '';
+            let xVal = typeof item[dataKey] === 'string' ? item[dataKey].toLowerCase() : typeof item[dataKey] ===  'number' || Array.isArray(targetValue) ? item[dataKey] : '';
+            let tVal = typeof targetValue === 'string' ? targetValue.toLowerCase() : typeof targetValue ===  'number' || Array.isArray(targetValue) ? targetValue : '';
             if (isDate) {
                 xVal = xVal === '' ? moment(+xVal) : moment(xVal, 'DD-MM-YYYY HH:mm');
                 tVal = tVal === '' ? moment(+tVal) : moment(tVal, 'DD-MM-YYYY HH:mm');
             }
-            result = result && operate(operatorType, xVal, tVal);
+            if (Array.isArray(tVal)) {
+                result = false;
+                tVal.forEach(elem => {
+                    if (operate(operatorType, xVal, elem)) {
+                        result = true;
+                    }
+                });
+            } else {
+                result = result && operate(operatorType, xVal, tVal);
+            }
         }
         return result;
     };
     return data.filter(item => compare(item, config));
 };
 
-export const transformDataSet = (model, forms, models, sort = null, filters = null, filterTailIndex = null) => {
+export const transformDataSet = (model, forms, models) => {
     let markName, markValue, userEmail, userLastName, userFirstName, role, agentNickName, agentLastName, agentFirstName, clockType, cityName;
     let dataSet = models[model].items.length > 0 ? models[model].items.map((item) => {
         let transformedItem = rewriteObjectProps(item, {
@@ -208,8 +218,8 @@ export const transformDataSet = (model, forms, models, sort = null, filters = nu
                 markName = models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0] ? models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0].mark_name : false;
                 markValue = models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0] ? models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0].mark_value : false;
                 return rewriteObjectProps(transformedItem, {
-                    raiting: markName === false || markValue === false ? false : `${markName} (${markValue})`,
-                    raitingValue: markValue === false ? false : markValue
+                    rating: markName === false || markValue === false ? false : `${markName} (${markValue})`,
+                    ratingValue: markValue === false ? false : markValue
                 });
             
             case 'coverage':
@@ -224,7 +234,7 @@ export const transformDataSet = (model, forms, models, sort = null, filters = nu
                 return rewriteObjectProps(transformedItem, {
                     agent_nickname: agentNickName,
                     agent_fullname: agentLastName === false || agentFirstName === false ? false : `${agentLastName} ${agentFirstName}`,
-                    agent_raiting: markName === false || markValue === false ? false : `${markName} (${markValue})`,
+                    agent_rating: markName === false || markValue === false ? false : `${markName} (${markValue})`,
                     city_name: cityName
                 });
 
@@ -260,7 +270,7 @@ export const transformDataSet = (model, forms, models, sort = null, filters = nu
                     city_name: cityName,
                     agent_nickname: agentNickName,
                     agent_fullname: agentLastName === false || agentFirstName === false ? false : `${agentLastName} ${agentFirstName}`,
-                    agent_raiting: markName === false || markValue === false ? false : `${markName} (${markValue})`,
+                    agent_rating: markName === false || markValue === false ? false : `${markName} (${markValue})`,
                     start_date: item.start_date !== null ? moment(item.start_date).format('DD-MM-YYYY HH:mm') : item.start_date,
                     expiration_date: item.expiration_date !== null ? moment(item.expiration_date).format('DD-MM-YYYY HH:mm') : item.expiration_date
                 }); 
@@ -269,13 +279,18 @@ export const transformDataSet = (model, forms, models, sort = null, filters = nu
                 return transformedItem;
         }
     }) : [];
+    return dataSet;
+};
+
+export const applyParams = (dataSet, sort = null, filters = null, filterTailIndex = null) => {
+    let resultSet = dataSet.slice();
     if (sort !== null) {
-        sortByKey(dataSet, sort);
+        sortByKey(resultSet, sort);
     }
     if (filters !== null) {
-        return filterDataSet(dataSet, configFilterPreset(filters, filterTailIndex));
+        return filterDataSet(resultSet, configFilterPreset(filters, filterTailIndex));
     }
-    return dataSet;
+    return resultSet;
 };
 
 export const debounce = (callback, delaytime) => {
@@ -294,7 +309,7 @@ export const search = (text, dataSet, key) => {
     const escapeRegExp = (string) => {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     };
-    const re = new RegExp(escapeRegExp(text, 'i'));
+    const re = new RegExp(escapeRegExp(text.toLowerCase(), 'i'));
     let source = [...dataSet];
     if (!key) {
         source = dataSet.map(item => {
@@ -302,7 +317,7 @@ export const search = (text, dataSet, key) => {
                 id: item.id,
                 payload: Object.keys(item).filter(key => key !== 'id').map(key => {
                     return item[key];
-                }).join(' ')
+                }).join(' ').toLowerCase()
             };
         });
     }

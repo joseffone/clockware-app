@@ -529,7 +529,10 @@ const adminReducer = (state = initState, action) => {
                                             payload: []
                                         }
                                     }
-                                })
+                                }),
+                                search: rewriteObjectProps(state.lists[action.model].params.search, {
+                                    value: ''
+                                }) 
                             })
                         })
                     })
@@ -557,7 +560,10 @@ const adminReducer = (state = initState, action) => {
                                             })
                                         }
                                         return filter;
-                                    })
+                                    }),
+                                search: rewriteObjectProps(state.lists[action.model].params.search, {
+                                    value: ''
+                                }) 
                             })
                         })
                     })
@@ -622,7 +628,10 @@ const adminReducer = (state = initState, action) => {
                                         }
                                         return filter;
                                     })
-                                    .sort((objA, objB) => Object.values(objA)[0].rank - Object.values(objB)[0].rank)
+                                    .sort((objA, objB) => Object.values(objA)[0].rank - Object.values(objB)[0].rank),
+                                search: rewriteObjectProps(state.lists[action.model].params.search, {
+                                    value: ''
+                                }) 
                             })
                         })
                     })

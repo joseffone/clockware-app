@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table, Checkbox, Button, Icon} from 'semantic-ui-react';
 import {adminActionCreator} from '../../store/actions';
-import {transformDataSet} from '../../util';
+import {transformDataSet, applyParams} from '../../util';
 import AdminForm from '../admin-form';
 import FieldsCustomizer from './fields-customizer';
 import Pagination from '../pagination';
@@ -75,10 +75,8 @@ class AdminDataGrid extends Component {
     onFiltersApplyHandler = () => {
         this.props.setListItemsIds(
             this.props.admin.ui.currentModel,
-            transformDataSet(
-                this.props.admin.ui.currentModel,
-                this.props.admin.forms, 
-                this.props.admin.models, 
+            applyParams(
+                this.props.admin.lists[this.props.admin.ui.currentModel].dataSet,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
             ).map(item => item.id)
@@ -89,10 +87,8 @@ class AdminDataGrid extends Component {
         this.props.searchData(
             this.props.admin.ui.currentModel, 
             this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value, 
-            () => transformDataSet(
-                this.props.admin.ui.currentModel, 
-                this.props.admin.forms, 
-                this.props.admin.models, 
+            () => applyParams(
+                this.props.admin.lists[this.props.admin.ui.currentModel].dataSet,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
             )

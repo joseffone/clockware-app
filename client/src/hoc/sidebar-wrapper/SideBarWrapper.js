@@ -6,8 +6,12 @@ const SideBarWrapper = (props) => {
     const CustomSideBar = props.sidebar;
     return (
         <Sidebar.Pushable>
-            <CustomSideBar />
-            <Sidebar.Pusher dimmed={props.dimmed}>
+            <CustomSideBar 
+                admin={props.admin} 
+            />
+            <Sidebar.Pusher 
+                dimmed={props.dimmed}
+            >
                 {props.children}
             </Sidebar.Pusher>
         </Sidebar.Pushable>
@@ -16,7 +20,8 @@ const SideBarWrapper = (props) => {
 };
 
 SideBarWrapper.propTypes = {
-    dimmed: PropTypes.bool,
+    admin: PropTypes.bool.isRequired,
+    dimmed: PropTypes.bool.isRequired,
     sidebar: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired
 };

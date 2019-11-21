@@ -43,14 +43,14 @@ const tableFieldsConfig = {
             ]
         },
         {
-            name: 'raiting',
+            name: 'rating',
             alias: 'Raiting',
             visible: true,
             sortable: true,
             isDate: false,
             filterable: true,
             filterOperation: [
-                {key: 'raiting', type: 'equal', descriptor: 'Raiting'}
+                {key: 'rating', type: 'equal', descriptor: 'Raiting'}
             ]
         },
         {
@@ -256,14 +256,14 @@ const tableFieldsConfig = {
             ]
         },
         {
-            name: 'agent_raiting',
-            alias: 'Agent raiting',
+            name: 'agent_rating',
+            alias: 'Agent rating',
             visible: true,
             sortable: true,
             isDate: false,
             filterable: true,
             filterOperation: [
-                {key: 'agent_raiting', type: 'equal', descriptor: 'Agent raiting'}
+                {key: 'agent_rating', type: 'equal', descriptor: 'Agent rating'}
             ]
         },
         {
@@ -464,14 +464,14 @@ const tableFieldsConfig = {
             ]
         },
         {
-            name: 'agent_raiting',
-            alias: 'Agent raiting',
+            name: 'agent_rating',
+            alias: 'Agent rating',
             visible: true,
             sortable: true,
             isDate: false,
             filterable: true,
             filterOperation: [
-                {key: 'agent_raiting', type: 'equal', descriptor: 'Agent raiting'}
+                {key: 'agent_rating', type: 'equal', descriptor: 'Agent rating'}
             ]
         },
         {

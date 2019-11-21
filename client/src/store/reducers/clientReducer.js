@@ -37,9 +37,9 @@ const initState = {
                         value: 'last_name'
                     },
                     {
-                        key: 'raiting',
-                        text: 'Raiting',
-                        value: 'raiting'
+                        key: 'ratingValue',
+                        text: 'Rating',
+                        value: 'ratingValue'
                     }
                 ]
             },

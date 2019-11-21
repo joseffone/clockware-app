@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Item, Rating, Button, Icon, Label} from 'semantic-ui-react';
-import moment from 'moment';
 import {adminActionCreator, clientActionCreator} from '../../store/actions';
-import {transformDataSet, rewriteObjectProps} from '../../util';
+import {transformDataSet, rewriteObjectProps, applyParams} from '../../util';
 import SearchMenu from '../search-menu';
 import Pagination from '../pagination';
 import img from '../../images/secret-agent-icon.jpg';
+import moment from 'moment';
 import styles from './styles.module.css';
 
 class ClientDataGrid extends Component {
@@ -25,16 +25,7 @@ class ClientDataGrid extends Component {
             if (this.props.admin.ui.fetchRequestsCounter.length === 0) {
                 if (this.props.admin.ui.fetchErrorsCounter.length === 0) {
                     if (!this.props.client.data.loading.isFetching) {
-                        let agentsDataSet = transformDataSet('agents', this.props.admin.forms, this.props.admin.models);
-                        let coverageDataSet = transformDataSet('coverage', this.props.admin.forms, this.props.admin.models);
-                        let mergedDataSet = agentsDataSet.map(agentDataItem => {
-                            return rewriteObjectProps(agentDataItem, {
-                                cities: coverageDataSet.filter(({agent_id}) => agent_id === agentDataItem.id).map(({city_name}) => city_name)
-                            });
-                        });
-                        this.props.setListData(mergedDataSet);
-                        this.onReloadFreeAgentsHandler();
-                        return;
+                        return this.onReloadFreeAgentsHandler();
                     }
                 }
                 if (this.props.admin.ui.fetchErrorsCounter.length > 0) {
@@ -43,9 +34,25 @@ class ClientDataGrid extends Component {
             }
         }
         if (prevProps.client.ui.reloadDataTrigger !== this.props.client.ui.reloadDataTrigger) {
-            if (!this.props.client.data.error.fetchError) {
+            if (!this.props.client.data.error.fetchError && !this.props.client.ui.reloadDataTrigger) {
+                let agentsDataSet = transformDataSet('agents', this.props.admin.forms, this.props.admin.models);
+                let coverageDataSet = transformDataSet('coverage', this.props.admin.forms, this.props.admin.models);
+                let mergedDataSet = this.props.client.data.freeAgents.map(({id}) => {
+                    let agentDataItem = agentsDataSet.find(item => item.id === id);
+                    return rewriteObjectProps(agentDataItem, {
+                        cities: coverageDataSet.filter(({agent_id}) => agent_id === id).map(({city_name}) => city_name)
+                    });
+                });
+                this.props.setListData(mergedDataSet);
                 this.props.setTotalItems(this.props.client.list.ids.length);
             }
+        }
+        if (prevProps.client.list.ids.length !== this.props.client.list.ids.length) {
+            this.props.setTotalItems(this.props.client.list.ids.length);
+        }
+        if (prevProps.client.list.params.sort !== this.props.client.list.params.sort ||
+            prevProps.client.list.params.filters !== this.props.client.list.params.filters) {
+            this.onFiltersApplyHandler();
         }
     }
 
@@ -76,6 +83,16 @@ class ClientDataGrid extends Component {
         });
     }
 
+    onFiltersApplyHandler = () => {
+        this.props.setListItemsIds(
+            applyParams(
+                this.props.client.list.dataSet,
+                this.props.client.list.params.sort,
+                this.props.client.list.params.filters
+            ).map(item => item.id)
+        );
+    }
+
     render() {
         let items = [];
         let dataSet = this.props.client.list.dataSet;
@@ -99,7 +116,7 @@ class ClientDataGrid extends Component {
                             <Item.Content>
                                 <Item.Header>
                                     <Rating 
-                                        defaultRating={dataSetItem.raitingValue} 
+                                        rating={dataSetItem.ratingValue} 
                                         maxRating={5} 
                                         disabled 
                                     />

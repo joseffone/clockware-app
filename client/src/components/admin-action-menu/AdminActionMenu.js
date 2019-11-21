@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Menu, Dropdown, Icon, Transition, Input} from 'semantic-ui-react';
 import {adminActionCreator} from '../../store/actions';
-import {transformDataSet} from '../../util';
+import {applyParams} from '../../util';
 import AdminForm from '../admin-form';
 import ConfirmDelete from './confirm-delete';
 import DropFilter from '../drop-filter';
@@ -32,10 +32,8 @@ class AdminActionMenu extends Component {
         this.props.searchData(
             this.props.admin.ui.currentModel, 
             value, 
-            () => transformDataSet(
-                this.props.admin.ui.currentModel, 
-                this.props.admin.forms, 
-                this.props.admin.models, 
+            () => applyParams(
+                this.props.admin.lists[this.props.admin.ui.currentModel].dataSet,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters
             )
@@ -50,15 +48,13 @@ class AdminActionMenu extends Component {
         this.props.deleteFilter(this.props.admin.ui.currentModel, id);
     }
 
-    onFilterMountedHandler = (filterKey, dataKey, tailIndex) => {
+    onFilterUpdatedHandler = (filterKey, dataKey, tailIndex) => {
         this.props.loadFilterOptions(
             filterKey,
             dataKey,
             this.props.admin.ui.currentModel, 
-            () => transformDataSet(
-                this.props.admin.ui.currentModel, 
-                this.props.admin.forms, 
-                this.props.admin.models, 
+            () => applyParams(
+                this.props.admin.lists[this.props.admin.ui.currentModel].dataSet,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.sort,
                 this.props.admin.lists[this.props.admin.ui.currentModel].params.filters,
                 tailIndex
@@ -194,7 +190,7 @@ class AdminActionMenu extends Component {
                                         text={targetValue}
                                         value={targetValue}
                                         closed={this.onFilterCloseButtonClickHandler}
-                                        updated={(tailIndex) => this.onFilterMountedHandler(filterKey, dataKey, tailIndex)}
+                                        updated={(tailIndex) => this.onFilterUpdatedHandler(filterKey, dataKey, tailIndex)}
                                         changed={(event, {value}) => this.onFilterChangeHandler(filterKey, value)}
                                     />
                                 </Menu.Item>

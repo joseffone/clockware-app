@@ -63,12 +63,12 @@ DropFilter.propTypes = {
     mobile: PropTypes.bool,
     loading: PropTypes.bool,
     date: PropTypes.bool,
-    description: PropTypes.string,
-    options: PropTypes.array,
-    rank: PropTypes.number,
-    changed: PropTypes.func,
-    closed: PropTypes.func,
-    updated: PropTypes.func
+    description: PropTypes.string.isRequired,
+    options: PropTypes.array.isRequired,
+    rank: PropTypes.number.isRequired,
+    changed: PropTypes.func.isRequired,
+    closed: PropTypes.func.isRequired,
+    updated: PropTypes.func.isRequired
 };
 
 export default DropFilter;
