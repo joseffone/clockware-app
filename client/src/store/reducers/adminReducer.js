@@ -366,7 +366,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.ADMIN_SET_SELECT_ALL_TRIGGER:
+        case actionTypes.ADMIN_TOGGLE_ALL_ITEMS_SELECT:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
@@ -375,11 +375,13 @@ const adminReducer = (state = initState, action) => {
                 })
             });
         
-        case actionTypes.ADMIN_TOGGLE_LIST_ITEM_SELECT:
+        case actionTypes.ADMIN_TOGGLE_ITEM_SELECT:
             return rewriteObjectProps(state, {
                 lists: rewriteObjectProps(state.lists, {
                     [action.model]: rewriteObjectProps(state.lists[action.model], {
-                        selectedIds: action.checked ? [...state.lists[action.model].selectedIds.slice(), +action.id] : state.lists[action.model].selectedIds.filter(selectedId => selectedId !== +action.id)
+                        selectedIds: action.checked ? 
+                            [...state.lists[action.model].selectedIds, +action.id] :
+                            state.lists[action.model].selectedIds.filter(selectedId => selectedId !== +action.id)
                     })
                 })
             });
@@ -504,7 +506,7 @@ const adminReducer = (state = initState, action) => {
         case actionTypes.ADMIN_ADD_FILTER:
             if (!state.lists[action.model].params.filters.find(filter => filter[action.filterKey])) {
                 let rank = state.lists[action.model].params.filters
-                    .filter(filter => Object.values(filter)[0].targetValue !== null).length;
+                    .filter(filter => Object.values(filter)[0].target !== null).length;
                 let {type, dataKey, isDate, descriptor} = state.lists[action.model].params.fields
                     .filter(field => field.filterOperation)
                     .map(field => field.filterOperation.map(operation => {
@@ -523,7 +525,7 @@ const adminReducer = (state = initState, action) => {
                                         dataKey,
                                         isDate,
                                         description: descriptor,
-                                        targetValue: null,
+                                        target: null,
                                         options: {
                                             isLoading: true,
                                             payload: []
@@ -555,7 +557,7 @@ const adminReducer = (state = initState, action) => {
                                             return rewriteObjectProps(filter, {
                                                 [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
                                                     rank: filter[Object.keys(filter)[0]].rank - 1,
-                                                    targetValue: null
+                                                    target: null
                                                 })
                                             })
                                         }
@@ -594,26 +596,25 @@ const adminReducer = (state = initState, action) => {
                 });
             }
 
-        case actionTypes.ADMIN_SET_FILTER_TARGET_VALUE:
+        case actionTypes.ADMIN_SET_FILTER_TARGET:
             {
                 let filters = state.lists[action.model].params.filters;
-                let index = filters.findIndex(filter => filter[action.filterKey]);
                 let filter = filters.find(filter => filter[action.filterKey]);
-                let initialValue = filter[action.filterKey].targetValue;
+                let initialTarget = filter[action.filterKey].target;
                 let promotedRank = filter[action.filterKey].rank;
                 let newFilter = rewriteObjectProps(filter, {
                     [action.filterKey]: rewriteObjectProps(filter[action.filterKey], {
-                        targetValue: action.value
+                        target: action.target
                     })
                 });
                 return rewriteObjectProps(state, {
                     lists: rewriteObjectProps(state.lists, {
                         [action.model]: rewriteObjectProps(state.lists[action.model], {
                             params: rewriteObjectProps(state.lists[action.model].params, {
-                                filters: [].concat(filters.slice(0, index), newFilter, filters.slice(index + 1, filters.length))
+                                filters: filters
                                     .map(filter => {
                                         if (Object.values(filter)[0].rank >= promotedRank && Object.keys(filter)[0] !== action.filterKey) {
-                                            if (initialValue === null) {
+                                            if (initialTarget === null) {
                                                 return rewriteObjectProps(filter, {
                                                     [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
                                                         rank: filter[Object.keys(filter)[0]].rank + 1
@@ -622,9 +623,12 @@ const adminReducer = (state = initState, action) => {
                                             }
                                             return rewriteObjectProps(filter, {
                                                 [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
-                                                    targetValue: null
+                                                    target: null
                                                 })
                                             })
+                                        }
+                                        if (Object.keys(filter)[0] === action.filterKey) {
+                                            return newFilter;
                                         }
                                         return filter;
                                     })

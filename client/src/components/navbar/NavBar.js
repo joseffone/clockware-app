@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Menu, Header, Button, Icon, Popup} from 'semantic-ui-react';
 import AdminForm from '../admin-form';
+import {connect} from 'react-redux';
 import {adminActionCreator, authActionCreator, globalActionCreator} from '../../store/actions';
 import styles from './styles.module.css';
 
@@ -34,7 +34,11 @@ class NavBar extends Component {
                             inverted
                             as='h3'
                             icon='clock outline'
-                            content={this.props.auth.pathToAutoRedirect === '/' ? 'Clockware' : this.props.admin.ui.currentModel.split('')[0].toUpperCase() + this.props.admin.ui.currentModel.split('').slice(1).join('')}
+                            content={
+                                this.props.auth.pathToAutoRedirect === '/' ? 
+                                'Clockware' : 
+                                this.props.admin.ui.currentModel.split('')[0].toUpperCase() + this.props.admin.ui.currentModel.split('').slice(1).join('')
+                            }
                         />
                     }
                 />
@@ -42,7 +46,7 @@ class NavBar extends Component {
                     position='right'
                 >
                     <Menu.Item
-                        className={`${this.props.global.ui.mobile || this.props.auth.accessToken ? 'inOutItem' :''}`}
+                        className={`${(this.props.global.ui.mobile && !this.props.client.ui.isStartPageShown) || this.props.auth.accessToken ? 'inOutItem' :''}`}
                         content={
                             this.props.auth.accessToken === null ?
                                 <AdminForm 
@@ -95,7 +99,7 @@ class NavBar extends Component {
                     :
                         null
                     }
-                    {this.props.global.ui.mobile || this.props.auth.accessToken ? 
+                    {(this.props.global.ui.mobile && !this.props.client.ui.isStartPageShown) || this.props.auth.accessToken ? 
                         <Menu.Item 
                             content={
                                 <Button 
@@ -129,6 +133,7 @@ const mapStateToProps = state => {
     return {
         auth: state.auth,
         global: state.global,
+        client: state.client,
         admin: state.admin
     };
 }

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Segment, Grid, Message} from 'semantic-ui-react';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
+import ClientActionMenu from '../client-action-menu';
 import StartForm from '../start-form';
 import ClientDataGrid from '../client-data-grid';
 import Footer from '../footer';
@@ -9,28 +10,28 @@ import styles from './styles.module.css';
 
 class ClientView extends Component {
 
-    clientContent = ({sidebar, mobile, error, empty}) => {
-        const Sidebar = sidebar;
+    clientContent = ({mobile, sbOpen, error, empty}) => {
         return (
             <SideBarWrapper 
-                sidebar={() => null}
+                content={
+                    <ClientActionMenu />
+                }
+                dimmed={mobile && sbOpen}
             >
-                <Grid 
+                <Grid
                     centered 
                     divided
                 >
-                    <Grid.Row 
-                        columns={mobile ? 1 : 2}
-                    >
+                    <Grid.Row>
                         {!mobile ?
                             <Grid.Column 
-                                width={4}
+                                className={'sideMenu'}
                             >
-                                <Sidebar sidebarView />
+                                <ClientActionMenu />
                             </Grid.Column>
                         : null}
                         <Grid.Column 
-                            width={mobile ? 16 : 8}
+                            width={mobile ? 16 : 7}
                         >
                             <Message
                                 error
@@ -56,20 +57,20 @@ class ClientView extends Component {
         );
     };
 
-    render () {
+    render() {
         const ClientContent = this.clientContent;
         return (
             <React.Fragment>
                 <Segment 
-                    className={styles.header}
+                    className={`${styles.header} ${this.props.global.ui.isSideBarOpen ? 'sideBarOpen' : null}`}
                     loading={this.props.client.ui.reloadDataTrigger}
                 >
                     {this.props.client.ui.isStartPageShown ?
                         <StartForm />
                     :
                         <ClientContent 
-                            sidebar={StartForm}
                             mobile={this.props.global.ui.mobile}
+                            sbOpen={this.props.global.ui.isSideBarOpen}
                             error={!this.props.client.ui.reloadDataTrigger && (
                                     this.props.client.data.error.fetchError || this.props.admin.ui.fetchErrorsCounter.length > 0
                                 )

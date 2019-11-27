@@ -37,7 +37,9 @@ const DateNavBar = (props) => {
                     <Table.Cell 
                         width={1}
                         selectable
-                        content={<Icon name='chevron left' />}
+                        content={
+                            <Icon name='chevron left' />
+                        }
                         onClick={() => props.prevClicked(dateContext)}
                     />
                     {dayCell}
@@ -52,8 +54,6 @@ const DateNavBar = (props) => {
                                 onChange={(event) => props.monthChanged(event, dateContext)}
                             />
                         }
-                        onClick={() => props.monthClicked(dateContext)}
-                        onFocus={() => props.monthClicked(dateContext)}
                     />
                     <Table.Cell 
                         width={2}
@@ -62,7 +62,9 @@ const DateNavBar = (props) => {
                     <Table.Cell 
                         width={1}
                         selectable
-                        content={<Icon name='chevron right' />}
+                        content={
+                            <Icon name='chevron right' />
+                        }
                         onClick={() => props.nextClicked(dateContext)}
                     />
                 </Table.Row>
@@ -75,7 +77,6 @@ const DateNavBar = (props) => {
 DateNavBar.propTypes = {
     withDay: PropTypes.bool,
     dateContext: PropTypes.object.isRequired,
-    monthClicked: PropTypes.func.isRequired,
     nextClicked: PropTypes.func.isRequired,
     prevClicked: PropTypes.func.isRequired,
     monthChanged: PropTypes.func.isRequired,

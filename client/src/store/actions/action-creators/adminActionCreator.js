@@ -169,20 +169,20 @@ adminActionCreator.setReloadDataTrigger = (model, flag) => {
     };
 };
 
-adminActionCreator.setSelectAllTrigger = (model, checked) => {
+adminActionCreator.toggleAllItemsSelect = (model, checked) => {
     return {
-        type: actionTypes.ADMIN_SET_SELECT_ALL_TRIGGER,
+        type: actionTypes.ADMIN_TOGGLE_ALL_ITEMS_SELECT,
         model,
         checked
     };
 };
 
-adminActionCreator.toggleListItemSelect = (model, checked, id) => {
+adminActionCreator.toggleItemSelect = (model, id, checked) => {
     return {
-        type: actionTypes.ADMIN_TOGGLE_LIST_ITEM_SELECT,
+        type: actionTypes.ADMIN_TOGGLE_ITEM_SELECT,
         model,
-        checked,
-        id
+        id,
+        checked
     };
 };
 
@@ -295,12 +295,12 @@ adminActionCreator.setFilterOptions = (model, filterKey, options) => {
     };
 };
 
-adminActionCreator.setFilterTargetValue = (model, filterKey, value) => {
+adminActionCreator.setFilterTarget = (model, filterKey, target) => {
     return {
-        type: actionTypes.ADMIN_SET_FILTER_TARGET_VALUE,
+        type: actionTypes.ADMIN_SET_FILTER_TARGET,
         model,
         filterKey,
-        value
+        target
     };
 };
 

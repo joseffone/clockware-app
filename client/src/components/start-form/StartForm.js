@@ -62,7 +62,9 @@ class StartForm extends Component {
     onFormSubmitHandler = () => {
         if (this.state.isFormDataValid) {
             this.props.hideStartForm();
-            this.props.setReloadDataTrigger(true);
+            if (this.props.sidebarView) {
+                this.props.setReloadDataTrigger(true);
+            }
         }
     }
 
@@ -96,6 +98,7 @@ class StartForm extends Component {
             >
                 <Grid.Column>
                     <Message 
+                        className={`${this.props.sidebarView ? 'sidebarView' : null}`}
                         hidden={this.state.isFormSubmited ? isFormDataValid : true}
                         error
                         header='Warning!'
@@ -134,7 +137,7 @@ class StartForm extends Component {
                                     options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
                                     text={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
                                     value={formField.value}
-                                    changed={(event, { value }) => this.props.changeFormState(event, 'clientStartForm', formField.key, { value })}
+                                    changed={(event, {value}) => this.props.changeFormState(event, 'clientStartForm', formField.key, {value})}
                                 />
                             </Form.Field>
                         ))}
@@ -172,7 +175,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         refreshFormState: (formKey) => dispatch(clientActionCreator.refreshFormState(formKey)),
-        changeFormState: (event, formKey, formFieldKey, { value }, touched) => dispatch(clientActionCreator.changeFormState(event, formKey, formFieldKey, value, touched)),
+        changeFormState: (event, formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormState(event, formKey, formFieldKey, value, touched)),
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
         setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
         hideStartForm: () => dispatch(clientActionCreator.hideStartForm())

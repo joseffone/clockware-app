@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/action-types';
-import {rewriteObjectProps, validateInput, clientFormTypesConfig} from '../../util';
+import {rewriteObjectProps, validateInput, clientFormTypesConfig, getUniqueKeyValues, applyParams} from '../../util';
 
 const initState = {
     forms: {},
@@ -20,7 +20,26 @@ const initState = {
         ids: [],
         params: {
             fields: [],
-            filters: [],
+            filters: [
+                {
+                    rating: {
+                        operatorType: 'equal',
+                        dataKey: 'ratingValue',
+                        isDate: false,
+                        target: [],
+                        options: []
+                    }
+                },
+                {
+                    cities: {
+                        operatorType: 'equal',
+                        dataKey: 'cities',
+                        isDate: false,
+                        target: [],
+                        options: []
+                    }
+                }
+            ],
             sort: {
                 target: null,
                 isDate: false,
@@ -226,11 +245,25 @@ const clientReducer = (state = initState, action) => {
             });
 
         case actionTypes.CLIENT_SET_LIST_DATA:
-            return rewriteObjectProps(state, {
-                list: rewriteObjectProps(state.list, {
-                    dataSet: action.dataSet.slice()
-                })
-            });
+            {
+                let newDataSet = action.dataSet.slice();
+                return rewriteObjectProps(state, {
+                    list: rewriteObjectProps(state.list, {
+                        dataSet: newDataSet,
+                        params: rewriteObjectProps(state.list.params, {
+                            filters: state.list.params.filters.map(filter => {
+                                let options = getUniqueKeyValues(newDataSet, Object.values(filter)[0].dataKey);
+                                return rewriteObjectProps(filter, {
+                                    [Object.keys(filter)[0]]: rewriteObjectProps(Object.values(filter)[0], {
+                                        target: [...options],
+                                        options: [...options]
+                                    })
+                                })
+                            })
+                        })
+                    })
+                });
+            }
 
         case actionTypes.CLIENT_CHANGE_SORT_TARGET:
             return rewriteObjectProps(state, {
@@ -253,6 +286,44 @@ const clientReducer = (state = initState, action) => {
                     })
                 })
             });
+        
+        case actionTypes.CLIENT_CHANGE_FILTER_TARGET:
+            {
+                let dataSet = state.list.dataSet.slice();
+                let filters = state.list.params.filters;
+                let filter = filters.find(filter => filter[action.filterKey]);
+                let index = filters.findIndex(filter => filter[action.filterKey]);
+                let id = +action.id !== +action.id ? action.id : +action.id;
+                let newFilter = rewriteObjectProps(filter, {
+                    [action.filterKey]: rewriteObjectProps(filter[action.filterKey], {
+                        target: action.id ?
+                            action.checked ? [...filter[action.filterKey].target, id] : filter[action.filterKey].target.filter(elem => elem !== id) : 
+                            action.checked ? [...filter[action.filterKey].options] : []
+                    })
+                });
+                let updatedFilters = [].concat(newFilter, filters.slice(0, index), filters.slice(index + 1, filters.length));
+                return rewriteObjectProps(state, {
+                    list: rewriteObjectProps(state.list, {
+                        params: rewriteObjectProps(state.list.params, {
+                            filters: updatedFilters
+                                .map(filter => {
+                                    if (Object.keys(filter)[0] !== action.filterKey) {
+                                        let checkedOptions = getUniqueKeyValues(
+                                            applyParams(dataSet, null, updatedFilters, 1), 
+                                            Object.values(filter)[0].dataKey
+                                        );
+                                        return rewriteObjectProps(filter, {
+                                            [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
+                                                target: [...checkedOptions]
+                                            })
+                                        })
+                                    }
+                                    return filter;
+                                })
+                        })
+                    })
+                });
+            }
     
         default:
             return state;

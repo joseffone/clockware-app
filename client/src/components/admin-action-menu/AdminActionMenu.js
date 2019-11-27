@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Menu, Dropdown, Icon, Transition, Input} from 'semantic-ui-react';
-import {adminActionCreator} from '../../store/actions';
-import {applyParams} from '../../util';
 import AdminForm from '../admin-form';
 import ConfirmDelete from './confirm-delete';
 import DropFilter from '../drop-filter';
+import {connect} from 'react-redux';
+import {adminActionCreator} from '../../store/actions';
+import {applyParams} from '../../util';
 import styles from './styles.module.css';
 
 class AdminActionMenu extends Component {
@@ -24,7 +24,7 @@ class AdminActionMenu extends Component {
 
     onCommitDeleteHandler = () => {
         this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, true);
-        this.props.setSelectAllTrigger(this.props.admin.ui.currentModel, false);
+        this.props.toggleAllItemsSelect(this.props.admin.ui.currentModel, false);
     }
 
     onSearchInputChangeHandler = (event, {value}) => {
@@ -63,7 +63,7 @@ class AdminActionMenu extends Component {
     }
 
     onFilterChangeHandler = (filterKey, value) => {
-        this.props.setFilterTargetValue(this.props.admin.ui.currentModel, filterKey, value);
+        this.props.setFilterTarget(this.props.admin.ui.currentModel, filterKey, value);
     }
 
     actions = (props) => {
@@ -174,7 +174,7 @@ class AdminActionMenu extends Component {
                     >
                         {this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.map((filter, index) => {
                             let filterKey = Object.keys(filter)[0];
-                            let {rank, dataKey, isDate, options, targetValue} = Object.values(filter)[0];
+                            let {rank, dataKey, isDate, options, target} = Object.values(filter)[0];
                             return (
                                 <Menu.Item>
                                     <DropFilter
@@ -187,8 +187,8 @@ class AdminActionMenu extends Component {
                                         description={filter[filterKey].description}
                                         placeholder={filter[filterKey].description}
                                         options={options.payload}
-                                        text={targetValue}
-                                        value={targetValue}
+                                        text={target}
+                                        value={target}
                                         closed={this.onFilterCloseButtonClickHandler}
                                         updated={(tailIndex) => this.onFilterUpdatedHandler(filterKey, dataKey, tailIndex)}
                                         changed={(event, {value}) => this.onFilterChangeHandler(filterKey, value)}
@@ -223,12 +223,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         deleteData: (accessToken, model, id, queryString) => dispatch(adminActionCreator.deleteDataRequest(accessToken, model, id, queryString)),
-        setSelectAllTrigger: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
+        toggleAllItemsSelect: (model, checked) => dispatch(adminActionCreator.toggleAllItemsSelect(model, checked)),
         changeSearchValue: (model, value) => dispatch(adminActionCreator.changeSearchValue(model, value)),
         searchData: (model, text, dataSet, key) => dispatch(adminActionCreator.searchDataRequest(model, text, dataSet, key)),
         addFilter: (model, filterKey) => dispatch(adminActionCreator.addFilter(model, filterKey)),
         deleteFilter: (model, filterKey) => dispatch(adminActionCreator.deleteFilter(model, filterKey)),
-        setFilterTargetValue: (model, filterKey, value) => dispatch(adminActionCreator.setFilterTargetValue(model, filterKey, value)),
+        setFilterTarget: (model, filterKey, value) => dispatch(adminActionCreator.setFilterTarget(model, filterKey, value)),
         loadFilterOptions: (filterKey, dataKey, model, getDataSet) => dispatch(adminActionCreator.loadFilterOptions(filterKey, dataKey, model, getDataSet)),
         setReloadDataTrigger: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag))
     };

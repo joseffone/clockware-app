@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Grid, Segment, Message} from 'semantic-ui-react';
-import {SideBar} from '../sidebar';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
 import AdminDataGrid from '../admin-data-grid';
 import AdminActionMenu from '../admin-action-menu';
+import AdminModelsMenu from '../admin-models-menu';
+import {connect} from 'react-redux';
+import {adminActionCreator} from '../../store/actions';
 import styles from './styles.module.css';
 
 class AdminView extends Component {
@@ -39,8 +40,14 @@ class AdminView extends Component {
         }
         return (
             <SideBarWrapper 
-                admin={true}
-                sidebar={SideBar}
+                content={
+                    <AdminModelsMenu 
+                        mobile={this.props.global.ui.mobile}
+                        currentModel={this.props.admin.ui.currentModel}
+                        options={this.props.admin.ui.models}
+                        itemClicked={this.props.changeCurrentModel}
+                    />
+                }
                 dimmed={this.props.global.ui.mobile && this.props.global.ui.isSideBarOpen}
             >
                 <Grid
@@ -87,4 +94,10 @@ const mapStateToProps = state => {
     };
 }
 
-export default connect(mapStateToProps, null)(AdminView);
+const mapDispatchToProps = dispatch => {
+    return {
+        changeCurrentModel: (event, {name}) => dispatch(adminActionCreator.changeCurrentModel(name))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminView);

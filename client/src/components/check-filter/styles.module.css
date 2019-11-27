@@ -1,0 +1,11 @@
+.checkFilter :global .item:hover {
+    cursor: unset !important;
+}
+
+.checkFilter :global .content {
+    padding: 0.25rem !important;
+}
+
+.checkFilter :global .rating i:hover {
+    cursor: pointer !important;
+}

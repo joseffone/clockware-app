@@ -120,4 +120,13 @@ clientActionCreator.changeSortOrder = (reverse) => {
     };
 };
 
+clientActionCreator.changeFilterTarget = (filterKey, checked, id) => {
+    return {
+        type: actionTypes.CLIENT_CHANGE_FILTER_TARGET,
+        filterKey,
+        checked,
+        id
+    };
+};
+
 export default clientActionCreator;

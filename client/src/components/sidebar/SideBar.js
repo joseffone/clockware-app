@@ -1,12 +1,21 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Sidebar} from 'semantic-ui-react';
-import {adminActionCreator, globalActionCreator} from '../../store/actions';
-import AdminModelsMenu from '../admin-models-menu';
+import {connect} from 'react-redux';
+import {globalActionCreator} from '../../store/actions';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 
 class SideBar extends Component {
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.global.ui.mobile !== this.props.global.ui.mobile) {
+            if (this.props.global.ui.isSideBarOpen) {
+                this.props.toggleSideBar();
+                this.props.toggleSideBarButtonPress();
+            }
+        }
+    }
+
     render () {
         return (
             <Sidebar
@@ -19,23 +28,14 @@ class SideBar extends Component {
                 onHide={this.props.global.ui.mobile ? this.props.toggleSideBar : null}
                 onHidden={this.props.global.ui.mobile &&  this.props.global.ui.isSideBarButtonPressed ? this.props.toggleSideBarButtonPress : null}
             >
-                {this.props.admin ?
-                    <AdminModelsMenu 
-                        mobile={this.props.global.ui.mobile}
-                        currentModel={this.props.admin.ui.currentModel}
-                        options={this.props.admin.ui.models}
-                        itemClicked={this.props.changeCurrentModel}
-                    />
-                :
-                    null
-                }
+                {this.props.content}
             </Sidebar>
         );
     }
 }
 
 SideBar.propTypes = {
-    admin: PropTypes.bool.isRequired
+    content: PropTypes.node.isRequired
 };
 
 const mapStateToProps = state => {
@@ -47,7 +47,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        changeCurrentModel: (event, {name}) => dispatch(adminActionCreator.changeCurrentModel(name)),
         toggleSideBar: () => dispatch(globalActionCreator.toggleSidebar()),
         toggleSideBarButtonPress: () => dispatch(globalActionCreator.toggleSidebarButtonPress())
     };

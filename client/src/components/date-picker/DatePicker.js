@@ -8,99 +8,117 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 
 class DatePicker extends Component {
+    inputFieldRef = React.createRef();
 
     state = {
-        dateContext: moment(),
+        dateContext: this.props.value && this.props.value !== '' ? moment(this.props.value, 'DD-MM-YYYY HH:mm') : moment(),
         isDatePickerOpen: false,
         isMouseOverDatePicker: false,
         showDays: true,
         showHours: false,
         showMinutes: false,
-        value: this.props.value && this.props.value !== '' ? moment(this.props.value).format('DD-MM-YYYY HH:mm') : ''
+        value: this.props.value && this.props.value !== '' ? this.props.value : ''
     }
 
-    inputFieldRef = React.createRef();
+    onDatePickerChangeHandler = () => {
+        if (this.props.changed) {
+            this.props.changed({target: {value: null}}, {value: this.state.value});
+        }
+    }
 
     onDayClickHandler = (event, dateContext) => {
         dateContext.set('date', +event.currentTarget.textContent);
-        this.setState({
-            dateContext: dateContext,
-            showDays: false,
-            showHours: true,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
+        this.setState(
+            {
+                dateContext: dateContext,
+                showDays: false,
+                showHours: true,
+                value: dateContext.format('DD-MM-YYYY HH:mm')
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onHoursClickHandler = (event, dateContext) => {
         dateContext.set('hour', +event.currentTarget.textContent.slice(0, 2));
-        this.setState({
-            dateContext: dateContext,
-            showHours: false,
-            showMinutes: true,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
+        this.setState(
+            {
+                dateContext: dateContext,
+                showHours: false,
+                showMinutes: true,
+                value: dateContext.format('DD-MM-YYYY HH:mm')
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onMinutesClickHandler = (event, dateContext) => {
         dateContext.set('minute', +event.currentTarget.textContent.slice(3));
-        this.setState({
-            dateContext: dateContext,
-            isDatePickerOpen: false,
-            isMouseOverDatePicker: false,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
+        this.setState(
+            {
+                dateContext: dateContext,
+                isDatePickerOpen: false,
+                isMouseOverDatePicker: false,
+                value: dateContext.format('DD-MM-YYYY HH:mm')
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onNavBarNextClickHandler = (dateContext) => {
         dateContext.add(1, 'months');
-        this.setState({
-            dateContext: dateContext,
-            showDays: true,
-            showHours: false,
-            showMinutes: false,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
+        this.setState(
+            {
+                dateContext: dateContext,
+                showDays: true,
+                showHours: false,
+                showMinutes: false,
+                value: dateContext.format('DD-MM-YYYY HH:mm')
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onNavBarPrevClickHandler = (dateContext) => {
         dateContext.subtract(1, 'months');
-        this.setState({
-            dateContext: dateContext,
-            showDays: true,
-            showHours: false,
-            showMinutes: false,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
+        this.setState(
+            {
+                dateContext: dateContext,
+                showDays: true,
+                showHours: false,
+                showMinutes: false,
+                value: dateContext.format('DD-MM-YYYY HH:mm')
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onNavBarDayClickHandler = (dateContext) => {
-        this.inputFieldRef.current.focus();
-        this.setState({
-            dateContext: dateContext,
-            showDays: true,
-            showHours: false,
-            showMinutes: false,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
-    }
-
-    onNavBarMonthClickHandler = (dateContext) => {
-        this.setState({
-            dateContext: dateContext,
-            showDays: true,
-            showHours: false,
-            showMinutes: false,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
+        this.setState(
+            {
+                dateContext: dateContext,
+                isDatePickerOpen: true,
+                showDays: true,
+                showHours: false,
+                showMinutes: false,
+                value: dateContext.format('DD-MM-YYYY HH:mm')
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onNavBarMonthChangeHandler = (event, dateContext) => {
         this.inputFieldRef.current.focus();
         dateContext.set('month', event.currentTarget.textContent);
-        this.setState({
-            dateContext: dateContext,
-            value: dateContext.format('DD-MM-YYYY HH:mm')
-        }, () => this.props.changed ? this.props.changed(null, {value: this.state.value}) : null);
+        dateContext.set('hour', 0);
+        dateContext.set('minute', 0);
+        this.setState(
+            {
+                dateContext: dateContext,
+                value: dateContext.format('DD-MM-YYYY HH:mm')
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onMouseOverDatePickerHandler = () => {
@@ -113,44 +131,43 @@ class DatePicker extends Component {
 
     onDatePickerClickHandler = () => {
         if (!this.state.showMinutes) {
-            return this.inputFieldRef.current.focus();
+            this.inputFieldRef.current.focus();
         }
-        return null;
     }
 
     onCloseButtonHandler = () => {
-        this.setState({
-            isDatePickerOpen: false,
-            isMouseOverDatePicker: false
-        }, () => this.props.changed ? this.props.changed({target: {value: null}}, {value: this.state.value}) : null);
+        this.setState(
+            {
+                isDatePickerOpen: false,
+                isMouseOverDatePicker: false
+            }, 
+            this.onDatePickerChangeHandler
+        );
     }
 
     onHideOnScrollHandler = () => {
-        this.setState({
-            isDatePickerOpen: false,
-        });
+        if (!this.state.isMouseOverDatePicker) {
+            this.setState({isDatePickerOpen: false});
+        }
     }
 
-    onPopupClickHandler = () => {
+    onPopupOpenHandler = () => {
         window.addEventListener('scroll', this.onHideOnScrollHandler, true);
     }
 
     onDatePickerInputFocusHandler = () => {
         if (!this.state.isMouseOverDatePicker) {
-            return this.setState({isDatePickerOpen: true});
+            this.setState({isDatePickerOpen: true});
         }
-        return null;
     }
 
-    onDatePickerInputBlurHandler = (event) => {
+    onDatePickerInputBlurHandler = () => {
         if (!this.state.isMouseOverDatePicker && !this.props.mobile) {
-            this.setState({isDatePickerOpen: false});
-            if (this.props.changed) {this.props.changed(event, {value: this.state.value})};
+            this.setState({isDatePickerOpen: false}, this.onDatePickerChangeHandler);
         }
     }
 
     render() {
-
         let inputTrigger = null;
         let currentConfig = null;
         let currentPicker = null;
@@ -159,7 +176,6 @@ class DatePicker extends Component {
         if (this.state.showDays) {
             currentNavBar = <DateNavBar 
                 dateContext={this.state.dateContext}
-                monthClicked={this.onNavBarMonthClickHandler}
                 nextClicked={this.onNavBarNextClickHandler}
                 prevClicked={this.onNavBarPrevClickHandler}
                 monthChanged={this.onNavBarMonthChangeHandler}
@@ -174,7 +190,6 @@ class DatePicker extends Component {
             currentNavBar = <DateNavBar 
                 withDay 
                 dateContext={this.state.dateContext} 
-                monthClicked={this.onNavBarMonthClickHandler}
                 nextClicked={this.onNavBarNextClickHandler}
                 prevClicked={this.onNavBarPrevClickHandler}
                 monthChanged={this.onNavBarMonthChangeHandler}
@@ -257,7 +272,7 @@ class DatePicker extends Component {
                     onMouseOver={this.onMouseOverDatePickerHandler}
                     onMouseOut={this.onMouseOutDatePickerHandler}
                     onClick={this.onDatePickerClickHandler}
-                    onOpen={this.onPopupClickHandler}
+                    onOpen={this.onPopupOpenHandler}
                 >
                     {currentNavBar}
                     {currentPicker}

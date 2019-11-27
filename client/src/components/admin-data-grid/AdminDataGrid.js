@@ -132,7 +132,7 @@ class AdminDataGrid extends Component {
             >
                 <Checkbox 
                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length === this.props.admin.lists[this.props.admin.ui.currentModel].ids.length} 
-                    onChange={(event, { checked }) => this.props.setSelectAllTrigger(this.props.admin.ui.currentModel, checked)} 
+                    onChange={(event, {checked}) => this.props.toggleAllItemsSelect(this.props.admin.ui.currentModel, checked)} 
                 />
             </Table.HeaderCell>
         );
@@ -179,7 +179,7 @@ class AdminDataGrid extends Component {
                                 <Checkbox 
                                     id={id}
                                     checked={this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.filter(selectedId => selectedId === id).length === 1}
-                                    onChange={(event, { checked}) => this.props.toggleListItemSelect(this.props.admin.ui.currentModel, checked, event.target.id)}
+                                    onChange={(event, {checked}) => this.props.toggleItemSelect(this.props.admin.ui.currentModel, event.target.id, checked)}
                                 />
                             </Table.Cell>
                             {this.props.admin.lists[this.props.admin.ui.currentModel].params.fields.map(({name, alias, visible}) => {
@@ -274,8 +274,8 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
         setReloadDataTrigger: (model, flag) => dispatch(adminActionCreator.setReloadDataTrigger(model, flag)),
-        setSelectAllTrigger: (model, checked) => dispatch(adminActionCreator.setSelectAllTrigger(model, checked)),
-        toggleListItemSelect: (model, checked, id) => dispatch(adminActionCreator.toggleListItemSelect(model, checked, id)),
+        toggleAllItemsSelect: (model, checked) => dispatch(adminActionCreator.toggleAllItemsSelect(model, checked)),
+        toggleItemSelect: (model, id, checked) => dispatch(adminActionCreator.toggleItemSelect(model, id, checked)),
         setCurrentPage: (model, activePage) => dispatch(adminActionCreator.setCurrentPage(model, activePage)),
         setItemsPerPage: (model, value) => dispatch(adminActionCreator.setItemsPerPage(model, value)),
         setTotalItems: (model, total) => dispatch(adminActionCreator.setTotalItems(model, total)),

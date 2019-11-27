@@ -147,54 +147,57 @@ export const configFilterPreset = (preset, tailIndex = null) => {
     let tIndex = isNaN(parseInt(tailIndex)) ? preset.length : parseInt(tailIndex);
     return preset
         .map(item => {
-            let {operatorType, dataKey, isDate, targetValue} = Object.values(item)[0];
+            let {operatorType, dataKey, isDate, target} = Object.values(item)[0];
             return {
                 operatorType, 
                 dataKey, 
                 isDate,
-                targetValue
+                target
             };
         })
         .slice(0, tIndex)
-        .filter(item => item.targetValue !== null);
+        .filter(item => item.target !== null);
 };
 
 export const filterDataSet = (data, config) => {
-    const operate = (type, value, targetValue) => {
+    const operate = (type, value, target) => {
         switch (type) {
             case 'equal':
-                return Array.isArray(value) ? value.includes(targetValue) : value === targetValue;
+                return Array.isArray(value) ? value.includes(target) : value === target;
             case 'notEqual':
-                return Array.isArray(value) ? !value.includes(targetValue) : value !== targetValue;
+                return Array.isArray(value) ? !value.includes(target) : value !== target;
             case 'more':
-                return Array.isArray(value) ? value.findIndex(elem => elem > targetValue) !== -1 : value > targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem > target) !== -1 : value > target;
             case 'less':
-                return Array.isArray(value) ? value.findIndex(elem => elem < targetValue) !== -1 : value < targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem < target) !== -1 : value < target;
             case 'moreOrEqual':
-                return Array.isArray(value) ? value.findIndex(elem => elem >= targetValue) !== -1 : value >= targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem >= target) !== -1 : value >= target;
             case 'lessOrEqual':
-                return Array.isArray(value) ? value.findIndex(elem => elem <= targetValue) !== -1 : value <= targetValue;
+                return Array.isArray(value) ? value.findIndex(elem => elem <= target) !== -1 : value <= target;
             default:
-                return Array.isArray(value) ? value.includes(targetValue) : value === targetValue;
+                return Array.isArray(value) ? value.includes(target) : value === target;
         }
     };
     const compare = (item, masks) => {
         let result = true;
         for (let mask of masks) {
-            let {operatorType, dataKey, isDate, targetValue} = mask;
-            let xVal = typeof item[dataKey] === 'string' ? item[dataKey].toLowerCase() : typeof item[dataKey] ===  'number' || Array.isArray(targetValue) ? item[dataKey] : '';
-            let tVal = typeof targetValue === 'string' ? targetValue.toLowerCase() : typeof targetValue ===  'number' || Array.isArray(targetValue) ? targetValue : '';
+            let {operatorType, dataKey, isDate, target} = mask;
+            let xVal = typeof item[dataKey] === 'string' ? item[dataKey].toLowerCase() : typeof item[dataKey] ===  'number' || Array.isArray(target) ? item[dataKey] : '';
+            let tVal = typeof target === 'string' ? target.toLowerCase() : typeof target ===  'number' || Array.isArray(target) ? target : '';
             if (isDate) {
                 xVal = xVal === '' ? moment(+xVal) : moment(xVal, 'DD-MM-YYYY HH:mm');
                 tVal = tVal === '' ? moment(+tVal) : moment(tVal, 'DD-MM-YYYY HH:mm');
             }
             if (Array.isArray(tVal)) {
                 result = false;
-                tVal.forEach(elem => {
+                for (let elem of tVal) {
                     if (operate(operatorType, xVal, elem)) {
                         result = true;
                     }
-                });
+                }
+                if (!result) {
+                    break;
+                }
             } else {
                 result = result && operate(operatorType, xVal, tVal);
             }
@@ -329,8 +332,16 @@ export const getUniqueKeyValues = (data, key) => {
     let result = [];
     let values = data.map(item => item[key]);
     for (let value of values) {
-        if (!result.includes(value)) {
-            result.push(value);
+        if (Array.isArray(value)) {
+            value.forEach(elem => {
+                if (!result.includes(elem)) {
+                    result.push(elem);
+                }
+            });
+        } else {
+            if (!result.includes(value)) {
+                result.push(value);
+            }
         }
     }
     return result;

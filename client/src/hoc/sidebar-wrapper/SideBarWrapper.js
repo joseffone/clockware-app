@@ -1,13 +1,13 @@
 import React from 'react';
 import {Sidebar} from 'semantic-ui-react';
+import SideBar from '../../components/sidebar';
 import PropTypes from 'prop-types';
 
 const SideBarWrapper = (props) => {
-    const CustomSideBar = props.sidebar;
     return (
         <Sidebar.Pushable>
-            <CustomSideBar 
-                admin={props.admin} 
+            <SideBar 
+                content={props.content} 
             />
             <Sidebar.Pusher 
                 dimmed={props.dimmed}
@@ -20,9 +20,8 @@ const SideBarWrapper = (props) => {
 };
 
 SideBarWrapper.propTypes = {
-    admin: PropTypes.bool.isRequired,
+    content: PropTypes.node.isRequired,
     dimmed: PropTypes.bool.isRequired,
-    sidebar: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired
 };
 

@@ -1,0 +1,8 @@
+.clientActionMenu {
+    border-radius: unset !important;
+    box-shadow: none !important;
+}
+
+.clientActionMenu :global .title {
+    border: none !important;
+}
