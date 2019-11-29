@@ -30,7 +30,7 @@ class ClientActionMenu extends Component {
 
     getFilterParam = (filterKey, paramKey) => {
         return this.props.client.list.params.filters
-            .find(filter => Object.keys(filter)[0] === filterKey)[filterKey][paramKey];
+            .find(filter => Object.keys(filter)[0] === filterKey)[filterKey][paramKey] || [];
     }
 
     render() {

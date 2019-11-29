@@ -11,9 +11,9 @@ adminActionCreator.refreshFormState = (model) => {
     };
 };
 
-adminActionCreator.changeFormState = (event, model, formFieldKey, value = null, touched = true) => {
+adminActionCreator.changeFormFieldValue = (event, model, formFieldKey, value = null, touched = true) => {
     return {
-        type: actionTypes.ADMIN_CHANGE_FORM_STATE,
+        type: actionTypes.ADMIN_CHANGE_FORM_FIELD_VALUE,
         event,
         model,
         formFieldKey,

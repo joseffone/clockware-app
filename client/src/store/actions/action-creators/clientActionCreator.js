@@ -11,14 +11,23 @@ clientActionCreator.refreshFormState = (formKey) => {
     };
 };
 
-clientActionCreator.changeFormState = (event, formKey, formFieldKey, value = null, touched = true) => {
+clientActionCreator.changeFormFieldValue = (event, formKey, formFieldKey, value = null, touched = true) => {
     return {
-        type: actionTypes.CLIENT_CHANGE_FORM_STATE,
+        type: actionTypes.CLIENT_CHANGE_FORM_FIELD_VALUE,
         event,
         formKey,
         formFieldKey,
         value,
         touched
+    };
+};
+
+clientActionCreator.changeFormFieldConfig = (formKey, formFieldKey, newConfig) => {
+    return {
+        type: actionTypes.CLIENT_CHANGE_FORM_FIELD_CONFIG,
+        formKey,
+        formFieldKey,
+        newConfig
     };
 };
 

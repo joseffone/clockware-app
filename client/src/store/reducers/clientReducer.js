@@ -116,7 +116,7 @@ const clientReducer = (state = initState, action) => {
                 })
             });
 
-        case actionTypes.CLIENT_CHANGE_FORM_STATE:
+        case actionTypes.CLIENT_CHANGE_FORM_FIELD_VALUE:
             return rewriteObjectProps(state, {
                 forms: rewriteObjectProps(state.forms, {
                     [action.formKey]:  rewriteObjectProps(state.forms[action.formKey], {
@@ -124,6 +124,17 @@ const clientReducer = (state = initState, action) => {
                             value: action.value || action.event.target.value,
                             isValid: validateInput(action.value || action.event.target.value || '', state.forms[action.formKey][action.formFieldKey].config.restrictions),
                             touched: action.touched
+                        })
+                    })
+                })
+            });
+
+        case actionTypes.CLIENT_CHANGE_FORM_FIELD_CONFIG:
+            return rewriteObjectProps(state, {
+                forms: rewriteObjectProps(state.forms, {
+                    [action.formKey]: rewriteObjectProps(state.forms[action.formKey], {
+                        [action.formFieldKey]: rewriteObjectProps(state.forms[action.formKey][action.formFieldKey], {
+                            config: rewriteObjectProps(state.forms[action.formKey][action.formFieldKey].config, action.newConfig)
                         })
                     })
                 })

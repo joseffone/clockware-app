@@ -135,7 +135,7 @@ const adminReducer = (state = initState, action) => {
                 })
             });
         
-        case actionTypes.ADMIN_CHANGE_FORM_STATE:
+        case actionTypes.ADMIN_CHANGE_FORM_FIELD_VALUE:
                 return rewriteObjectProps(state, {
                     forms: rewriteObjectProps(state.forms, {
                         [action.model]:  rewriteObjectProps(state.forms[action.model], {

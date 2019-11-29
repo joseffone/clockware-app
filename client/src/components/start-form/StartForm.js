@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Form, Grid, Header, Message, Icon} from 'semantic-ui-react';
 import InputField from '../input-field';
-import {transformSelectOptions} from '../../util';
+import {transformSelectOptions, rewriteObjectProps} from '../../util';
 import {adminActionCreator, clientActionCreator} from '../../store/actions';
 import moment from 'moment';
 import styles from './styles.module.css';
@@ -19,9 +19,26 @@ class StartForm extends Component {
         this.onReloadFieldsDataHandler();
     }
 
-    componentDidUpdate () {
-        if (this.props.fetchErrorsCounter.length > 0) {
+    componentDidUpdate (prevProps) {
+        if (!this.props.sidebarView && this.props.fetchErrorsCounter.length > 0) {
             this.onReloadFieldsDataHandler(this.props.fetchErrorsCounter);
+        }
+        if (prevProps.fetchRequestsCounter.length > 0 &&
+            this.props.fetchRequestsCounter.length === 0 &&
+            this.props.fetchErrorsCounter.length === 0) {
+            for (const key in this.props.form) {
+                if (this.props.form[key].config.defaultOptions) {
+                    let options = transformSelectOptions(
+                        this.props.form[key].config.source, 
+                        this.props.models, {}, 
+                        this.props.form[key].config.defaultOptions
+                    );
+                    new Promise(handle => handle())
+                        .then(() => this.props.changeFormFieldConfig('clientStartForm', key, {
+                            defaultOptions: options
+                        }));
+                }
+            }
         }
     }
 
@@ -117,30 +134,35 @@ class StartForm extends Component {
                         size={this.props.sidebarView ? null : 'large'}
                         onSubmit={this.onFormSubmitHandler}
                     >
-                        {formFieldsArray.map(formField => (
-                            <Form.Field
-                                onFocus={() => this.setState({isFormSubmited: false})}
-                            >
-                                {this.props.sidebarView ? 
-                                    <label>{formField.config.label}</label> 
-                                : null}
-                                <InputField 
-                                    className={`${formField.value !== '' ? 'notempty' : null} ${this.props.sidebarView ? 'sidebarView' : null}`}
-                                    key={formField.key}
-                                    mobile={this.props.global.ui.mobile}
-                                    elementType={formField.elementType}
-                                    inputType={formField.config.type}
-                                    icon={formField.config.icon}
-                                    iconPosition={formField.config.iconPosition}
-                                    placeholder={formField.config.placeholder}
-                                    loading={this.checkOptionsLoading(formField.key) || !this.checkFetchSuccessByKey(formField.key)}
-                                    options={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions)}
-                                    text={transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0] ? transformSelectOptions(formField.config.source, this.props.models, formField.config.defaultOptions).filter(opt => opt.key === formField.value)[0].text : ''}
-                                    value={formField.value}
-                                    changed={(event, {value}) => this.props.changeFormState(event, 'clientStartForm', formField.key, {value})}
-                                />
-                            </Form.Field>
-                        ))}
+                        {formFieldsArray.map(formField => {
+                            let loading = this.checkOptionsLoading(formField.key) || !this.checkFetchSuccessByKey(formField.key);
+                            let options = formField.config.defaultOptions ? formField.config.defaultOptions : [];
+                            let text = options.filter(opt => opt.key === formField.value)[0] ? options.filter(opt => opt.key === formField.value)[0].text : '';
+                            return (
+                                <Form.Field
+                                    onFocus={() => this.setState({isFormSubmited: false})}
+                                >
+                                    {this.props.sidebarView ? 
+                                        <label>{formField.config.label}</label> 
+                                    : null}
+                                    <InputField 
+                                        className={`${formField.value !== '' ? 'notempty' : ''} ${this.props.sidebarView ? 'sidebarView' : ''}`}
+                                        key={formField.key}
+                                        mobile={this.props.global.ui.mobile}
+                                        elementType={formField.elementType}
+                                        inputType={formField.config.type}
+                                        icon={formField.config.icon}
+                                        iconPosition={formField.config.iconPosition}
+                                        placeholder={formField.config.placeholder}
+                                        loading={loading}
+                                        options={options}
+                                        text={text}
+                                        value={formField.value}
+                                        changed={(event, {value}) => this.props.changeFormFieldValue(event, 'clientStartForm', formField.key, {value})}
+                                    />
+                                </Form.Field>
+                            );
+                        })}
                         <Form.Field>
                             <Button 
                                 floated='right'
@@ -174,8 +196,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        refreshFormState: (formKey) => dispatch(clientActionCreator.refreshFormState(formKey)),
-        changeFormState: (event, formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormState(event, formKey, formFieldKey, value, touched)),
+        changeFormFieldValue: (event, formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormFieldValue(event, formKey, formFieldKey, value, touched)),
+        changeFormFieldConfig: (formKey, formFieldKey, newConfig) => dispatch(clientActionCreator.changeFormFieldConfig(formKey, formFieldKey, newConfig)), 
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
         setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
         hideStartForm: () => dispatch(clientActionCreator.hideStartForm())

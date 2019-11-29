@@ -1,0 +1,10 @@
+.wrapper {
+    width: 100%;
+    overflow: visible;
+}
+
+.mobileWrapper {
+    width: 100%;
+    overflow: visible;
+    align-self: flex-start;
+}

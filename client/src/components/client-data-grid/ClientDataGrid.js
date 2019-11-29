@@ -29,12 +29,16 @@ class ClientDataGrid extends Component {
                     }
                 }
                 if (this.props.admin.ui.fetchErrorsCounter.length > 0) {
-                    return this.props.setReloadDataTrigger(false);
+                    this.props.setListData([]);
+                    this.props.setReloadDataTrigger(false);
+                    return;
                 }
             }
         }
         if (prevProps.client.ui.reloadDataTrigger !== this.props.client.ui.reloadDataTrigger) {
-            if (!this.props.client.data.error.fetchError && !this.props.client.ui.reloadDataTrigger) {
+            if (this.props.admin.ui.fetchErrorsCounter.length === 0 && 
+                !this.props.client.data.error.fetchError && 
+                !this.props.client.ui.reloadDataTrigger) {
                 let agentsDataSet = transformDataSet('agents', this.props.admin.forms, this.props.admin.models);
                 let coverageDataSet = transformDataSet('coverage', this.props.admin.forms, this.props.admin.models);
                 let mergedDataSet = this.props.client.data.freeAgents.map(({id}) => {

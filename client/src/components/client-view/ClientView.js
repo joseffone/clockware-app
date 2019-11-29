@@ -12,7 +12,8 @@ class ClientView extends Component {
 
     clientContent = ({mobile, sbOpen, error, empty}) => {
         return (
-            <SideBarWrapper 
+            <SideBarWrapper
+                mobile={mobile} 
                 content={
                     <ClientActionMenu />
                 }
@@ -71,11 +72,12 @@ class ClientView extends Component {
                         <ClientContent 
                             mobile={this.props.global.ui.mobile}
                             sbOpen={this.props.global.ui.isSideBarOpen}
-                            error={!this.props.client.ui.reloadDataTrigger && (
-                                    this.props.client.data.error.fetchError || this.props.admin.ui.fetchErrorsCounter.length > 0
-                                )
+                            error={
+                                !this.props.client.ui.reloadDataTrigger && 
+                                (this.props.client.data.error.fetchError || 
+                                this.props.admin.ui.fetchErrorsCounter.length > 0)
                             }
-                            empty={!this.props.client.ui.reloadDataTrigger && this.props.client.list.ids.length === 0}
+                            empty={!this.props.client.ui.reloadDataTrigger && this.props.client.list.dataSet.length === 0}
                         />
                     }
                 </Segment>

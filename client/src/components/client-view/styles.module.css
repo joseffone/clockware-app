@@ -20,11 +20,6 @@
     padding: 0 !important;
 }
 
-.header :global .pushable {
-    width: 100%;
-    overflow: visible;
-}
-
 .footer {
     border: none !important;
     border-radius: unset !important;
