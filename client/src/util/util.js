@@ -222,7 +222,7 @@ export const transformDataSet = (model, forms, models) => {
                 markValue = models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0] ? models[forms[model].mark_id.config.source[0]].items.filter(({ id }) => id === item.mark_id)[0].mark_value : false;
                 return rewriteObjectProps(transformedItem, {
                     rating: markName === false || markValue === false ? false : `${markName} (${markValue})`,
-                    ratingValue: markValue === false ? false : markValue
+                    rating_value: markValue === false ? false : markValue
                 });
             
             case 'coverage':

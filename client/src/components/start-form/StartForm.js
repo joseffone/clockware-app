@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Button, Form, Grid, Header, Message, Icon} from 'semantic-ui-react';
 import InputField from '../input-field';
-import {transformSelectOptions, rewriteObjectProps} from '../../util';
-import {adminActionCreator, clientActionCreator} from '../../store/actions';
+import {connect} from 'react-redux';
+import {transformSelectOptions} from '../../util';
+import {adminActionCreator, clientActionCreator, globalActionCreator} from '../../store/actions';
 import moment from 'moment';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
@@ -11,8 +11,9 @@ import PropTypes from 'prop-types';
 class StartForm extends Component {
 
     state = {
-        isFormSubmited: false,
-        isFormDataValid: false
+        isFormSubmited: this.props.sidebarView ? true : false,
+        isFormDataValid: false,
+        isTouchedAfterSubmited: false
     }
 
     componentDidMount () {
@@ -39,6 +40,11 @@ class StartForm extends Component {
                         }));
                 }
             }
+        }
+        if (prevProps.form.city_id.value !== this.props.form.city_id.value ||
+            prevProps.form.clock_id.value !== this.props.form.clock_id.value ||
+            prevProps.form.start_date.value !== this.props.form.start_date.value) {
+            this.setState({isTouchedAfterSubmited: true});
         }
     }
 
@@ -85,10 +91,17 @@ class StartForm extends Component {
         }
     }
 
+    onDatePickerCloseHandler = () => {
+        if (this.props.global.ui.mobile && this.props.sidebarView) {
+            this.props.toggleSideBar();
+            this.props.toggleSideBarButtonPress();
+        }
+    }
+
     render() {
         const formFieldsArray = [];
         let isFormDataValid = true;
-        let messageContent = 'You must specify a city, a type of clock and date/time before search running';
+        let messageContent = 'You must specify a city, a type of clock and date/time before search running.';
 
         for (const key in this.props.form) {
             formFieldsArray.push({
@@ -101,11 +114,10 @@ class StartForm extends Component {
                 let startDate = moment(this.props.form[key].value, 'DD-MM-YYYY HH:mm');
                 if (startDate < currentDate) {
                     isFormDataValid = false;
-                    messageContent = 'Reserving date and time can not be erlier than the current one'
+                    messageContent = 'Reserving date and time can not be erlier than the current one.'
                 }
             }
         }
-
 
         return (
             <Grid 
@@ -120,6 +132,13 @@ class StartForm extends Component {
                         error
                         header='Warning!'
                         content={messageContent}
+                    />
+                    <Message 
+                        className={'sidebarView'}
+                        hidden={!(this.props.sidebarView && this.state.isTouchedAfterSubmited)}
+                        info
+                        header='Be aware!'
+                        content='Search params are changed, but displayed data is not updated. To fix this, click the <Find!> button below.'
                     />
                     {this.props.sidebarView ? null :
                         <Header 
@@ -158,7 +177,8 @@ class StartForm extends Component {
                                         options={options}
                                         text={text}
                                         value={formField.value}
-                                        changed={(event, {value}) => this.props.changeFormFieldValue(event, 'clientStartForm', formField.key, {value})}
+                                        onChange={(event, {value}) => this.props.changeFormFieldValue(event, 'clientStartForm', formField.key, {value})}
+                                        onClose={this.onDatePickerCloseHandler}
                                     />
                                 </Form.Field>
                             );
@@ -170,7 +190,7 @@ class StartForm extends Component {
                                 fluid={!this.props.sidebarView}
                                 secondary={!this.props.sidebarView}
                                 circular={!this.props.sidebarView}
-                                onClick={() => this.setState({isFormSubmited: true, isFormDataValid})}
+                                onClick={() => this.setState({isFormSubmited: true, isFormDataValid, isTouchedAfterSubmited: false})}
                             >
                                 Find
                                 <Icon name='right chevron' />
@@ -186,7 +206,6 @@ class StartForm extends Component {
 const mapStateToProps = state => {
     return {
         global: state.global,
-        auth: state.auth,
         form: state.client.forms.clientStartForm,
         models: state.admin.models,
         fetchRequestsCounter: state.admin.ui.fetchRequestsCounter,
@@ -200,7 +219,9 @@ const mapDispatchToProps = dispatch => {
         changeFormFieldConfig: (formKey, formFieldKey, newConfig) => dispatch(clientActionCreator.changeFormFieldConfig(formKey, formFieldKey, newConfig)), 
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
         setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
-        hideStartForm: () => dispatch(clientActionCreator.hideStartForm())
+        hideStartForm: () => dispatch(clientActionCreator.hideStartForm()),
+        toggleSideBar: () => dispatch(globalActionCreator.toggleSidebar()),
+        toggleSideBarButtonPress: () => dispatch(globalActionCreator.toggleSidebarButtonPress())
     };
 };
 

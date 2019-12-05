@@ -10,6 +10,7 @@
 
 .startForm :global .message {
     border-radius: 10rem;
+    margin-top: 0 !important;
 }
 
 .startForm :global .selection {

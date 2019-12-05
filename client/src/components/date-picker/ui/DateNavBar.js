@@ -1,11 +1,10 @@
 import React from 'react';
 import {Table, Dropdown, Icon} from 'semantic-ui-react';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import styles from '../styles.module.css';
+import PropTypes from 'prop-types';
 
 const DateNavBar = (props) => {
-
     let dateContext = moment(Object.assign({}, props.dateContext));
     let currentYear = dateContext.format('YYYY');
     let currentMonth  = dateContext.format('MMMM');
@@ -20,7 +19,7 @@ const DateNavBar = (props) => {
                 width={1}
                 selectable
                 content={dateContext.format('D')}
-                onClick={() => props.dayClicked(dateContext)}
+                onClick={() => props.onDayClick(dateContext)}
             />
         );
     }
@@ -40,7 +39,7 @@ const DateNavBar = (props) => {
                         content={
                             <Icon name='chevron left' />
                         }
-                        onClick={() => props.prevClicked(dateContext)}
+                        onClick={() => props.onPrevClick(dateContext)}
                     />
                     {dayCell}
                     <Table.Cell 
@@ -51,7 +50,7 @@ const DateNavBar = (props) => {
                                 scrolling 
                                 value={currentMonth} 
                                 options={monthsOptions}
-                                onChange={(event) => props.monthChanged(event, dateContext)}
+                                onChange={(event) => props.onMonthChange(event, dateContext)}
                             />
                         }
                     />
@@ -65,22 +64,21 @@ const DateNavBar = (props) => {
                         content={
                             <Icon name='chevron right' />
                         }
-                        onClick={() => props.nextClicked(dateContext)}
+                        onClick={() => props.onNextClick(dateContext)}
                     />
                 </Table.Row>
             </Table.Body>
         </Table>
     );
-
 };
 
 DateNavBar.propTypes = {
     withDay: PropTypes.bool,
     dateContext: PropTypes.object.isRequired,
-    nextClicked: PropTypes.func.isRequired,
-    prevClicked: PropTypes.func.isRequired,
-    monthChanged: PropTypes.func.isRequired,
-    dayClicked: PropTypes.func
+    onNextClick: PropTypes.func.isRequired,
+    onPrevClick: PropTypes.func.isRequired,
+    onMonthChange: PropTypes.func.isRequired,
+    onDayClick: PropTypes.func
 };
 
 export default DateNavBar;

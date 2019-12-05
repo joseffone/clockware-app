@@ -5,7 +5,7 @@ const initState = {
     forms: {},
     data: {
         freeAgents: [],
-        order: null,
+        reservation: null,
         error: {
             fetchError: null,
             createError: null
@@ -24,7 +24,7 @@ const initState = {
                 {
                     rating: {
                         operatorType: 'equal',
-                        dataKey: 'ratingValue',
+                        dataKey: 'rating_value',
                         isDate: false,
                         target: [],
                         options: []
@@ -56,9 +56,9 @@ const initState = {
                         value: 'last_name'
                     },
                     {
-                        key: 'ratingValue',
+                        key: 'rating_value',
                         text: 'Rating',
-                        value: 'ratingValue'
+                        value: 'rating_value'
                     }
                 ]
             },
@@ -107,7 +107,7 @@ const clientReducer = (state = initState, action) => {
 
     switch (action.type) {
 
-        case actionTypes.CLIENT_REFRESH_FORM_STATE:
+        case actionTypes.CLIENT_RESET_FORM_FIELDS:
             return rewriteObjectProps(state, {
                 forms: rewriteObjectProps(state.forms, {
                     [action.formKey]: {
@@ -184,6 +184,52 @@ const clientReducer = (state = initState, action) => {
                 }),
                 ui: rewriteObjectProps(state.ui, {
                     reloadDataTrigger: false
+                })
+            });
+
+        case actionTypes.CLIENT_CREATE_RESERVATION_REQUEST:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isCreating: true
+                    }),
+                    error: rewriteObjectProps(state.data.error, {
+                        createError: null
+                    }),
+                    reservation: null
+                })
+            });
+
+        case actionTypes.CLIENT_CREATE_RESERVATION_SUCCESS:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isCreating: false
+                    }),
+                    reservation: {...action.createdData}
+                })
+            });
+
+        case actionTypes.CLIENT_CREATE_RESERVATION_FAILURE:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isCreating: false
+                    }),
+                    reservation: null,
+                    error: rewriteObjectProps(state.data.error, {
+                        createError: action.error
+                    })
+                })
+            });
+
+        case actionTypes.CLIENT_RESET_RESERVING_RESULTS:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    reservation: null,
+                    error: rewriteObjectProps(state.data.error, {
+                        createError: null
+                    })
                 })
             });
 

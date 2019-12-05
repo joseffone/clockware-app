@@ -1,0 +1,7 @@
+.clientForm :global .header .icon {
+    margin-right: 1rem;
+}
+
+.clientForm :global .card .extra .label {
+    margin-right: 0.5rem;
+}

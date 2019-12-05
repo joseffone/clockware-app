@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Table, Checkbox, Button, Icon} from 'semantic-ui-react';
-import {adminActionCreator} from '../../store/actions';
-import {transformDataSet, applyParams} from '../../util';
 import AdminForm from '../admin-form';
 import FieldsCustomizer from './fields-customizer';
 import Pagination from '../pagination';
+import {connect} from 'react-redux';
+import {adminActionCreator} from '../../store/actions';
+import {transformDataSet, applyParams} from '../../util';
 import styles from './styles.module.css';
 
 class AdminDataGrid extends Component {
@@ -157,7 +157,7 @@ class AdminDataGrid extends Component {
                     }
                     mobile={this.props.global.ui.mobile}
                     fields={this.props.admin.lists[this.props.admin.ui.currentModel].params.fields}
-                    applied={this.onCustomFieldsApplyHandler}
+                    onApply={this.onCustomFieldsApplyHandler}
                 />
             </Table.HeaderCell>
         );
@@ -250,8 +250,8 @@ class AdminDataGrid extends Component {
                                     itemsPerPageOptions={this.props.admin.ui.itemsPerPageOptions}
                                     totalPages={totalPages}
                                     currentPage={currentPage}
-                                    itemsPerPageChanged={(event, { value }) => this.props.setItemsPerPage(this.props.admin.ui.currentModel, value)}
-                                    currentPageChanged={(event, { activePage }) => this.props.setCurrentPage(this.props.admin.ui.currentModel, activePage)}
+                                    onItemsPerPageChange={(event, { value }) => this.props.setItemsPerPage(this.props.admin.ui.currentModel, value)}
+                                    onCurrentPageChange={(event, { activePage }) => this.props.setCurrentPage(this.props.admin.ui.currentModel, activePage)}
                                 />
                             </Table.HeaderCell>
                         </Table.Row>

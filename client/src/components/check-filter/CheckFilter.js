@@ -4,11 +4,9 @@ import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 
 class CheckFilter extends Component {
-
-
     render() {
         let filters = [];
-        let {filterKey, checkedOptions, options, showAsRating, changed} = this.props;
+        let {filterKey, checkedOptions, options, showAsRating, onChange} = this.props;
 
         options.sort((a, b) => b - a).forEach((option, index) => {
             filters.push(
@@ -30,7 +28,7 @@ class CheckFilter extends Component {
                                 : option}
                             </label>
                         }
-                        onChange={(event, {checked}) => changed(filterKey, checked, event.target.id)}
+                        onChange={(event, {checked}) => onChange(filterKey, checked, event.target.id)}
                     />
               </List.Item>
             );
@@ -44,7 +42,7 @@ class CheckFilter extends Component {
                     as={List.Content}
                     checked={checkedOptions.length === options.length}
                     label={<label><b>All</b></label>}
-                    onChange={(event, {checked}) => changed(filterKey, checked)}
+                    onChange={(event, {checked}) => onChange(filterKey, checked)}
                 />
         </List.Item>
         );
@@ -68,7 +66,7 @@ CheckFilter.propTypes = {
     }).isRequired,
     checkedOptions: PropTypes.array.isRequired,
     options: PropTypes.array.isRequired,
-    changed: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
 };
 
 export default CheckFilter;

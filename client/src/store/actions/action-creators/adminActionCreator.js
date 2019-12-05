@@ -4,9 +4,9 @@ import {debounce, search, promiseToGetUniqueKeyValues, apiServicesConfig} from '
 
 const adminActionCreator = {};
 
-adminActionCreator.refreshFormState = (model) => {
+adminActionCreator.resetFormFields = (model) => {
     return {
-        type: actionTypes.ADMIN_REFRESH_FORM_STATE,
+        type: actionTypes.ADMIN_RESET_FORM_FIELDS,
         model
     };
 };

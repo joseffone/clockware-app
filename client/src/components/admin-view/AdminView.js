@@ -45,7 +45,7 @@ class AdminView extends Component {
                         mobile={this.props.global.ui.mobile}
                         currentModel={this.props.admin.ui.currentModel}
                         options={this.props.admin.ui.models}
-                        itemClicked={this.props.changeCurrentModel}
+                        onItemClick={this.props.changeCurrentModel}
                     />
                 }
                 dimmed={this.props.global.ui.mobile && this.props.global.ui.isSideBarOpen}

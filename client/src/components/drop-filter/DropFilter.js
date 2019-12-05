@@ -11,21 +11,21 @@ import PropTypes from 'prop-types';
     }
 
     componentDidMount() {
-        if (!this.props.date && this.props.updated) {
-            return new Promise(resolve => resolve()).then(() => this.props.updated(this.props.rank));
+        if (!this.props.date && this.props.onUpdate) {
+            return new Promise(resolve => resolve()).then(() => this.props.onUpdate(this.props.rank));
         }
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.rank !== this.props.rank || prevProps.value !== this.props.value) {
-            if (!this.props.date && this.props.updated) {
-                this.props.updated(this.props.rank);
+            if (!this.props.date && this.props.onUpdate) {
+                this.props.onUpdate(this.props.rank);
             }
         }
     }
 
     onSelectChangeHandler = (event, {value}) => {
-        this.setState({isSelectChanged: !this.state.isSelectChanged}, () => this.props.changed(event, {value}));
+        this.setState({isSelectChanged: !this.state.isSelectChanged}, () => this.props.onChange(event, {value}));
     }
 
     render () {
@@ -36,7 +36,7 @@ import PropTypes from 'prop-types';
                     <DatePicker 
                         {...this.props}
                         mobile={this.props.mobile}
-                        changed={this.props.changed}
+                        onChange={this.props.onChange}
                     />
                 :
                     <Select 
@@ -52,7 +52,7 @@ import PropTypes from 'prop-types';
                     basic 
                     circular 
                     icon='close' 
-                    onClick={this.props.closed}
+                    onClick={this.props.onClose}
                 />
             </Segment>
         );
@@ -66,9 +66,9 @@ DropFilter.propTypes = {
     description: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     rank: PropTypes.number.isRequired,
-    changed: PropTypes.func.isRequired,
-    closed: PropTypes.func.isRequired,
-    updated: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired
 };
 
 export default DropFilter;

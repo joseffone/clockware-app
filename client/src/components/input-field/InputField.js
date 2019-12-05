@@ -17,8 +17,8 @@ const InputField = (props) => {
                     iconPosition={props.iconPosition}
                     placeholder={props.placeholder}
                     value={props.value}
-                    onChange={props.changed}
-                    onBlur={props.blurred}
+                    onChange={props.onChange}
+                    onBlur={props.onBlur}
                 />
             );
         case 'textarea':
@@ -27,8 +27,8 @@ const InputField = (props) => {
                     disabled={props.disabled}
                     placeholder={props.placeholder}
                     value={props.value}
-                    onChange={props.changed}
-                    onBlur={props.blurred}
+                    onChange={props.onChange}
+                    onBlur={props.onBlur}
                 />
             );
         case 'select':
@@ -43,8 +43,8 @@ const InputField = (props) => {
                     options={props.options}
                     text={props.text}
                     value={props.value}
-                    onChange={props.changed}
-                    onBlur={props.blurred}
+                    onChange={props.onChange}
+                    onBlur={props.onBlur}
                  />
             );
         case 'datetime':
@@ -56,7 +56,8 @@ const InputField = (props) => {
                     disabled={props.disabled}
                     placeholder={props.placeholder}
                     value={props.value}
-                    changed={props.changed}
+                    onChange={props.onChange}
+                    onClose={props.onClose}
                 />
             );
         default:
@@ -81,8 +82,9 @@ InputField.propTypes = {
             value: PropTypes.any.isRequired
         })
     ),
-    changed: PropTypes.func,
-    blurred: PropTypes.func
+    onChange: PropTypes.func,
+    onBlur: PropTypes.func,
+    onClose: PropTypes.func
 };
 
 export default InputField;

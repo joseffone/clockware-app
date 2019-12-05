@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Item, Rating, Button, Icon, Label} from 'semantic-ui-react';
-import {adminActionCreator, clientActionCreator} from '../../store/actions';
-import {transformDataSet, rewriteObjectProps, applyParams} from '../../util';
 import SearchMenu from '../search-menu';
 import Pagination from '../pagination';
+import ClientForm from '../client-form';
+import {connect} from 'react-redux';
+import {adminActionCreator, clientActionCreator} from '../../store/actions';
+import {transformDataSet, rewriteObjectProps, applyParams, getUniqueKeyValues} from '../../util';
 import img from '../../images/secret-agent-icon.jpg';
-import moment from 'moment';
 import styles from './styles.module.css';
+import moment from 'moment';
 
 class ClientDataGrid extends Component {
 
@@ -44,7 +45,9 @@ class ClientDataGrid extends Component {
                 let mergedDataSet = this.props.client.data.freeAgents.map(({id}) => {
                     let agentDataItem = agentsDataSet.find(item => item.id === id);
                     return rewriteObjectProps(agentDataItem, {
-                        cities: coverageDataSet.filter(({agent_id}) => agent_id === id).map(({city_name}) => city_name)
+                        cities: coverageDataSet
+                            .filter(({agent_id}) => agent_id === id)
+                            .map(({city_name}) => city_name)
                     });
                 });
                 this.props.setListData(mergedDataSet);
@@ -110,7 +113,7 @@ class ClientDataGrid extends Component {
         if (this.props.client.data.freeAgents.length > 0) {
             totalPages = Math.ceil(totalItems/itemsPerPage);
             this.props.client.list.ids.forEach((id, index) => {
-                let dataSetItem = dataSet.filter(item => item.id === id)[0];
+                let dataSetItem = dataSet.find(item => item.id === id);
                 if (index >= startIndex && index <= endIndex && dataSetItem) {
                     items.push(
                         <Item 
@@ -120,8 +123,15 @@ class ClientDataGrid extends Component {
                             <Item.Content>
                                 <Item.Header>
                                     <Rating 
-                                        rating={dataSetItem.ratingValue} 
-                                        maxRating={5} 
+                                        rating={dataSetItem.rating_value} 
+                                        maxRating={
+                                            Math.max(
+                                                ...getUniqueKeyValues(
+                                                    this.props.admin.models.marks.items.filter(({deleted_at}) => deleted_at === null),
+                                                    'mark_value'
+                                                )
+                                            )
+                                        } 
                                         disabled 
                                     />
                                 </Item.Header>
@@ -129,12 +139,19 @@ class ClientDataGrid extends Component {
                                     {`${dataSetItem.first_name} ${dataSetItem.last_name}`}
                                 </Item.Description>
                                 <Item.Extra>
-                                    <Button
-                                        floated='right'
-                                    >
-                                        Reserve
-                                        <Icon name='right chevron' />
-                                    </Button>
+                                    <ClientForm 
+                                        id={id}
+                                        trigger={
+                                            (props) =>
+                                                <Button
+                                                    floated='right'
+                                                    {...props}
+                                                >
+                                                    Reserve
+                                                    <Icon name='right chevron' />
+                                                </Button>
+                                        }
+                                    />
                                     {dataSetItem.cities.map(city => <Label>{city}</Label>)}
                                 </Item.Extra>
                             </Item.Content>
@@ -150,8 +167,8 @@ class ClientDataGrid extends Component {
                         <SearchMenu 
                             mobile={this.props.global.ui.mobile}
                             options={this.props.client.list.params.sort.options}
-                            targetChanged={this.props.changeSortTarget}
-                            orderChanged={this.props.changeSortOrder}
+                            onTargetChange={this.props.changeSortTarget}
+                            onOrderChange={this.props.changeSortOrder}
                         />
                     </Item.Content>
                 </Item>
@@ -170,8 +187,8 @@ class ClientDataGrid extends Component {
                             itemsPerPageOptions={this.props.client.ui.itemsPerPageOptions}
                             totalPages={totalPages}
                             currentPage={currentPage}
-                            itemsPerPageChanged={(event, {value}) => this.props.setItemsPerPage(value)}
-                            currentPageChanged={(event, {activePage}) => this.props.setCurrentPage(activePage)}
+                            onItemsPerPageChange={(event, {value}) => this.props.setItemsPerPage(value)}
+                            onCurrentPageChange={(event, {activePage}) => this.props.setCurrentPage(activePage)}
                         />
                     </Item.Content>
                 </Item>

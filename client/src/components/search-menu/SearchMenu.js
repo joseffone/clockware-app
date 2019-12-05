@@ -10,12 +10,12 @@ class SearchMenu extends Component {
 
     onSetActiveItemHandler = (event, {name}) => {
         this.setState({activeItem: name}, () => {
-            return this.props.orderChanged ? this.props.orderChanged(name === 'asc' ? false : true) : null;
+            return this.props.onOrderChange ? this.props.onOrderChange(name === 'asc' ? false : true) : null;
         });
     };
 
     onSelectKeyHandler = (event, {value}) => {
-        return this.props.targetChanged ? this.props.targetChanged(value === '' ? null : value) : null;
+        return this.props.onTargetChange ? this.props.onTargetChange(value === '' ? null : value) : null;
     };
 
     render() {
@@ -78,8 +78,8 @@ SearchMenu.propTypes = {
             value: PropTypes.any.isRequired
         })
     ),
-    targetChanged: PropTypes.func,
-    orderChanged: PropTypes.func
+    onTargetChange: PropTypes.func,
+    onOrderChange: PropTypes.func
 };
 
 export default SearchMenu;

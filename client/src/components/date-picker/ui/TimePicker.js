@@ -1,11 +1,10 @@
 import React from 'react';
 import {Table} from 'semantic-ui-react';
 import moment from 'moment';
-import PropTypes from 'prop-types';
 import styles from '../styles.module.css';
+import PropTypes from 'prop-types';
 
 const TimePicker = (props) => {
-
     let dateContext = moment(Object.assign({}, props.dateContext));
     let currentHour = dateContext.format('H');
     let currentMinutes  = dateContext.format('m');
@@ -20,7 +19,7 @@ const TimePicker = (props) => {
                     selectable
                     active = {(h === +currentHour) ? true : false}
                     content={moment().hours(h).minutes(0).format('HH:mm')}
-                    onClick={(event) => props.timeClicked(event, dateContext)}
+                    onClick={(event) => props.onTimeClick(event, dateContext)}
                 />
             );
             if ((h + 1) % 4 === 0) {
@@ -42,7 +41,7 @@ const TimePicker = (props) => {
                     selectable
                     active = {(m === Math.round(currentMinutes/5)*5) ? true : false}
                     content={moment(dateContext).minutes(m).format('HH:mm')}
-                    onClick={(event) => props.timeClicked(event, dateContext)}
+                    onClick={(event) => props.onTimeClick(event, dateContext)}
                 />
             );
             if (m % 3 === 1) {
@@ -74,7 +73,7 @@ const TimePicker = (props) => {
 
 TimePicker.propTypes = {
     dateContext: PropTypes.object.isRequired,
-    timeClicked: PropTypes.func.isRequired,
+    onTimeClick: PropTypes.func.isRequired,
     view: PropTypes.oneOf(['hours', 'minutes']).isRequired
 };
 

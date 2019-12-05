@@ -18,7 +18,24 @@ const clientFormTypesConfig = {
         })
     },
     clientOrderForm: {
-        
+        email: inputElemTypesConfig.email({
+            label: 'E-Mail',
+            placeholder: 'Enter E-Mail Address'
+        }),
+        first_name: inputElemTypesConfig.textField({
+            label: 'First Name',
+            placeholder: 'Enter First Name',
+            restrictions: {
+                requared: true
+            }
+        }),
+        last_name: inputElemTypesConfig.textField({
+            label: 'Last Name',
+            placeholder: 'Enter Last Name',
+            restrictions: {
+                requared: true
+            }
+        })
     }
 };
 

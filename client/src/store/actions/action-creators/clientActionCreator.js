@@ -4,9 +4,9 @@ import {apiServicesConfig} from '../../../util';
 
 const clientActionCreator = {};
 
-clientActionCreator.refreshFormState = (formKey) => {
+clientActionCreator.resetFormFields = (formKey) => {
     return {
-        type: actionTypes.CLIENT_REFRESH_FORM_STATE,
+        type: actionTypes.CLIENT_RESET_FORM_FIELDS,
         formKey
     };
 };
@@ -58,6 +58,66 @@ clientActionCreator.fetchFreeAgentsRequest = (queryString) => {
                 .catch(error => {
                     dispatch(clientActionCreator.fetchFreeAgentsFailure(error));
                 });
+    };
+};
+
+clientActionCreator.createReservationSuccess = (createdData) => {
+    return {
+        type: actionTypes.CLIENT_CREATE_RESERVATION_SUCCESS,
+        createdData
+    };
+};
+
+clientActionCreator.createReservationFailure = (error) => {
+    return {
+        type: actionTypes.CLIENT_CREATE_RESERVATION_FAILURE,
+        error
+    };
+};
+
+clientActionCreator.createReservationRequest = (reservationData) => {
+    return dispatch => {
+        dispatch({
+            type: actionTypes.CLIENT_CREATE_RESERVATION_REQUEST
+        });
+        apiServiceController(apiServicesConfig.crud.createDataOptions)
+            .createData(null, 'users', {
+                email: reservationData.email,
+                first_name: reservationData.first_name,
+                last_name: reservationData.last_name,
+                password: reservationData.email
+            }).then(response => {
+                let clientId = response.data[0].id;
+                apiServiceController(apiServicesConfig.auth.loginUserOptions)
+                    .loginUser({email: reservationData.email, password: reservationData.email})
+                        .then(response => {
+                            let accToken = response.data.access_token;
+                            apiServiceController(apiServicesConfig.crud.createDataOptions)
+                                .createData(accToken, 'orders', {
+                                    ...reservationData,
+                                    user_id: clientId
+                                })
+                                .then(response => {
+                                    dispatch(clientActionCreator.createReservationSuccess(response.data));
+                                    apiServiceController(apiServicesConfig.auth.logoutUserOptions).logoutUser(accToken);
+                                })
+                                .catch(error => {
+                                    dispatch(clientActionCreator.createReservationFailure(error));
+                                });
+                        })
+                        .catch(error => {
+                            dispatch(clientActionCreator.createReservationFailure(error));
+                        });
+            })
+            .catch(error => {
+                dispatch(clientActionCreator.createReservationFailure(error));
+            });
+    };
+};
+
+clientActionCreator.resetReservingResults = () => {
+    return {
+        type: actionTypes.CLIENT_RESET_RESERVING_RESULTS
     };
 };
 

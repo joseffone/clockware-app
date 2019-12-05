@@ -17,7 +17,7 @@ const AdminModelsMenu = (props) => {
                     key={index}
                     name={item.name}
                     active={props.currentModel === item.name}
-                    onClick={props.itemClicked}
+                    onClick={props.onItemClick}
                 >
                     <Icon name={item.icon} />
                     {item.name.split('')[0].toUpperCase() + item.name.split('').slice(1).join('')}
@@ -36,7 +36,7 @@ AdminModelsMenu.propTypes = {
             icon: PropTypes.string.isRequired
         })
     ).isRequired,
-    itemClicked: PropTypes.func.isRequired
+    onItemClick: PropTypes.func.isRequired
 };
 
 export default AdminModelsMenu;

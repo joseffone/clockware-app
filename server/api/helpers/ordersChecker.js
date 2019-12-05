@@ -50,16 +50,16 @@ export default (db, modelName, dataObj, transaction, flag) => {
                             }).then((orders) => {
                                 //check if conflict orders exist
                                 if (orders.length !== 0) {
-                                    return reject({errMessage: 'Unable to create order with provided time interval. Agent is reserved'});
+                                    return reject({errMessage: 'Unable to create data. Chosen agent is already reserved for provided time interval.'});
                                 }
                                 return resolve(transaction);
                             });
                         }
                     }
-                    return reject({errMessage: 'Time interval does not match to provided clock type'});
+                    return reject({errMessage: 'Time interval does not match to provided clock type.'});
                 });
             }
-            return reject({errMessage: 'Chosen agent is not available in provided city'});
+            return reject({errMessage: 'Chosen agent is not available in provided city.'});
         });
 
     });

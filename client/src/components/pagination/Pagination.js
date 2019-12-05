@@ -17,7 +17,7 @@ const CustomPagination = (props) => {
                     defaultValue={props.itemsPerPage}
                     text={'' + props.itemsPerPage}
                     inline
-                    onChange={props.itemsPerPageChanged}
+                    onChange={props.onItemsPerPageChange}
                 />
             }
             {props.totalItems > 0 ? <span>{props.startIndex + 1}-{props.endIndex + 1 > props.totalItems ? props.totalItems : props.endIndex + 1} of {props.totalItems}</span> : <span>0-0 of 0</span>}
@@ -31,7 +31,7 @@ const CustomPagination = (props) => {
                 boundaryRange={1}
                 siblingRange={1}
                 floated='right'
-                onPageChange={props.currentPageChanged}
+                onPageChange={props.onCurrentPageChange}
             />
         </div>
     );
@@ -52,8 +52,8 @@ CustomPagination.propTypes = {
     ).isRequired,
     totalPages: PropTypes.number.isRequired,
     currentPage: PropTypes.number.isRequired,
-    itemsPerPageChanged: PropTypes.func.isRequired,
-    currentPageChanged: PropTypes.func.isRequired
+    onItemsPerPageChange: PropTypes.func.isRequired,
+    onCurrentPageChange: PropTypes.func.isRequired
 };
 
 export default CustomPagination;

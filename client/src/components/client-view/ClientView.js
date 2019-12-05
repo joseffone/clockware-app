@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Segment, Grid, Message} from 'semantic-ui-react';
 import SideBarWrapper from '../../hoc/sidebar-wrapper';
 import ClientActionMenu from '../client-action-menu';
 import StartForm from '../start-form';
 import ClientDataGrid from '../client-data-grid';
 import Footer from '../footer';
+import {connect} from 'react-redux';
 import styles from './styles.module.css';
 
 class ClientView extends Component {

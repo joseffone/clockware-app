@@ -26,7 +26,7 @@ import PropTypes from 'prop-types';
         });
     }
 
-    onModalOpenHandler = () => {
+    onTriggerClickHandler = () => {
         this.setState({
             isModalOpen: true
         });
@@ -41,7 +41,7 @@ import PropTypes from 'prop-types';
     onApplyButtonClickHandler = () => {
         this.setState({
             isModalOpen: false
-        }, () => this.props.applied ? this.props.applied(this.state.fields) : null);
+        }, () => this.props.onApply ? this.props.onApply(this.state.fields) : null);
     }
 
     onCheckboxChangeHandler = (event, {checked, id}) => {
@@ -59,19 +59,12 @@ import PropTypes from 'prop-types';
         });
     }
 
-    onMoveUpButtonClickHandler = (index) => {
+    onMoveButtonClickHandler = (index, f) => {
+        let flag = typeof f !== 'number' || f === 0 ? 1 : f;
         let fields = this.state.fields.slice();
-        let nextIndex = index === 0 ? fields.length - 1 : index - 1;
-        let currentElem = fields[index];
-        let nextElem = fields[nextIndex];
-        fields[index] = nextElem;
-        fields[nextIndex] = currentElem;
-        this.setState({fields: fields});
-    }
-
-    onMoveDownButtonClickHandler = (index) => {
-        let fields = this.state.fields.slice();
-        let nextIndex = index === fields.length - 1 ? 0 : index + 1;
+        let nextIndex = flag < 0 ? 
+            index === fields.length - 1 ? 0 : index + 1 :
+            index === 0 ? fields.length - 1 : index - 1;
         let currentElem = fields[index];
         let nextElem = fields[nextIndex];
         fields[index] = nextElem;
@@ -111,7 +104,7 @@ import PropTypes from 'prop-types';
                             as='a'
                             basic
                             compact
-                            onClick={() => this.onMoveUpButtonClickHandler(index)}
+                            onClick={() => this.onMoveButtonClickHandler(index, 1)}
                         >
                             <Icon name='arrow up' />
                         </Button>
@@ -119,7 +112,7 @@ import PropTypes from 'prop-types';
                             as='a'
                             basic
                             compact
-                            onClick={() => this.onMoveDownButtonClickHandler(index)}
+                            onClick={() => this.onMoveButtonClickHandler(index, -1)}
                         >
                             <Icon name='arrow down' />
                         </Button>
@@ -133,7 +126,7 @@ import PropTypes from 'prop-types';
                 trigger={
                     <Trigger 
                         className={styles.trigger}
-                        onClick={this.onModalOpenHandler} 
+                        onClick={this.onTriggerClickHandler} 
                     />
                 }
                 size='tiny'
@@ -169,7 +162,7 @@ import PropTypes from 'prop-types';
 
 FieldsCustomizer.propTypes = {
     mobile: PropTypes.bool,
-    applied: PropTypes.func,
+    onApply: PropTypes.func,
     fields: PropTypes.array,
     trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired
 };

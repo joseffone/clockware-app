@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom'
-import {connect} from 'react-redux';
-import {authActionCreator, globalActionCreator} from '../../store/actions';
 import {Responsive, Segment} from 'semantic-ui-react';
 import NavBar from '../../components/navbar';
+import {connect} from 'react-redux';
+import {authActionCreator, globalActionCreator} from '../../store/actions';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 

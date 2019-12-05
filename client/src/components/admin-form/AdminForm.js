@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Modal, Form, Button, Message, Icon, Confirm} from 'semantic-ui-react';
 import InputField from '../input-field';
 import ConfirmPassword from './confirm-password';
+import {connect} from 'react-redux';
 import {adminActionCreator, authActionCreator} from '../../store/actions';
 import {transformSelectOptions, adminFormTypesConfig} from '../../util';
 import moment from 'moment';
@@ -38,14 +38,24 @@ class AdminForm extends Component {
                     for (const key in this.props.models[this.props.model].updatedItem) {
                         if (!prevProps.models[this.props.model].updatedItem) {
                             updateFlag = true;
-                            this.props.changeFormFieldValue({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
+                            this.props.changeFormFieldValue(
+                                {target: {value: null}}, 
+                                this.props.model, 
+                                key, 
+                                {value: this.props.models[this.props.model].updatedItem[key]}
+                            );
                             continue;
                         }
                         if (!!prevProps.models[this.props.model].updatedItem[key] &&
                             !!this.props.models[this.props.model].updatedItem[key] &&
                             (prevProps.models[this.props.model].updatedItem[key] !== this.props.models[this.props.model].updatedItem[key])) {
                             updateFlag = true;
-                            this.props.changeFormFieldValue(null, this.props.model, key, {value: this.props.models[this.props.model].updatedItem[key]});
+                            this.props.changeFormFieldValue(
+                                {target: {value: null}}, 
+                                this.props.model, 
+                                key, 
+                                {value: this.props.models[this.props.model].updatedItem[key]}
+                            );
                         }
                     }
                 }
@@ -55,14 +65,24 @@ class AdminForm extends Component {
                     for (const key in this.props.models[this.props.model].createdItem) {
                         if (!prevProps.models[this.props.model].createdItem) {
                             createFlag = true;
-                            this.props.changeFormFieldValue({target: {value: null}}, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
+                            this.props.changeFormFieldValue(
+                                {target: {value: null}}, 
+                                this.props.model, 
+                                key, 
+                                {value: this.props.models[this.props.model].createdItem[key]}
+                            );
                             continue;
                         }
                         if (!!prevProps.models[this.props.model].createdItem[key] &&
                             !!this.props.models[this.props.model].createdItem[key] &&
                             (prevProps.models[this.props.model].createdItem[key] !== this.props.models[this.props.model].createdItem[key])) {
                             createFlag = true;
-                            this.props.changeFormFieldValue(null, this.props.model, key, {value: this.props.models[this.props.model].createdItem[key]});
+                            this.props.changeFormFieldValue(
+                                {target: {value: null}}, 
+                                this.props.model, 
+                                key, 
+                                {value: this.props.models[this.props.model].createdItem[key]}
+                            );
                         }
                     }
                 }
@@ -75,8 +95,45 @@ class AdminForm extends Component {
             }
             if (deleteFlag) {
                 this.setState({lastRequestType: null, isFormSubmited: false, update: false}, () => {
-                    this.props.refreshFormState(this.props.model);
+                    this.props.resetFormFields(this.props.model);
                 });
+            }
+        }
+        if (this.props.model === 'orders') {
+            if (this.props.forms[this.props.model].clock_id.value !== '') {
+                if ((prevProps.forms[this.props.model].start_date.value !== this.props.forms[this.props.model].start_date.value &&
+                    this.props.forms[this.props.model].start_date.value !== '') ||
+                    (prevProps.forms[this.props.model].clock_id.value !== this.props.forms[this.props.model].clock_id.value &&
+                    this.props.forms[this.props.model].start_date.value !== '')
+                ) {
+                    this.props.changeFormFieldValue(
+                        {target: {value: null}}, 
+                        this.props.model, 
+                        'expiration_date', 
+                        {
+                            value: moment(this.props.forms[this.props.model].start_date.value, 'DD-MM-YYYY HH:mm')
+                                .add(this.props.models.clocks.items.find(({id}) => id === this.props.forms[this.props.model].clock_id.value).hours_of_repair, 'h')
+                                .format('DD-MM-YYYY HH:mm')
+                        }
+                    );
+                }
+                if ((prevProps.forms[this.props.model].expiration_date.value !== this.props.forms[this.props.model].expiration_date.value &&
+                    this.props.forms[this.props.model].expiration_date.value !== '') ||
+                    (prevProps.forms[this.props.model].clock_id.value !== this.props.forms[this.props.model].clock_id.value &&
+                    this.props.forms[this.props.model].start_date.value === '' &&
+                    this.props.forms[this.props.model].expiration_date.value !== '')
+                ) {
+                    this.props.changeFormFieldValue(
+                        {target: {value: null}}, 
+                        this.props.model, 
+                        'start_date', 
+                        {
+                            value: moment(this.props.forms[this.props.model].expiration_date.value, 'DD-MM-YYYY HH:mm')
+                                .subtract(this.props.models.clocks.items.find(({id}) => id === this.props.forms[this.props.model].clock_id.value).hours_of_repair, 'h')
+                                .format('DD-MM-YYYY HH:mm')
+                        }
+                    );
+                }
             }
         }
     }
@@ -120,7 +177,7 @@ class AdminForm extends Component {
         this.onReloadFieldsDataHandler(this.props.fetchErrorsCounter);
     }
 
-    onModalOpenHandler = () => {
+    onTriggerClickHandler = () => {
         this.setState({
             isModalOpen: true,
             isFormSubmited: false,
@@ -144,11 +201,9 @@ class AdminForm extends Component {
         this.props.changeFormFieldValue({target: {value: ''}}, this.props.model, key, {value: null}, true);
     }
 
-    onModalCloseHandler = () => {
-        this.setState({
-            isModalOpen: false
-        }, () => {
-            this.props.refreshFormState(this.props.model);
+    onCloseButtonClickHandler = () => {
+        this.setState({isModalOpen: false}, () => {
+            this.props.resetFormFields(this.props.model);
             if (this.props.refreshAfterClose) {
                 this.props.setReloadDataTrigger(this.props.model, true);
             }
@@ -156,7 +211,7 @@ class AdminForm extends Component {
     }
 
     onFormLoadHandler = () => {
-        this.props.refreshFormState(this.props.model);
+        this.props.resetFormFields(this.props.model);
         this.onReloadFieldsDataHandler();
         if (this.props.update) {
             for (const key in this.props.update) {
@@ -208,7 +263,6 @@ class AdminForm extends Component {
     }
 
     render () {
-
         const Trigger = this.props.trigger;
         const formFieldsArray = [];
         let isFormDataValid = true;
@@ -287,7 +341,7 @@ class AdminForm extends Component {
                 className={styles.adminForm}
                 trigger={
                     <Trigger 
-                        onClick={this.onModalOpenHandler} 
+                        onClick={this.onTriggerClickHandler} 
                     />
                 }
                 size={this.props.model === 'authentication' ? 'mini' : 'tiny'}
@@ -335,8 +389,8 @@ class AdminForm extends Component {
                                             options={options}
                                             text={text}
                                             value={formField.value}
-                                            changed={(event, {value}) => this.props.changeFormFieldValue(event, this.props.model, formField.key, {value})}
-                                            blurred={(event) => this.props.changeFormFieldValue(event, this.props.model, formField.key, {
+                                            onChange={(event, {value}) => this.props.changeFormFieldValue(event, this.props.model, formField.key, {value})}
+                                            onBlur={(event) => this.props.changeFormFieldValue(event, this.props.model, formField.key, {
                                                 value: formField.elementType === 'select' ? formField.value : null
                                             })}
                                         />
@@ -429,7 +483,7 @@ class AdminForm extends Component {
                             <Form.Field>
                                 <Button
                                     fluid
-                                    onClick={this.onModalCloseHandler}
+                                    onClick={this.onCloseButtonClickHandler}
                                 >
                                     <Icon name='close' />
                                     Close
@@ -457,7 +511,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        refreshFormState: (model) => dispatch(adminActionCreator.refreshFormState(model)),
+        resetFormFields: (model) => dispatch(adminActionCreator.resetFormFields(model)),
         changeFormFieldValue: (event, model, formFieldKey, { value }, touched) => dispatch(adminActionCreator.changeFormFieldValue(event, model, formFieldKey, value, touched)),
         loginUser: (loginData) => dispatch(authActionCreator.loginRequest(loginData)),
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
@@ -471,7 +525,7 @@ const mapDispatchToProps = dispatch => {
 AdminForm.propTypes = {
     refreshAfterClose: PropTypes.bool,
     model: PropTypes.oneOf(Object.keys(adminFormTypesConfig)).isRequired,
-    trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired,
+    trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.elementType]).isRequired,
     update: PropTypes.object
 };
 

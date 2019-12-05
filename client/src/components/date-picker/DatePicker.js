@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import moment from 'moment';
+import {Grid, Popup, Modal, Input, Button, Container} from 'semantic-ui-react';
 import DayPicker from './ui/DayPicker';
 import TimePicker from './ui/TimePicker';
 import DateNavBar from './ui/DateNavBar';
-import {Grid, Popup, Modal, Input, Button, Container} from 'semantic-ui-react';
-import PropTypes from 'prop-types';
+import moment from 'moment';
 import styles from './styles.module.css';
+import PropTypes from 'prop-types';
 
 class DatePicker extends Component {
     inputFieldRef = React.createRef();
@@ -21,8 +21,17 @@ class DatePicker extends Component {
     }
 
     onDatePickerChangeHandler = () => {
-        if (this.props.changed) {
-            this.props.changed({target: {value: null}}, {value: this.state.value});
+        if (this.props.onChange) {
+            this.props.onChange({target: {value: null}}, {value: this.state.value});
+        }
+        if (this.props.onClose) {
+            this.props.onClose();
+        }
+    }
+
+    onDatePickerCloseHandler = () => {
+        if (this.props.onClose) {
+            this.props.onClose();
         }
     }
 
@@ -140,8 +149,10 @@ class DatePicker extends Component {
             {
                 isDatePickerOpen: false,
                 isMouseOverDatePicker: false
-            }, 
-            this.onDatePickerChangeHandler
+            }, () => {
+                this.onDatePickerChangeHandler();
+ 
+            }
         );
     }
 
@@ -176,13 +187,13 @@ class DatePicker extends Component {
         if (this.state.showDays) {
             currentNavBar = <DateNavBar 
                 dateContext={this.state.dateContext}
-                nextClicked={this.onNavBarNextClickHandler}
-                prevClicked={this.onNavBarPrevClickHandler}
-                monthChanged={this.onNavBarMonthChangeHandler}
+                onNextClick={this.onNavBarNextClickHandler}
+                onPrevClick={this.onNavBarPrevClickHandler}
+                onMonthChange={this.onNavBarMonthChangeHandler}
             />;
             currentPicker = <DayPicker 
                 dateContext={this.state.dateContext} 
-                dayClicked={this.onDayClickHandler} 
+                onDayClick={this.onDayClickHandler} 
             />;
         }
 
@@ -190,17 +201,17 @@ class DatePicker extends Component {
             currentNavBar = <DateNavBar 
                 withDay 
                 dateContext={this.state.dateContext} 
-                nextClicked={this.onNavBarNextClickHandler}
-                prevClicked={this.onNavBarPrevClickHandler}
-                monthChanged={this.onNavBarMonthChangeHandler}
-                dayClicked={this.onNavBarDayClickHandler}
+                onNextClick={this.onNavBarNextClickHandler}
+                onPrevClick={this.onNavBarPrevClickHandler}
+                onMonthChange={this.onNavBarMonthChangeHandler}
+                onDayClick={this.onNavBarDayClickHandler}
             />;
             
             if (this.state.showHours) {
                 currentPicker = <TimePicker 
                     view='hours' 
                     dateContext={this.state.dateContext} 
-                    timeClicked={this.onHoursClickHandler} 
+                    onTimeClick={this.onHoursClickHandler} 
                 />;
             }
     
@@ -208,7 +219,7 @@ class DatePicker extends Component {
                 currentPicker = <TimePicker 
                     view='minutes' 
                     dateContext={this.state.dateContext} 
-                    timeClicked={this.onMinutesClickHandler} 
+                    onTimeClick={this.onMinutesClickHandler} 
                 />;
             }
         }
@@ -222,7 +233,7 @@ class DatePicker extends Component {
                 iconPosition='left' 
                 icon='calendar alternate outline' 
                 placeholder={this.props.placeholder ? this.props.placeholder : 'Date Time'}
-                value={this.props.changed ? this.props.value : this.state.value}
+                value={this.props.onChange ? this.props.value : this.state.value}
                 onKeyPress={(event) => event.preventDefault()}
                 onClick={this.onDatePickerInputFocusHandler}
                 onFocus={this.onDatePickerInputFocusHandler}
@@ -233,9 +244,10 @@ class DatePicker extends Component {
         if (this.props.mobile) {
             currentConfig = (
                 <Modal
+                    className={styles.datePickerModal}
                     open={this.state.isDatePickerOpen}
                     trigger={inputTrigger}
-                    className={styles.datePickerModal}
+                    onClose={this.onDatePickerCloseHandler}
                 >
                     <Grid
                         textAlign='center'
@@ -266,13 +278,14 @@ class DatePicker extends Component {
         } else {
             currentConfig = (
                 <Popup
+                    className={styles.datePickerPopup}
                     open={this.state.isDatePickerOpen}
                     trigger={inputTrigger}
-                    className={styles.datePickerPopup}
                     onMouseOver={this.onMouseOverDatePickerHandler}
                     onMouseOut={this.onMouseOutDatePickerHandler}
                     onClick={this.onDatePickerClickHandler}
                     onOpen={this.onPopupOpenHandler}
+                    onClose={this.onDatePickerCloseHandler}
                 >
                     {currentNavBar}
                     {currentPicker}
@@ -290,7 +303,8 @@ DatePicker.propTypes = {
     disabled: PropTypes.bool,
     placeholder: PropTypes.string,
     value: PropTypes.string,
-    changed: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onClose: PropTypes.func
 };
 
 export default DatePicker;

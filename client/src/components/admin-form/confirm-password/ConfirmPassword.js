@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Modal, Input, Button, Icon} from 'semantic-ui-react';
-import PropTypes from 'prop-types';
 import styles from './styles.module.css';
+import PropTypes from 'prop-types';
 
 class ConfirmPassword extends Component {
 

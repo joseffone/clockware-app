@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Menu, Dropdown, Icon, Transition, Input} from 'semantic-ui-react';
 import AdminForm from '../admin-form';
-import ConfirmDelete from './confirm-delete';
+import ConfirmAction from '../confirm-action';
 import DropFilter from '../drop-filter';
 import {connect} from 'react-redux';
 import {adminActionCreator} from '../../store/actions';
@@ -189,20 +189,47 @@ class AdminActionMenu extends Component {
                                         options={options.payload}
                                         text={target}
                                         value={target}
-                                        closed={this.onFilterCloseButtonClickHandler}
-                                        updated={(tailIndex) => this.onFilterUpdatedHandler(filterKey, dataKey, tailIndex)}
-                                        changed={(event, {value}) => this.onFilterChangeHandler(filterKey, value)}
+                                        onClose={this.onFilterCloseButtonClickHandler}
+                                        onUpdate={(tailIndex) => this.onFilterUpdatedHandler(filterKey, dataKey, tailIndex)}
+                                        onChange={(event, {value}) => this.onFilterChangeHandler(filterKey, value)}
                                     />
                                 </Menu.Item>
                             );
                         })}
                     </Menu>
                 : null}
-                <ConfirmDelete
+                <ConfirmAction
                     open={this.state.isConfirmDeleteOpen}
                     error={this.props.admin.models[this.props.admin.ui.currentModel].error.deleteError}
-                    deleting={this.props.admin.models[this.props.admin.ui.currentModel].loading.isDeleting}
-                    onClose={() => this.setState({isConfirmDeleteOpen: false})}
+                    acting={this.props.admin.models[this.props.admin.ui.currentModel].loading.isDeleting}
+                    loaderText={'Deleting...'}
+                    message={{
+                        initial: {
+                            header: 'Delete confirmation',
+                            content: 'You are going to delete selected entries. Do you confirm this action?'
+                        },
+                        success: {
+                            header: 'Delete action succeed',
+                            content: 'Entries were deleted successfully!'
+                        },
+                        failure: [
+                            {
+                                errCode: 'default',
+                                header: 'Cannot delete data',
+                                content: 'Something went wrong while acting data. The action cannot be completed successfully.'
+                            },
+                            {
+                                errCode: 403,
+                                header: 'No access to delete data',
+                                content: 'There are restrictions for your account to delete data from this register.'
+                            },
+                            {
+                                errCode: 404,
+                                header: 'Data is not available',
+                                content: 'Selected entries are not available. They might be deleted by other users.'
+                            }
+                        ]
+                    }}
                     onCancel={() => this.setState({isConfirmDeleteOpen: false})}
                     onConfirm={this.onConfirmDeleteHandler}
                     onCommit={() => this.setState({isConfirmDeleteOpen: false}, () => this.onCommitDeleteHandler())}

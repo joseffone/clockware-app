@@ -4,6 +4,7 @@ import StartForm from '../start-form';
 import CheckFilter from '../check-filter';
 import {connect} from 'react-redux';
 import {clientActionCreator} from '../../store/actions';
+import {getUniqueKeyValues} from '../../util';
 import styles from './styles.module.css';
 
 class ClientActionMenu extends Component {
@@ -79,10 +80,19 @@ class ClientActionMenu extends Component {
                     >
                         <CheckFilter
                             filterKey={'rating'}
-                            showAsRating={{maxRating: 5}}
+                            showAsRating={
+                                {
+                                    maxRating: Math.max(
+                                        ...getUniqueKeyValues(
+                                            this.props.admin.models.marks.items.filter(({deleted_at}) => deleted_at === null), 
+                                            'mark_value'
+                                        )
+                                    )
+                                }
+                            }
                             checkedOptions={this.getFilterParam('rating', 'target')}
                             options={this.getFilterParam('rating', 'options')}
-                            changed={this.props.changeFilterTarget}
+                            onChange={this.props.changeFilterTarget}
                         />
                     </Accordion.Content>
                     <Accordion.Title
@@ -100,7 +110,7 @@ class ClientActionMenu extends Component {
                             filterKey={'cities'}
                             checkedOptions={this.getFilterParam('cities', 'target')}
                             options={this.getFilterParam('cities', 'options')}
-                            changed={this.props.changeFilterTarget}
+                            onChange={this.props.changeFilterTarget}
                         />
                     </Accordion.Content>
                 </Accordion.Content>
@@ -111,7 +121,8 @@ class ClientActionMenu extends Component {
 
 const mapStateToProps = state => {
     return {
-        client: state.client
+        client: state.client,
+        admin: state.admin
     };
 }
 

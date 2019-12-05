@@ -26,7 +26,7 @@ class SideBar extends Component {
                 visible={this.props.global.ui.isSideBarOpen}
                 width='thin'
                 onHide={this.props.global.ui.mobile ? this.props.toggleSideBar : null}
-                onHidden={this.props.global.ui.mobile &&  this.props.global.ui.isSideBarButtonPressed ? this.props.toggleSideBarButtonPress : null}
+                onHidden={this.props.global.ui.mobile && this.props.global.ui.isSideBarButtonPressed ? this.props.toggleSideBarButtonPress : null}
             >
                 {this.props.content}
             </Sidebar>
