@@ -73,7 +73,7 @@ SearchMenu.propTypes = {
     text: PropTypes.string,
     options: PropTypes.arrayOf(
         PropTypes.shape({
-            key: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+            key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
             text: PropTypes.string.isRequired,
             value: PropTypes.any.isRequired
         })

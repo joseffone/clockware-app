@@ -30,20 +30,26 @@ import PropTypes from 'prop-types';
 
     render () {
         return (
-            <Segment compact className={styles.dropFilter}>
+            <Segment 
+                compact 
+                className={styles.dropFilter}
+            >
                 <Label attached='top left'>{this.props.description}</Label>
-                {this.props.date ?
-                    <DatePicker 
-                        {...this.props}
+                {this.props.date 
+                    ? <DatePicker
+                        loading={this.props.loading}
                         mobile={this.props.mobile}
+                        placeholder={this.props.placeholder}
+                        value={this.props.value}
                         onChange={this.props.onChange}
                     />
-                :
-                    <Select 
-                        {...this.props}
+                    : <Select
+                        loading={this.props.loading}
                         options={this.props.options ? this.props.options.map(opt => {
                             return {key: opt, text: opt, value: opt};
                         }) : []}
+                        placeholder={this.props.placeholder}
+                        text={this.props.text}
                         onChange={this.onSelectChangeHandler}
                     />
                 }
@@ -52,7 +58,7 @@ import PropTypes from 'prop-types';
                     basic 
                     circular 
                     icon='close' 
-                    onClick={this.props.onClose}
+                    onClick={this.props.onDelete}
                 />
             </Segment>
         );
@@ -60,14 +66,17 @@ import PropTypes from 'prop-types';
 }
 
 DropFilter.propTypes = {
-    mobile: PropTypes.bool,
-    loading: PropTypes.bool,
     date: PropTypes.bool,
     description: PropTypes.string.isRequired,
+    loading: PropTypes.bool,
+    mobile: PropTypes.bool,
     options: PropTypes.array.isRequired,
+    placeholder: PropTypes.string,
     rank: PropTypes.number.isRequired,
+    text: PropTypes.string,
+    value: PropTypes.any,
     onChange: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired
 };
 

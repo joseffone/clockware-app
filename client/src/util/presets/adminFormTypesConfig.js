@@ -261,6 +261,22 @@ const adminFormTypesConfig = {
         expiration_date: inputElemTypesConfig.dateTime({
             label: 'Expiration Date'
         }),
+        confirmed: inputElemTypesConfig.select({
+            label: 'Confirmed',
+            placeholder: 'Set confirmation status',
+            defaultOptions: [
+                {
+                    key: 'No',
+                    text: 'No',
+                    value: 'No'
+                },
+                {
+                    key: 'Yes',
+                    text: 'Yes',
+                    value: 'Yes'
+                }
+            ]
+        }),
         note: inputElemTypesConfig.textArea({
             label: 'Note',
             placeholder: 'Enter Notes'

@@ -79,7 +79,7 @@ for (const key in adminFormTypesConfig) {
     };
     initState.models[key] = {
         items: [],
-        createdItem: null,
+        createdItem: [],
         updatedItem: null,
         deletedItemIds: [],
         error: {
@@ -231,7 +231,7 @@ const adminReducer = (state = initState, action) => {
                         loading: rewriteObjectProps(state.models[action.model].loading, {
                             isCreating: false
                         }),
-                        createdItem: {...action.createdData[0]}
+                        createdItem: [...action.createdData]
                     })
                 })
             });

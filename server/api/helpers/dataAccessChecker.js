@@ -2,7 +2,6 @@
 
 export default (userData, action, modelName, db) => {
     return new Promise((resolve, reject) => {
-
         if (!userData) {
             let roleId, clientRoleId;
             //user is not defined; set roles by default
@@ -55,6 +54,5 @@ export default (userData, action, modelName, db) => {
                 reject(error);
             }
         }
-
     });
 };

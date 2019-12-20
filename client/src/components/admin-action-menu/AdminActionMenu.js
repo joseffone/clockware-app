@@ -74,7 +74,7 @@ class AdminActionMenu extends Component {
                 animation='fade left' 
                 duration={500}
             >
-                {this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length > 0 ?
+                {this.props.admin.lists[this.props.admin.ui.currentModel].selectedIds.length > 0 &&
                     <Item
                         as='a'
                         onClick={() => this.setState({isConfirmDeleteOpen: true})}
@@ -82,7 +82,7 @@ class AdminActionMenu extends Component {
                         <Icon name='delete' color='red' />
                         Delete
                     </Item>
-                : null}
+                }
             </Transition.Group>,
             <AdminForm
                 key='add'
@@ -176,20 +176,21 @@ class AdminActionMenu extends Component {
                             let filterKey = Object.keys(filter)[0];
                             let {rank, dataKey, isDate, options, target} = Object.values(filter)[0];
                             return (
-                                <Menu.Item>
+                                <Menu.Item
+                                    key={filterKey}
+                                >
                                     <DropFilter
-                                        key={filterKey}
-                                        mobile={this.props.global.ui.mobile}
-                                        loading={options.isLoading && !isDate}
                                         id={filterKey}
-                                        rank={rank}
                                         date={isDate}
                                         description={filter[filterKey].description}
-                                        placeholder={filter[filterKey].description}
+                                        loading={options.isLoading && !isDate}
+                                        mobile={this.props.global.ui.mobile}
                                         options={options.payload}
+                                        placeholder={filter[filterKey].description}
+                                        rank={rank}
                                         text={target}
                                         value={target}
-                                        onClose={this.onFilterCloseButtonClickHandler}
+                                        onDelete={this.onFilterCloseButtonClickHandler}
                                         onUpdate={(tailIndex) => this.onFilterUpdatedHandler(filterKey, dataKey, tailIndex)}
                                         onChange={(event, {value}) => this.onFilterChangeHandler(filterKey, value)}
                                     />
@@ -209,7 +210,7 @@ class AdminActionMenu extends Component {
                             content: 'You are going to delete selected entries. Do you confirm this action?'
                         },
                         success: {
-                            header: 'Delete action succeed',
+                            header: 'Delete action succeeded',
                             content: 'Entries were deleted successfully!'
                         },
                         failure: [

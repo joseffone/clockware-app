@@ -50,7 +50,7 @@ export default (db, modelName, dataObj, transaction, flag) => {
                             }).then((orders) => {
                                 //check if conflict orders exist
                                 if (orders.length !== 0) {
-                                    return reject({errMessage: 'Unable to create data. Chosen agent is already reserved for provided time interval.'});
+                                    return reject({errMessage: 'Order creating terminated. Chosen agent is already reserved for provided time interval.'});
                                 }
                                 return resolve(transaction);
                             });

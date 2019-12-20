@@ -17,7 +17,7 @@ const clientFormTypesConfig = {
             placeholder: 'Pick the date and time'
         })
     },
-    clientOrderForm: {
+    clientSignupForm: {
         email: inputElemTypesConfig.email({
             label: 'E-Mail',
             placeholder: 'Enter E-Mail Address'
@@ -35,6 +35,24 @@ const clientFormTypesConfig = {
             restrictions: {
                 requared: true
             }
+        }),
+        password: inputElemTypesConfig.password({
+            label: 'Password',
+            placeholder: 'Enter Password (at least 8 symbols)'
+        }),
+        duplicate: inputElemTypesConfig.password({
+            label: 'Password Duplicate',
+            placeholder: 'Enter Password Duplicate'
+        })
+    },
+    clientLoginForm: {
+        email: inputElemTypesConfig.email({
+            label: 'E-Mail',
+            placeholder: 'Enter E-Mail Address'
+        }),
+        password: inputElemTypesConfig.password({
+            label: 'Password',
+            placeholder: 'Enter Password (at least 8 symbols)'
         })
     }
 };

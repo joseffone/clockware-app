@@ -499,8 +499,19 @@ const tableFieldsConfig = {
             ]
         },
         {
+            name: 'confirmed',
+            alias: 'Confirmed',
+            visible: true,
+            sortable: true,
+            isDate: false,
+            filterable: true,
+            filterOperation: [
+                {key: 'confirmed', type: 'equal', descriptor: 'Confirmed'}
+            ]
+        },
+        {
             name: 'note',
-            alias: 'Comment',
+            alias: 'Note',
             visible: true,
             sortable: false,
             isDate: false,

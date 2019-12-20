@@ -15,6 +15,10 @@ const apiServicesConfig = {
         deleteDataOptions: {
             repeat: 3,
             delay: 1
+        },
+        sendEmailOptions: {
+            repeat: 3,
+            delay: 1
         }
     },
     auth: {

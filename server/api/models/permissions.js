@@ -21,7 +21,7 @@ export default (sequelize, DataTypes) => {
         },
         model: {
             type: DataTypes.ENUM,
-            defaultValue:'permissions',
+            defaultValue: 'permissions',
             values: [
                 'users',
                 'roles',

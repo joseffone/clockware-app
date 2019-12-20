@@ -11,11 +11,12 @@ class Layout extends Component {
 
     componentDidMount () {
         this.props.onRefreshTokensHandler(localStorage.getItem('refresh_token'));
-        this.props.history.replace(this.props.auth.pathToAutoRedirect);
     }
 
     componentDidUpdate (prevProps) {
-        if (prevProps.auth.pathToAutoRedirect !== this.props.auth.pathToAutoRedirect) {
+        if (prevProps.auth.pathToAutoRedirect !== this.props.auth.pathToAutoRedirect || 
+            (this.props.location.pathname !== this.props.auth.pathToAutoRedirect && 
+            this.props.location.pathname === '/admin')) {
             this.props.history.replace(this.props.auth.pathToAutoRedirect);
         }
     }

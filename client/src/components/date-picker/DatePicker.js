@@ -226,14 +226,15 @@ class DatePicker extends Component {
 
         inputTrigger = (
             <Input
-                {...this.props}
                 ref={this.inputFieldRef}
-                fluid={this.props.fluid}
                 disabled={this.props.disabled}
+                fluid={this.props.fluid}
+                icon='calendar alternate outline'
                 iconPosition='left' 
-                icon='calendar alternate outline' 
+                loading={this.props.loading}
                 placeholder={this.props.placeholder ? this.props.placeholder : 'Date Time'}
-                value={this.props.onChange ? this.props.value : this.state.value}
+                readOnly={this.props.readOnly}
+                value={this.props.onChange ? this.props.value && this.props.value !== '' ? this.props.value : '' : this.state.value}
                 onKeyPress={(event) => event.preventDefault()}
                 onClick={this.onDatePickerInputFocusHandler}
                 onFocus={this.onDatePickerInputFocusHandler}
@@ -298,10 +299,12 @@ class DatePicker extends Component {
 };
 
 DatePicker.propTypes = {
-    mobile: PropTypes.bool,
-    fluid: PropTypes.bool,
     disabled: PropTypes.bool,
+    loading: PropTypes.bool,
+    fluid: PropTypes.bool,
+    mobile: PropTypes.bool,
     placeholder: PropTypes.string,
+    readOnly: PropTypes.bool,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     onClose: PropTypes.func

@@ -57,6 +57,12 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: false
         },
+        confirmed: {
+            type: DataTypes.ENUM,
+            defaultValue: 'No',
+            values: ['No', 'Yes'],
+            allowNull: false
+        },
         note: {
             type: DataTypes.TEXT
         },

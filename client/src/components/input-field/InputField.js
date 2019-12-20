@@ -8,14 +8,14 @@ const InputField = (props) => {
         case 'input':
             return (
                 <Input 
-                    {...props}
-                    type={props.inputType} 
                     fluid 
                     disabled={props.disabled}
-                    readOnly={props.readOnly}
                     icon={props.icon}
                     iconPosition={props.iconPosition}
+                    loading={props.loading}
                     placeholder={props.placeholder}
+                    readOnly={props.readOnly}
+                    type={props.inputType}
                     value={props.value}
                     onChange={props.onChange}
                     onBlur={props.onBlur}
@@ -26,6 +26,7 @@ const InputField = (props) => {
                 <TextArea
                     disabled={props.disabled}
                     placeholder={props.placeholder}
+                    readOnly={props.readOnly}
                     value={props.value}
                     onChange={props.onChange}
                     onBlur={props.onBlur}
@@ -34,13 +35,13 @@ const InputField = (props) => {
         case 'select':
             return (
                 <Select
-                    {...props}
                     fluid
                     search
                     disabled={props.disabled}
-                    placeholder={props.placeholder}
+                    icon={props.icon}
                     loading={props.loading}
                     options={props.options}
+                    placeholder={props.placeholder}
                     text={props.text}
                     value={props.value}
                     onChange={props.onChange}
@@ -50,11 +51,14 @@ const InputField = (props) => {
         case 'datetime':
             return (
                 <DatePicker 
-                    {...props}
                     fluid
-                    mobile={props.mobile}
                     disabled={props.disabled}
+                    icon={props.icon}
+                    iconPosition={props.iconPosition}
+                    loading={props.loading}
+                    mobile={props.mobile}
                     placeholder={props.placeholder}
+                    readOnly={props.readOnly}
                     value={props.value}
                     onChange={props.onChange}
                     onClose={props.onClose}
@@ -66,22 +70,22 @@ const InputField = (props) => {
 };
 
 InputField.propTypes = {
-    mobile: PropTypes.bool,
     disabled: PropTypes.bool,
-    readOnly: PropTypes.bool,
-    loading: PropTypes.bool,
     icon: PropTypes.string,
     iconPosition: PropTypes.oneOf(['left', 'right']),
-    placeholder: PropTypes.string,
-    text: PropTypes.string,
-    value: PropTypes.any,
+    loading: PropTypes.bool,
+    mobile: PropTypes.bool,
     options: PropTypes.arrayOf(
         PropTypes.shape({
-            key: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+            key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
             text: PropTypes.string.isRequired,
             value: PropTypes.any.isRequired
         })
     ),
+    placeholder: PropTypes.string,
+    readOnly: PropTypes.bool,
+    text: PropTypes.string,
+    value: PropTypes.any,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     onClose: PropTypes.func

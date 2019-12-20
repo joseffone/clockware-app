@@ -6,6 +6,8 @@ import loginUserService from './loginUserService';
 import logoutUserService from './logoutUserService';
 import refreshTokensService from './refreshTokensService';
 import fetchFreeAgentsDataService from './fetchFreeAgentsDataService';
+import sendEmailService from './sendEmailService';
+import confirmReservationService from './confirmReservationService';
 
 const apiServiceController = (options) => {
     let repeatNumber = 1;
@@ -66,6 +68,12 @@ const apiServiceController = (options) => {
         ),
         fetchFreeAgentsData: (queryString) => customize(
             () => fetchFreeAgentsDataService(queryString), repeatNumber, timeDelay
+        ),
+        sendEmail: (accessToken, emailData) => customize(
+            () => sendEmailService(accessToken, emailData), repeatNumber, timeDelay
+        ),
+        confirmReservation: (confirmToken) => customize(
+            () => confirmReservationService(confirmToken), repeatNumber, timeDelay
         )
     };
 };

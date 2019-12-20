@@ -80,7 +80,7 @@ class ConfirmAction extends Component {
 
 ConfirmAction.propTypes = {
     open: PropTypes.bool.isRequired,
-    error: PropTypes.object.isRequired,
+    error: PropTypes.object,
     acting: PropTypes.bool.isRequired,
     icon: PropTypes.shape({
         initial: PropTypes.string.isRequired,
@@ -98,13 +98,12 @@ ConfirmAction.propTypes = {
         }).isRequired,
         failure: PropTypes.arrayOf(
             PropTypes.shape({
-                errCode: PropTypes.oneOf(['default', PropTypes.number]).isRequired,
+                errCode: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
                 header: PropTypes.string.isRequired,
                 content: PropTypes.string.isRequired
             }).isRequired
         ).isRequired
     }),
-    onClose: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired,
     onCommit: PropTypes.func.isRequired

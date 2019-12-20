@@ -39,21 +39,21 @@ const CustomPagination = (props) => {
 
 CustomPagination.propTypes = {
     mobile: PropTypes.bool,
-    totalItems: PropTypes.number.isRequired,
-    startIndex: PropTypes.number.isRequired,
-    endIndex: PropTypes.number.isRequired,
-    itemsPerPage: PropTypes.number.isRequired,
+    totalItems: PropTypes.number,
+    startIndex: PropTypes.number,
+    endIndex: PropTypes.number,
+    itemsPerPage: PropTypes.number,
     itemsPerPageOptions: PropTypes.arrayOf(
         PropTypes.shape({
-            key: PropTypes.oneOfType(PropTypes.number, PropTypes.string).isRequired,
+            key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
             text: PropTypes.string.isRequired,
             value: PropTypes.any.isRequired
         })
-    ).isRequired,
-    totalPages: PropTypes.number.isRequired,
-    currentPage: PropTypes.number.isRequired,
-    onItemsPerPageChange: PropTypes.func.isRequired,
-    onCurrentPageChange: PropTypes.func.isRequired
+    ),
+    totalPages: PropTypes.number,
+    currentPage: PropTypes.number,
+    onItemsPerPageChange: PropTypes.func,
+    onCurrentPageChange: PropTypes.func
 };
 
 export default CustomPagination;

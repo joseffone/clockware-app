@@ -29,7 +29,8 @@ export default (db) => {
                         access_token_exp: tokensController.getExpTime(accessToken),
                         refresh_token: refreshToken,
                         refresh_token_iat: tokensController.getIatTime(refreshToken),
-                        refresh_token_exp: tokensController.getExpTime(refreshToken)
+                        refresh_token_exp: tokensController.getExpTime(refreshToken),
+                        user_id: userId
                     });
                 }).catch((err) => {
                     errorWrapper(err, res, null);

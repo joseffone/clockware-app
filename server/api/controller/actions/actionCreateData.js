@@ -41,7 +41,8 @@ export default (db, modelName) => {
             queryParams.where.agent_id = req.body.agent_id;
             queryParams.where.start_date = req.body.start_date;
             queryParams.where.expiration_date = req.body.expiration_date;
-            queryParams.defaults.note = req.body.note;
+            queryParams.defaults.confirmed = req.body.confirmed || 'No';
+            queryParams.defaults.note = req.body.note || '';
             break;
         case 'users':
             queryParams.where.email = req.body.email;

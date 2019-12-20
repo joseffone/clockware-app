@@ -7,16 +7,16 @@ class ConfirmPassword extends Component {
 
     state = {
         passwordToConfirm: '',
-        isPasswordValid: true
+        isPasswordConfirmed: true
     }
 
     passInput = React.createRef();
 
     onConfirmButtonClickHandler = () => {
         if (this.state.passwordToConfirm === this.props.currentPasswordValue) {
-            return this.setState({isPasswordValid: true}, () => this.props.onConfirm());
+            return this.setState({isPasswordConfirmed: true}, () => this.props.onConfirm());
         }
-        return this.setState({isPasswordValid: false});
+        return this.setState({isPasswordConfirmed: false});
     }
 
     render () {
@@ -41,10 +41,10 @@ class ConfirmPassword extends Component {
                             inverted
                             transparent
                             className={styles.confirmPasswordInput}
-                            onChange={(event, { value }) => this.setState({passwordToConfirm: value, isPasswordValid: true})}
+                            onChange={(event, { value }) => this.setState({passwordToConfirm: value, isPasswordConfirmed: true})}
                         />
                     </p>
-                    {this.state.isPasswordValid ? null : <p className={styles.confirmPasswordErrorMessage}>Password is not valid!</p>}
+                    {this.state.isPasswordConfirmed ? null : <p className={styles.confirmPasswordErrorMessage}>Password is not valid!</p>}
                 </Modal.Content>
                 <Modal.Actions>
                     <Button 

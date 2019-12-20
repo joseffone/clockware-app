@@ -5,3 +5,25 @@
 .clientForm :global .card .extra .label {
     margin-right: 0.5rem;
 }
+
+.clientForm :global .warning .button {
+    display: contents;
+    color: #573a08;
+}
+
+
+.clientForm :global .warning .button:hover {
+    color: chocolate;
+}
+
+.clientForm :global .negative .button {
+    box-shadow: 0 0 0 1px #e0b4b4 inset, 0 0 0 0 transparent;
+    background-color: #e0b4b4;
+    color: #fff6f6;
+}
+
+.clientForm :global .negative .button:hover {
+    box-shadow: 0 0 0 1px #9f3a38 inset, 0 0 0 0 transparent;
+    background-color: #9f3a38;
+    color: #fff6f6;
+}

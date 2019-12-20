@@ -66,18 +66,17 @@ class ClientView extends Component {
                     className={`${styles.header} ${this.props.global.ui.isSideBarOpen ? 'sideBarOpen' : null}`}
                     loading={this.props.client.ui.reloadDataTrigger}
                 >
-                    {this.props.client.ui.isStartPageShown ?
-                        <StartForm />
-                    :
-                        <ClientContent 
-                            mobile={this.props.global.ui.mobile}
-                            sbOpen={this.props.global.ui.isSideBarOpen}
-                            error={
-                                !this.props.client.ui.reloadDataTrigger && 
-                                (this.props.client.data.error.fetchError || 
-                                this.props.admin.ui.fetchErrorsCounter.length > 0)
-                            }
-                            empty={!this.props.client.ui.reloadDataTrigger && this.props.client.list.dataSet.length === 0}
+                    {this.props.client.ui.isStartPageShown 
+                        ? <StartForm />
+                        : <ClientContent 
+                                mobile={this.props.global.ui.mobile}
+                                sbOpen={this.props.global.ui.isSideBarOpen}
+                                error={
+                                    !this.props.client.ui.reloadDataTrigger && 
+                                    (this.props.client.data.error.fetchError || 
+                                    this.props.admin.ui.fetchErrorsCounter.length > 0)
+                                }
+                                empty={!this.props.client.ui.reloadDataTrigger && this.props.client.list.dataSet.length === 0}
                         />
                     }
                 </Segment>

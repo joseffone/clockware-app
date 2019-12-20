@@ -61,6 +61,59 @@ clientActionCreator.fetchFreeAgentsRequest = (queryString) => {
     };
 };
 
+clientActionCreator.sendEmailSuccess = (emailInfo) => {
+    return {
+        type: actionTypes.CLIENT_SEND_EMAIL_SUCCESS,
+        emailInfo
+    };
+};
+
+clientActionCreator.sendEmailFailure = (error) => {
+    return {
+        type: actionTypes.CLIENT_SEND_EMAIL_FAILURE,
+        error
+    };
+};
+
+clientActionCreator.sendEmailRequest = (accessToken, emailData) => {
+    return async dispatch => {
+        let accessTokenToUse = accessToken;
+        dispatch({
+            type: actionTypes.CLIENT_SEND_EMAIL_REQUEST
+        });
+        if (!accessTokenToUse) {
+            await apiServiceController(apiServicesConfig.auth.loginUserOptions)
+                .loginUser({email: emailData.email, password: emailData.password})
+                    .then(response => {
+                        accessTokenToUse = response.data.access_token;
+                    })
+                    .catch(error => {
+                        dispatch(clientActionCreator.sendEmailFailure({...error, stage: 'email'}));
+                    });
+            if (!accessTokenToUse) return;
+        }
+        apiServiceController(apiServicesConfig.crud.sendEmailOptions)
+            .sendEmail(accessTokenToUse, {
+                order_id: emailData.order_id,
+                link: emailData.link,
+                city_name: emailData.city_name,
+                clock_type: emailData.clock_type,
+                agent_first_name: emailData.agent_first_name,
+                agent_last_name: emailData.agent_last_name,
+                start_date: emailData.start_date,
+                expiration_date: emailData.expiration_date
+            })
+                .then(response => {
+                    dispatch(clientActionCreator.sendEmailSuccess(response.data));
+                    apiServiceController(apiServicesConfig.auth.logoutUserOptions).logoutUser(accessTokenToUse);
+                })
+                .catch(error => {
+                    dispatch(clientActionCreator.sendEmailFailure({...error, stage: 'email'}));
+                    apiServiceController(apiServicesConfig.auth.logoutUserOptions).logoutUser(accessTokenToUse);
+                });
+    };
+};
+
 clientActionCreator.createReservationSuccess = (createdData) => {
     return {
         type: actionTypes.CLIENT_CREATE_RESERVATION_SUCCESS,
@@ -75,43 +128,112 @@ clientActionCreator.createReservationFailure = (error) => {
     };
 };
 
-clientActionCreator.createReservationRequest = (reservationData) => {
-    return dispatch => {
+clientActionCreator.createReservationRequest = (reservationData, isSignup) => {
+    return async dispatch => {
+        let isUserCreated = false, isSignupSucceed = false;
         dispatch({
             type: actionTypes.CLIENT_CREATE_RESERVATION_REQUEST
         });
-        apiServiceController(apiServicesConfig.crud.createDataOptions)
-            .createData(null, 'users', {
-                email: reservationData.email,
-                first_name: reservationData.first_name,
-                last_name: reservationData.last_name,
-                password: reservationData.email
-            }).then(response => {
-                let clientId = response.data[0].id;
-                apiServiceController(apiServicesConfig.auth.loginUserOptions)
-                    .loginUser({email: reservationData.email, password: reservationData.email})
+        if (isSignup) {
+            await apiServiceController(apiServicesConfig.crud.createDataOptions)
+                .createData(null, 'users', {
+                    email: reservationData.email,
+                    first_name: reservationData.first_name,
+                    last_name: reservationData.last_name,
+                    password: reservationData.password
+                }).then(response => {
+                    isSignupSucceed = true;
+                    isUserCreated = response.data[1];
+                })
+                .catch(error => {
+                    dispatch(clientActionCreator.createReservationFailure({...error, stage: 'signup'}));
+                });
+            if (!isSignupSucceed) return;
+        }
+        apiServiceController(apiServicesConfig.auth.loginUserOptions)
+            .loginUser({email: reservationData.email, password: reservationData.password})
+                .then(response => {
+                    let accessToken = response.data.access_token;
+                    apiServiceController(apiServicesConfig.crud.createDataOptions)
+                        .createData(accessToken, 'orders', {
+                            user_id: response.data.user_id,
+                            clock_id: reservationData.clock_id,
+                            city_id: reservationData.city_id,
+                            agent_id: reservationData.agent_id,
+                            start_date: reservationData.start_date,
+                            expiration_date: reservationData.expiration_date,
+                            note: reservationData.note
+                        })
                         .then(response => {
-                            let accToken = response.data.access_token;
-                            apiServiceController(apiServicesConfig.crud.createDataOptions)
-                                .createData(accToken, 'orders', {
-                                    ...reservationData,
-                                    user_id: clientId
-                                })
-                                .then(response => {
-                                    dispatch(clientActionCreator.createReservationSuccess(response.data));
-                                    apiServiceController(apiServicesConfig.auth.logoutUserOptions).logoutUser(accToken);
-                                })
-                                .catch(error => {
-                                    dispatch(clientActionCreator.createReservationFailure(error));
-                                });
+                            dispatch(clientActionCreator.createReservationSuccess(response.data));
+                            dispatch(clientActionCreator.sendEmailRequest(accessToken, {
+                                order_id: response.data[0].id,
+                                link: reservationData.link,
+                                city_name: reservationData.city_name,
+                                clock_type: reservationData.clock_type,
+                                agent_first_name: reservationData.agent_first_name,
+                                agent_last_name: reservationData.agent_last_name,
+                                start_date: reservationData.start_date,
+                                expiration_date: reservationData.expiration_date
+                            }));
                         })
                         .catch(error => {
-                            dispatch(clientActionCreator.createReservationFailure(error));
+                            let isTerminated = error.response.data.error 
+                                ? error.response.data.error.message.indexOf('Order creating terminated.') !== -1 
+                                : false;
+                            dispatch(clientActionCreator.createReservationFailure({
+                                ...error, 
+                                stage: isUserCreated && isSignup 
+                                    ? isTerminated 
+                                        ? 'reserve-after-singup-terminated' 
+                                        : 'reserve-after-singup' 
+                                    : isTerminated 
+                                        ? 'reserve-terminated' 
+                                        : 'reserve'
+                            }));
+                            apiServiceController(apiServicesConfig.auth.logoutUserOptions).logoutUser(accessToken);
                         });
-            })
-            .catch(error => {
-                dispatch(clientActionCreator.createReservationFailure(error));
-            });
+                })
+                .catch(error => {
+                    dispatch(clientActionCreator.createReservationFailure({
+                        ...error, 
+                        stage: !isUserCreated && isSignup 
+                            ? 're-signup' 
+                            : isUserCreated && isSignup 
+                                ? 'login-after-signup' 
+                                : 'login'
+                    }));
+                });
+    };
+};
+
+clientActionCreator.confirmReservationSuccess = (updatedData) => {
+    return {
+        type: actionTypes.CLIENT_CONFIRM_RESERVATION_SUCCESS,
+        updatedData
+    };
+};
+
+clientActionCreator.confirmReservationFailure = (error) => {
+    return {
+        type: actionTypes.CLIENT_CONFIRM_RESERVATION_FAILURE,
+        error
+    };
+};
+
+clientActionCreator.confirmReservationRequest = (confirmToken) => {
+    return dispatch => {
+        dispatch({
+            type: actionTypes.CLIENT_CONFIRM_RESERVATION_REQUEST
+        });
+        apiServiceController(apiServicesConfig.crud.updateDataOptions)
+            .confirmReservation(confirmToken)
+                .then(response => {
+                    dispatch(clientActionCreator.confirmReservationSuccess(response.data));
+                })
+                .catch(error => {
+                    dispatch(clientActionCreator.confirmReservationFailure(error));
+                });
     };
 };
 
@@ -195,6 +317,12 @@ clientActionCreator.changeFilterTarget = (filterKey, checked, id) => {
         filterKey,
         checked,
         id
+    };
+};
+
+clientActionCreator.toggleActiveForm = () => {
+    return {
+        type: actionTypes.CLIENT_TOGGLE_ACTIVE_FORM
     };
 };
 

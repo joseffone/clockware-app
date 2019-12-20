@@ -19,33 +19,27 @@ export default {
         },
         clocks: {
             admin: ['read', 'create', 'update', 'delete'],
-            user: ['read'],
-            client: ['read']
+            user: ['read']
         },
         cities: {
             admin: ['read', 'create', 'update', 'delete'],
-            user: ['read'],
-            client: ['read']
+            user: ['read']
         },
         marks: {
             admin: ['read', 'create', 'update', 'delete'],
-            user: ['read'],
-            client: ['read']
+            user: ['read']
         },
         agents: {
             admin: ['read', 'create', 'update', 'delete'],
-            user: ['read'],
-            client: ['read']
+            user: ['read']
         },
         coverage: {
             admin: ['read', 'create', 'update', 'delete'],
-            user: ['read'],
-            client: ['read']
+            user: ['read']
         },
         orders: {
             admin: ['read', 'create', 'update', 'delete'],
-            user: ['read'],
-            client: ['read', 'create']
+            client: ['create', 'update']
         }
     },
     defaultAdmin: {

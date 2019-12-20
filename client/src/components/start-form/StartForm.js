@@ -127,7 +127,7 @@ class StartForm extends Component {
             >
                 <Grid.Column>
                     <Message 
-                        className={`${this.props.sidebarView ? 'sidebarView' : null}`}
+                        className={`${this.props.sidebarView ? 'sidebarView' : ''}`}
                         hidden={this.state.isFormSubmited ? isFormDataValid : true}
                         error
                         header='Warning!'
@@ -140,17 +140,16 @@ class StartForm extends Component {
                         header='Be aware!'
                         content='Search params are changed, but displayed data is not updated. To fix this, click the <Find!> button below.'
                     />
-                    {this.props.sidebarView ? null :
+                    {!this.props.sidebarView &&
                         <Header 
                             as='h2'
-                            icon='clock outline'
                             textAlign='center'
                         >
                             Start searching for watchmakers
                         </Header>
                     }
                     <Form
-                        size={this.props.sidebarView ? null : 'large'}
+                        size={!this.props.sidebarView && 'large'}
                         onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => {
@@ -159,22 +158,20 @@ class StartForm extends Component {
                             let text = options.filter(opt => opt.key === formField.value)[0] ? options.filter(opt => opt.key === formField.value)[0].text : '';
                             return (
                                 <Form.Field
+                                    key={formField.key}
                                     onFocus={() => this.setState({isFormSubmited: false})}
                                 >
-                                    {this.props.sidebarView ? 
-                                        <label>{formField.config.label}</label> 
-                                    : null}
+                                    {this.props.sidebarView && <label>{formField.config.label}</label>}
                                     <InputField 
                                         className={`${formField.value !== '' ? 'notempty' : ''} ${this.props.sidebarView ? 'sidebarView' : ''}`}
-                                        key={formField.key}
-                                        mobile={this.props.global.ui.mobile}
                                         elementType={formField.elementType}
                                         inputType={formField.config.type}
                                         icon={formField.config.icon}
                                         iconPosition={formField.config.iconPosition}
-                                        placeholder={formField.config.placeholder}
                                         loading={loading}
+                                        mobile={this.props.global.ui.mobile}
                                         options={options}
+                                        placeholder={formField.config.placeholder}
                                         text={text}
                                         value={formField.value}
                                         onChange={(event, {value}) => this.props.changeFormFieldValue(event, 'clientStartForm', formField.key, {value})}

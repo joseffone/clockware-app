@@ -6,7 +6,6 @@ import getUserKeyId from '../middlewares/getUserKeyId';
 import controller from '../controller/controller';
 
 export default (app, db) => {
-
     //USERS
     app.get('/users', verifyUser, controller.readData(db, 'users'));
     app.get('/user/:id', verifyUser, controller.readData(db, 'users'));
@@ -82,7 +81,10 @@ export default (app, db) => {
     app.get('/order/:id', verifyUser, controller.readData(db, 'orders'));
     app.post('/order', verifyUser, controller.createData(db, 'orders'));
     app.patch('/order/:id', verifyUser, controller.updateData(db, 'orders'));
+    app.patch('/orders/confirm', verifyUser, controller.updateData(db, 'orders'));
     app.delete('/order/:id', verifyUser, controller.deleteData(db, 'orders'));
     app.delete('/orders', verifyUser, controller.deleteData(db, 'orders'));
 
+    //EMAIL
+    app.post('/email', verifyUser, controller.sendEmail(db));
 };

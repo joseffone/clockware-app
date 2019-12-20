@@ -224,7 +224,6 @@ class AdminDataGrid extends Component {
         return (
             <div ref={this.tableRef}>
                 <Table
-                    ref={elem => this.tableRef = elem}
                     stackable
                     selectable
                     sortable

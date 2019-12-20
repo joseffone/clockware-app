@@ -5,21 +5,26 @@ const initState = {
     forms: {},
     data: {
         freeAgents: [],
-        reservation: null,
+        reservation: [],
+        confirmation: null,
+        emailInfo: null,
         error: {
             fetchError: null,
-            createError: null
+            createError: null,
+            confirmError: null,
+            emailError: null
         },
         loading: {
             isFetching: false,
-            isCreating: false
+            isCreating: false,
+            isConfirming: false,
+            isMailing: false
         }
     },
     list: {
         dataSet: [],
         ids: [],
         params: {
-            fields: [],
             filters: [
                 {
                     rating: {
@@ -75,8 +80,10 @@ const initState = {
         }
     },
     ui: {
-        isStartPageShown: true,
         reloadDataTrigger: false,
+        isStartPageShown: true,
+        isSignupFormShown: false,
+        confirmLink: `${window.location.protocol}//${window.location.host}/confirm`, 
         itemsPerPageOptions: [
             {
                 key: 5,
@@ -104,9 +111,7 @@ for (const key in clientFormTypesConfig) {
 }
 
 const clientReducer = (state = initState, action) => {
-
     switch (action.type) {
-
         case actionTypes.CLIENT_RESET_FORM_FIELDS:
             return rewriteObjectProps(state, {
                 forms: rewriteObjectProps(state.forms, {
@@ -187,6 +192,41 @@ const clientReducer = (state = initState, action) => {
                 })
             });
 
+        case actionTypes.CLIENT_SEND_EMAIL_REQUEST:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isMailing: true
+                    }),
+                    error: rewriteObjectProps(state.data.error, {
+                        emailError: null
+                    }),
+                    emailInfo: null
+                })
+            });
+
+        case actionTypes.CLIENT_SEND_EMAIL_SUCCESS:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isMailing: false
+                    }),
+                    emailInfo: {...action.emailInfo}
+                })
+            });
+
+        case actionTypes.CLIENT_SEND_EMAIL_FAILURE:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isMailing: false
+                    }),
+                    error: rewriteObjectProps(state.data.error, {
+                        emailError: action.error
+                    })
+                })
+            });
+
         case actionTypes.CLIENT_CREATE_RESERVATION_REQUEST:
             return rewriteObjectProps(state, {
                 data: rewriteObjectProps(state.data, {
@@ -194,9 +234,11 @@ const clientReducer = (state = initState, action) => {
                         isCreating: true
                     }),
                     error: rewriteObjectProps(state.data.error, {
-                        createError: null
+                        createError: null,
+                        emailError: null
                     }),
-                    reservation: null
+                    reservation: [],
+                    emailInfo: null
                 })
             });
 
@@ -206,7 +248,7 @@ const clientReducer = (state = initState, action) => {
                     loading: rewriteObjectProps(state.data.loading, {
                         isCreating: false
                     }),
-                    reservation: {...action.createdData}
+                    reservation: [...action.createdData]
                 })
             });
 
@@ -216,19 +258,54 @@ const clientReducer = (state = initState, action) => {
                     loading: rewriteObjectProps(state.data.loading, {
                         isCreating: false
                     }),
-                    reservation: null,
                     error: rewriteObjectProps(state.data.error, {
                         createError: action.error
                     })
                 })
             });
+        
+        case actionTypes.CLIENT_CONFIRM_RESERVATION_REQUEST:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isConfirming: true
+                    }),
+                    error: rewriteObjectProps(state.data.error, {
+                        confirmError: null
+                    }),
+                    confirmation: null
+                })
+            });
 
+        case actionTypes.CLIENT_CONFIRM_RESERVATION_SUCCESS:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isConfirming: false
+                    }),
+                    confirmation: {...action.updatedData}
+                })
+            });
+
+        case actionTypes.CLIENT_CONFIRM_RESERVATION_FAILURE:
+            return rewriteObjectProps(state, {
+                data: rewriteObjectProps(state.data, {
+                    loading: rewriteObjectProps(state.data.loading, {
+                        isConfirming: false
+                    }),
+                    error: rewriteObjectProps(state.data.error, {
+                        confirmError: action.error
+                    })
+                })
+            });
+        
         case actionTypes.CLIENT_RESET_RESERVING_RESULTS:
             return rewriteObjectProps(state, {
                 data: rewriteObjectProps(state.data, {
-                    reservation: null,
+                    reservation: [],
                     error: rewriteObjectProps(state.data.error, {
-                        createError: null
+                        createError: null,
+                        emailError: null
                     })
                 })
             });
@@ -381,10 +458,16 @@ const clientReducer = (state = initState, action) => {
                     })
                 });
             }
+
+        case actionTypes.CLIENT_TOGGLE_ACTIVE_FORM:
+            return rewriteObjectProps(state, {
+                ui: rewriteObjectProps(state.ui, {
+                    isSignupFormShown: !state.ui.isSignupFormShown
+                })
+            });
     
         default:
             return state;
-    
     };
 };
 

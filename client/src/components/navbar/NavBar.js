@@ -17,7 +17,6 @@ class NavBar extends Component {
 
     onLogoutButtonClickHandler = () => {
         this.props.logoutUser(this.props.auth.accessToken);
-        window.location.reload(true);
     }
 
     render () {
