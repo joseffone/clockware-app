@@ -11,10 +11,9 @@ adminActionCreator.resetFormFields = (model) => {
     };
 };
 
-adminActionCreator.changeFormFieldValue = (event, model, formFieldKey, value = null, touched = true) => {
+adminActionCreator.changeFormFieldValue = (model, formFieldKey, value = null, touched = true) => {
     return {
         type: actionTypes.ADMIN_CHANGE_FORM_FIELD_VALUE,
-        event,
         model,
         formFieldKey,
         value,
@@ -321,6 +320,14 @@ adminActionCreator.setCustomFields = (model, customFields) => {
         type: actionTypes.ADMIN_SET_CUSTOM_FIELDS,
         model,
         customFields
+    };
+};
+
+adminActionCreator.setUpdatedItem = (model, updatedItem) => {
+    return {
+        type: actionTypes.ADMIN_SET_UPDATED_ITEM,
+        model,
+        updatedItem
     };
 };
 

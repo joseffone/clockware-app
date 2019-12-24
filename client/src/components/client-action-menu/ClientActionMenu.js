@@ -121,8 +121,8 @@ class ClientActionMenu extends Component {
 
 const mapStateToProps = state => {
     return {
-        client: state.client,
-        admin: state.admin
+        admin: state.admin,
+        client: state.client
     };
 }
 

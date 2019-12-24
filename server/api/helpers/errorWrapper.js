@@ -1,6 +1,7 @@
+
 'use strict';
 
-export default (err, res, customMessage) => {
+export default (err, res, customMessage = null) => {
     if (!err) {
         return res.status(404).json({
             error: {
@@ -21,34 +22,34 @@ export default (err, res, customMessage) => {
     if (err.status === 400) {
         return res.status(400).json({
             error: {
-                message: err.message
+                message: customMessage ? customMessage : err.message
             }
         });
     }
     if (err.status === 401) {
         return res.status(401).json({
             error: {
-                message: customMessage
+                message: customMessage ? customMessage : err.message
             }
         });
     }
     if (err.status === 403) {
         return res.status(403).json({
             error: {
-                message: customMessage
+                message: customMessage ? customMessage : err.message
             }
         });
     }
     if (err.status === 404) {
         return res.status(404).json({
             error: {
-                message: err.message
+                message: customMessage ? customMessage : err.message
             }
         });
     }
     return res.status(500).json({
         error: {
-            message: err.message
+            message: customMessage ? customMessage : err.message
         }
     });
 };

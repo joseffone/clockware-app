@@ -19,8 +19,8 @@ class NavBar extends Component {
         this.props.logoutUser(this.props.auth.accessToken);
     }
 
-    render () {
-        return(
+    render() {
+        return (
             <Menu
                 borderless
                 inverted
@@ -34,9 +34,9 @@ class NavBar extends Component {
                             as='h3'
                             icon='clock outline'
                             content={
-                                this.props.auth.pathToAutoRedirect === '/' ? 
-                                'Clockware' : 
-                                this.props.admin.ui.currentModel.split('')[0].toUpperCase() + this.props.admin.ui.currentModel.split('').slice(1).join('')
+                                this.props.auth.pathToAutoRedirect === '/' 
+                                    ? 'Clockware'
+                                    : this.props.admin.ui.currentModel.split('')[0].toUpperCase() + this.props.admin.ui.currentModel.split('').slice(1).join('')
                             }
                         />
                     }
@@ -47,8 +47,8 @@ class NavBar extends Component {
                     <Menu.Item
                         className={`${(this.props.global.ui.mobile && !this.props.client.ui.isStartPageShown) || this.props.auth.accessToken ? 'inOutItem' :''}`}
                         content={
-                            this.props.auth.accessToken === null ?
-                                <AdminForm 
+                            this.props.auth.accessToken === null 
+                                ? <AdminForm 
                                     trigger={
                                         (props) => 
                                             <Button
@@ -56,25 +56,32 @@ class NavBar extends Component {
                                                 inverted
                                                 icon={this.props.global.ui.mobile}
                                                 circular
-                                                content={this.props.global.ui.mobile ? <Popup trigger={<Icon name='sign-in' />} content='Log in' /> : 'Log in'}
+                                                content={
+                                                    this.props.global.ui.mobile 
+                                                        ? <Popup trigger={<Icon name='sign-in' />} content='Log in' /> 
+                                                        : 'Log in'
+                                                }
                                                 {...props}
                                             />
                                     }
                                     model='authentication'
                                 />
-                            :
-                                <Button 
+                                : <Button 
                                     as='a'
                                     inverted
                                     icon={this.props.global.ui.mobile}
                                     circular
-                                    content={this.props.global.ui.mobile ? <Popup trigger={<Icon name='sign-out' />} content='Log out' /> : 'Log out'}
+                                    content={
+                                        this.props.global.ui.mobile 
+                                            ? <Popup trigger={<Icon name='sign-out' />} content='Log out' /> 
+                                            : 'Log out'
+                                    }
                                     onClick={this.onLogoutButtonClickHandler}
                                 />
                         }
                     />
-                    {this.props.auth.accessToken ? 
-                        <Menu.Item
+                    {this.props.auth.accessToken 
+                        ? <Menu.Item
                             className={'refreshItem'}
                             content={
                                 <Button 
@@ -83,23 +90,29 @@ class NavBar extends Component {
                                     inverted
                                     circular
                                     content={
-                                        this.props.global.ui.mobile ?
-                                            <Icon name='sync alternate' loading={this.props.admin.ui.fetchRequestsCounter.length > 0}/>
-                                        :
-                                            <Popup 
-                                                trigger={<Icon name='sync alternate' loading={this.props.admin.ui.fetchRequestsCounter.length > 0}/>}
-                                                content='Refresh'
-                                            />
+                                        this.props.global.ui.mobile 
+                                        ? <Icon 
+                                            name='sync alternate' 
+                                            loading={this.props.admin.ui.fetchRequestsCounter.length > 0}
+                                        />
+                                        : <Popup 
+                                            trigger={
+                                                <Icon 
+                                                    name='sync alternate' 
+                                                    loading={this.props.admin.ui.fetchRequestsCounter.length > 0}
+                                                />
+                                            }
+                                            content='Refresh'
+                                        />
                                     }
                                     onClick={() => this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, true)}
                                 />
                             }
                         />
-                    :
-                        null
+                        : null
                     }
-                    {(this.props.global.ui.mobile && !this.props.client.ui.isStartPageShown) || this.props.auth.accessToken ? 
-                        <Menu.Item 
+                    {(this.props.global.ui.mobile && !this.props.client.ui.isStartPageShown) || this.props.auth.accessToken 
+                        ? <Menu.Item 
                             content={
                                 <Button 
                                     as='a'
@@ -107,10 +120,9 @@ class NavBar extends Component {
                                     inverted
                                     circular
                                     content={
-                                        this.props.global.ui.mobile ?
-                                            <Icon name={this.props.global.ui.isSideBarOpen ? 'x' : 'sidebar'} />
-                                        :
-                                            <Popup 
+                                        this.props.global.ui.mobile 
+                                            ? <Icon name={this.props.global.ui.isSideBarOpen ? 'x' : 'sidebar'} />
+                                            : <Popup 
                                                 trigger={<Icon name={this.props.global.ui.isSideBarOpen ? 'x' : 'sidebar'} />} 
                                                 content={this.props.global.ui.isSideBarOpen ? 'Hide sidebar' : 'Show sidebar'} 
                                             />
@@ -119,8 +131,7 @@ class NavBar extends Component {
                                 />
                             }
                         />
-                    :
-                        null
+                        : null
                     }
                 </Menu.Menu>
             </Menu>

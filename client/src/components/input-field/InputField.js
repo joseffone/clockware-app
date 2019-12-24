@@ -9,6 +9,7 @@ const InputField = (props) => {
             return (
                 <Input 
                     fluid 
+                    className={props.className}
                     disabled={props.disabled}
                     icon={props.icon}
                     iconPosition={props.iconPosition}
@@ -24,6 +25,7 @@ const InputField = (props) => {
         case 'textarea':
             return (
                 <TextArea
+                    className={props.className}
                     disabled={props.disabled}
                     placeholder={props.placeholder}
                     readOnly={props.readOnly}
@@ -37,6 +39,7 @@ const InputField = (props) => {
                 <Select
                     fluid
                     search
+                    className={props.className}
                     disabled={props.disabled}
                     icon={props.icon}
                     loading={props.loading}
@@ -52,6 +55,7 @@ const InputField = (props) => {
             return (
                 <DatePicker 
                     fluid
+                    className={props.className}
                     disabled={props.disabled}
                     icon={props.icon}
                     iconPosition={props.iconPosition}
@@ -70,6 +74,7 @@ const InputField = (props) => {
 };
 
 InputField.propTypes = {
+    className: PropTypes.string,
     disabled: PropTypes.bool,
     icon: PropTypes.string,
     iconPosition: PropTypes.oneOf(['left', 'right']),

@@ -32,10 +32,9 @@ class ClientForm extends Component {
                 agent_id: this.props.id,
                 agent_first_name: this.props.dataSet.find(({id}) => id === this.props.id).first_name,
                 agent_last_name: this.props.dataSet.find(({id}) => id === this.props.id).last_name,
-                start_date: moment(this.props.forms.clientStartForm.start_date.value, 'DD-MM-YYYY HH:mm').utc(),
+                start_date: moment(this.props.forms.clientStartForm.start_date.value, 'DD-MM-YYYY HH:mm'),
                 expiration_date: moment(this.props.forms.clientStartForm.start_date.value, 'DD-MM-YYYY HH:mm')
-                    .add(this.props.models.clocks.items.find(({id}) => id === this.props.forms.clientStartForm.clock_id.value).hours_of_repair, 'h')
-                    .utc(),
+                    .add(this.props.models.clocks.items.find(({id}) => id === this.props.forms.clientStartForm.clock_id.value).hours_of_repair, 'h'),
                 note: 'created by client',
                 link: this.props.confirmLink
             })
@@ -155,13 +154,13 @@ class ClientForm extends Component {
             <React.Fragment>
                 <Modal
                     className={styles.clientForm}
+                    open={this.state.isModalOpen}
+                    size='small'
                     trigger={
                         <Trigger 
                             onClick={this.onTriggerClickHandler} 
                         />
                     }
-                    size={'small'}
-                    open={this.state.isModalOpen}
                 >
                     <Modal.Header>
                         <Icon name='handshake outline' />
@@ -176,17 +175,12 @@ class ClientForm extends Component {
                                 <Card 
                                     fluid
                                 >
-                                    <Image 
-                                        src={img} 
-                                        wrapped 
-                                        ui={false} 
-                                    />
+                                    <Image src={img} wrapped ui={false} />
                                     <Card.Content>
-                                        <Card.Header>
-                                            {`${agentDataItem.first_name} ${agentDataItem.last_name}`}
-                                        </Card.Header>
+                                        <Card.Header>{`${agentDataItem.first_name} ${agentDataItem.last_name}`}</Card.Header>
                                         <Card.Meta>
                                             <Rating 
+                                                disabled
                                                 rating={agentDataItem.rating_value} 
                                                 maxRating={
                                                     Math.max(
@@ -195,8 +189,7 @@ class ClientForm extends Component {
                                                             'mark_value'
                                                         )
                                                     )
-                                                } 
-                                                disabled 
+                                                }
                                             />
                                         </Card.Meta>
                                         <Card.Description>
@@ -204,11 +197,10 @@ class ClientForm extends Component {
                                             <div>{`${startDate} / ${expDate}`}</div>
                                         </Card.Description>
                                     </Card.Content>
-                                    <Card.Content 
-                                        extra
-                                    >
+                                    <Card.Content extra>
                                         {agentDataItem.cities.map(city => (
                                             <Label 
+                                                key={city}
                                                 color={city === this.state.reservationData.city_name ? 'green' : null}
                                             >
                                                 {city}
@@ -236,8 +228,8 @@ class ClientForm extends Component {
                                 />
                                 <Message
                                     attached
-                                    negative 
                                     icon
+                                    negative
                                     hidden={!this.props.error.createError && !this.props.error.emailError && this.state.isFormDataValid}
                                 >
                                     {this.props.loading.isMailing && this.props.reservation.length > 0 && 
@@ -256,8 +248,8 @@ class ClientForm extends Component {
                                 </Message>
                                 <Message
                                     attached
-                                    info
                                     icon
+                                    info
                                     hidden={!(this.props.loading.isMailing && this.props.reservation.length > 0)}
                                 >
                                     {this.props.loading.isMailing && this.props.reservation.length > 0 && 
@@ -285,7 +277,7 @@ class ClientForm extends Component {
                                                     mobile={this.props.global.ui.mobile}
                                                     placeholder={formField.config.placeholder}
                                                     value={formField.value}
-                                                    onChange={(event, {value}) => this.props.changeFormFieldValue(event, this.state.activeForm, formField.key, {value})}
+                                                    onChange={(event, {value}) => this.props.changeFormFieldValue(this.state.activeForm, formField.key, {value})}
                                                 />
                                             </Form.Field>
                                         );
@@ -372,7 +364,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         resetFormFields: (formKey) => dispatch(clientActionCreator.resetFormFields(formKey)),
-        changeFormFieldValue: (event, formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormFieldValue(event, formKey, formFieldKey, value, touched)),
+        changeFormFieldValue: (formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormFieldValue(formKey, formFieldKey, value, touched)),
         setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
         createReservation: (reservationData, isSignup) => dispatch(clientActionCreator.createReservationRequest(reservationData, isSignup)),
         resetReservingResults: () => dispatch(clientActionCreator.resetReservingResults()),

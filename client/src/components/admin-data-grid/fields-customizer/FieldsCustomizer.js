@@ -161,10 +161,10 @@ import PropTypes from 'prop-types';
 }
 
 FieldsCustomizer.propTypes = {
-    mobile: PropTypes.bool,
-    onApply: PropTypes.func,
     fields: PropTypes.array,
-    trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired
+    mobile: PropTypes.bool,
+    trigger: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired,
+    onApply: PropTypes.func
 };
 
 export default FieldsCustomizer;

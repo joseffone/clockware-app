@@ -135,9 +135,7 @@ class ClientDataGrid extends Component {
                                         disabled 
                                     />
                                 </Item.Header>
-                                <Item.Description>
-                                    {`${dataSetItem.first_name} ${dataSetItem.last_name}`}
-                                </Item.Description>
+                                <Item.Description>{`${dataSetItem.first_name} ${dataSetItem.last_name}`}</Item.Description>
                                 <Item.Extra>
                                     <ClientForm 
                                         id={id}
@@ -152,7 +150,7 @@ class ClientDataGrid extends Component {
                                                 </Button>
                                         }
                                     />
-                                    {dataSetItem.cities.map(city => <Label>{city}</Label>)}
+                                    {dataSetItem.cities.map(city => <Label key={city}>{city}</Label>)}
                                 </Item.Extra>
                             </Item.Content>
                         </Item>

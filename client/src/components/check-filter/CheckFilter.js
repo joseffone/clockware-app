@@ -19,13 +19,14 @@ class CheckFilter extends Component {
                         checked={checkedOptions.includes(option)}
                         label={
                             <label>
-                                {showAsRating ?
-                                    <Rating 
-                                        rating={option} 
-                                        maxRating={showAsRating.maxRating} 
-                                        disabled 
-                                    />
-                                : option}
+                                {showAsRating 
+                                    ? <Rating 
+                                            rating={option} 
+                                            maxRating={showAsRating.maxRating} 
+                                            disabled 
+                                        />
+                                    : option
+                                }
                             </label>
                         }
                         onChange={(event, {checked}) => onChange(filterKey, checked, event.target.id)}
@@ -60,12 +61,12 @@ class CheckFilter extends Component {
 }
 
 CheckFilter.propTypes = {
+    checkedOptions: PropTypes.array.isRequired,
     filterKey: PropTypes.string.isRequired,
+    options: PropTypes.array.isRequired,
     showAsRating: PropTypes.shape({
         maxRating: PropTypes.number.isRequired
-    }).isRequired,
-    checkedOptions: PropTypes.array.isRequired,
-    options: PropTypes.array.isRequired,
+    }),
     onChange: PropTypes.func.isRequired
 };
 

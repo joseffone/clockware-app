@@ -13,24 +13,16 @@ class ClientView extends Component {
     clientContent = ({mobile, sbOpen, error, empty}) => {
         return (
             <SideBarWrapper
-                mobile={mobile} 
-                content={
-                    <ClientActionMenu />
-                }
+                content={<ClientActionMenu />}
                 dimmed={mobile && sbOpen}
+                mobile={mobile} 
             >
                 <Grid
                     centered 
                     divided
                 >
                     <Grid.Row>
-                        {!mobile ?
-                            <Grid.Column 
-                                className={'sideMenu'}
-                            >
-                                <ClientActionMenu />
-                            </Grid.Column>
-                        : null}
+                        {!mobile && <Grid.Column className={'sideMenu'}><ClientActionMenu /></Grid.Column>}
                         <Grid.Column 
                             width={mobile ? 16 : 7}
                         >
@@ -68,15 +60,14 @@ class ClientView extends Component {
                 >
                     {this.props.client.ui.isStartPageShown 
                         ? <StartForm />
-                        : <ClientContent 
-                                mobile={this.props.global.ui.mobile}
-                                sbOpen={this.props.global.ui.isSideBarOpen}
+                        : <ClientContent
+                                empty={!this.props.client.ui.reloadDataTrigger && this.props.client.list.dataSet.length === 0}
                                 error={
                                     !this.props.client.ui.reloadDataTrigger && 
-                                    (this.props.client.data.error.fetchError || 
-                                    this.props.admin.ui.fetchErrorsCounter.length > 0)
+                                    (this.props.client.data.error.fetchError || this.props.admin.ui.fetchErrorsCounter.length > 0)
                                 }
-                                empty={!this.props.client.ui.reloadDataTrigger && this.props.client.list.dataSet.length === 0}
+                                mobile={this.props.global.ui.mobile}
+                                sbOpen={this.props.global.ui.isSideBarOpen}
                         />
                     }
                 </Segment>
@@ -85,9 +76,7 @@ class ClientView extends Component {
                     vertical
                     inverted
                 >
-                    <Footer 
-                        inverted 
-                    />
+                    <Footer inverted />
                 </Segment>
             </React.Fragment>
         );

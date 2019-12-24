@@ -140,8 +140,8 @@ const adminReducer = (state = initState, action) => {
                     forms: rewriteObjectProps(state.forms, {
                         [action.model]:  rewriteObjectProps(state.forms[action.model], {
                             [action.formFieldKey]: rewriteObjectProps(state.forms[action.model][action.formFieldKey], {
-                                value: action.value || action.event.target.value,
-                                isValid: validateInput(action.value || action.event.target.value || '', state.forms[action.model][action.formFieldKey].config.restrictions),
+                                value: action.value || '',
+                                isValid: validateInput(action.value || '', state.forms[action.model][action.formFieldKey].config.restrictions),
                                 touched: action.touched
                             })
                         })
@@ -219,7 +219,8 @@ const adminReducer = (state = initState, action) => {
                         }),
                         error: rewriteObjectProps(state.models[action.model].error, {
                             createError: null
-                        })
+                        }),
+                        createdItem: []
                     })
                 })
             });
@@ -657,6 +658,15 @@ const adminReducer = (state = initState, action) => {
                     })
                 });
             }
+
+        case actionTypes.ADMIN_SET_UPDATED_ITEM:
+            return rewriteObjectProps(state, {
+                models: rewriteObjectProps(state.models, {
+                    [action.model]: rewriteObjectProps(state.models[action.model], {
+                        updatedItem: {...action.updatedItem}
+                    })
+                })
+            });
 
         default:
             return state;

@@ -25,16 +25,20 @@ class AdminDataGrid extends Component {
                 return this.onReloadDataHandler();
             }
             if (this.props.admin.ui.fetchRequestsCounter.length === 0) {
-                this.tableRef.current.scrollIntoView({block: 'end'});
                 this.props.setTotalItems(this.props.admin.ui.currentModel, this.props.admin.lists[this.props.admin.ui.currentModel].ids.length);
                 this.props.setListData(this.props.admin.ui.currentModel, transformDataSet(this.props.admin.ui.currentModel, this.props.admin.forms, this.props.admin.models));
                 if (this.props.admin.lists[this.props.admin.ui.currentModel].params.search.value !== '') {
                     this.onSearchApplyHandler();
                 }
-                if (this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.length !== 0) {
-                    this.onFiltersApplyHandler();
+                if (this.props.admin.lists[this.props.admin.ui.currentModel].params.sort.target ||
+                    this.props.admin.lists[this.props.admin.ui.currentModel].params.filters.length > 0) {
+                    new Promise(handle => handle()).then(() => {
+                        this.onFiltersApplyHandler();
+                        this.tableRef.current.scrollIntoView({block: 'end'});
+                    });
                 }
                 this.props.setReloadDataTrigger(this.props.admin.ui.currentModel, false);
+                this.tableRef.current.scrollIntoView({block: 'end'});
             }
         }
         if (prevProps.admin.lists[this.props.admin.ui.currentModel].ids.length !== this.props.admin.lists[this.props.admin.ui.currentModel].ids.length) {

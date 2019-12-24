@@ -53,18 +53,25 @@ class AdminView extends Component {
                 <Grid
                     textAlign='center'
                     verticalAlign='middle'
-                    className={this.props.global.ui.mobile ? styles.adminViewMobile : this.props.global.ui.isSideBarOpen ? styles.adminViewPCOpen : styles.adminViewPCClose}
+                    className={
+                        this.props.global.ui.mobile 
+                            ? styles.adminViewMobile 
+                            : this.props.global.ui.isSideBarOpen 
+                                ? styles.adminViewPCOpen 
+                                : styles.adminViewPCClose
+                    }
                 >
                     <Grid.Row>
-                        {!this.checkFetchSuccess() && !this.props.admin.ui.fetchRequestsCounter.includes(this.props.admin.ui.currentModel) ? 
-                            <Message
-                                info={emptyDataFlag}
-                                warning={noAccessFlag}
-                                error={!emptyDataFlag && !noAccessFlag}
-                                header={messageHeader}
-                                content={messageContent}
-                            />
-                        : null}
+                        {!this.checkFetchSuccess() && !this.props.admin.ui.fetchRequestsCounter.includes(this.props.admin.ui.currentModel) 
+                            ? <Message
+                                    info={emptyDataFlag}
+                                    warning={noAccessFlag}
+                                    error={!emptyDataFlag && !noAccessFlag}
+                                    header={messageHeader}
+                                    content={messageContent}
+                                />
+                            : null
+                        }
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column

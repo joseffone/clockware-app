@@ -22,7 +22,7 @@ class AdminForm extends Component {
         dateKeys: ['start_date', 'expiration_date', 'created_at', 'updated_at', 'deleted_at']
     }
 
-    componentDidUpdate (prevProps) {
+    componentDidUpdate(prevProps) {
         if (this.state.isFormSubmited) {
             let updateFlag = false;
             let createFlag = false;
@@ -34,80 +34,65 @@ class AdminForm extends Component {
                     }
                 }
             }
-            if (this.state.update && !this.props.update && this.state.lastRequestType !== 'delete') {
+            if (this.state.update && this.state.lastRequestType !== 'delete') {
                 if (this.props.models[this.props.model].updatedItem && !this.props.models[this.props.model].loading.isUpdating) {
                     for (const key in this.props.models[this.props.model].updatedItem) {
                         if (!prevProps.models[this.props.model].updatedItem) {
                             updateFlag = true;
                             this.props.changeFormFieldValue(
-                                {target: {value: null}}, 
                                 this.props.model, 
                                 key, 
-                                {value: this.state.dateKeys.includes(key) 
+                                {value: this.state.dateKeys.includes(key)
                                     ? moment(this.props.models[this.props.model].updatedItem[key]).format('DD-MM-YYYY HH:mm') 
                                     : this.props.models[this.props.model].updatedItem[key]
                                 }
                             );
                             continue;
                         }
-                        if (prevProps.models[this.props.model].updatedItem[key] &&
-                            this.props.models[this.props.model].updatedItem[key] &&
-                            (prevProps.models[this.props.model].updatedItem[key] !== this.props.models[this.props.model].updatedItem[key])) {
-                            updateFlag = true;
-                            this.props.changeFormFieldValue(
-                                {target: {value: null}}, 
-                                this.props.model, 
-                                key, 
-                                {value: this.state.dateKeys.includes(key) 
-                                    ? moment(this.props.models[this.props.model].updatedItem[key]).format('DD-MM-YYYY HH:mm') 
-                                    : this.props.models[this.props.model].updatedItem[key]
-                                }
-                            );
+                        if (prevProps.models[this.props.model].updatedItem[key] && this.props.models[this.props.model].updatedItem[key]) {
+                                let prevValue = this.state.dateKeys.includes(key)
+                                    ? moment(prevProps.models[this.props.model].updatedItem[key]).format('DD-MM-YYYY HH:mm')
+                                    : prevProps.models[this.props.model].updatedItem[key];
+                                let currValue = this.state.dateKeys.includes(key) 
+                                    ? moment(this.props.models[this.props.model].updatedItem[key]).format('DD-MM-YYYY HH:mm')
+                                    : this.props.models[this.props.model].updatedItem[key];
+                            if (prevValue !== currValue) {
+                                updateFlag = true;
+                                this.props.changeFormFieldValue(
+                                    this.props.model, 
+                                    key, 
+                                    {value: currValue}
+                                );
+                            }
                         }
                     }
                 }
             }
             if (!this.state.update) {
-                if (this.props.models[this.props.model].createdItem.length !== 0 && !this.props.models[this.props.model].loading.isCreating) {
+                if (prevProps.models[this.props.model].createdItem.length === 0 && this.props.models[this.props.model].createdItem.length > 0 && 
+                    !this.props.models[this.props.model].loading.isCreating) {
+                    createFlag = true;
                     for (const key in this.props.models[this.props.model].createdItem[0]) {
-                        if (prevProps.models[this.props.model].createdItem.length === 0) {
-                            createFlag = true;
-                            this.props.changeFormFieldValue(
-                                {target: {value: null}}, 
-                                this.props.model, 
-                                key, 
-                                {value: this.state.dateKeys.includes(key) 
-                                    ? moment(this.props.models[this.props.model].createdItem[0][key]).format('DD-MM-YYYY HH:mm') 
-                                    : this.props.models[this.props.model].createdItem[0][key]
-                                }
-                            );
-                            continue;
-                        }
-                        if (prevProps.models[this.props.model].createdItem[0][key] &&
-                            this.props.models[this.props.model].createdItem[0][key] &&
-                            (prevProps.models[this.props.model].createdItem[0][key] !== this.props.models[this.props.model].createdItem[0][key])) {
-                            createFlag = true;
-                            this.props.changeFormFieldValue(
-                                {target: {value: null}}, 
-                                this.props.model, 
-                                key, 
-                                {value: this.state.dateKeys.includes(key) 
-                                    ? moment(this.props.models[this.props.model].createdItem[0][key]).format('DD-MM-YYYY HH:mm') 
-                                    : this.props.models[this.props.model].createdItem[0][key]
-                                }
-                            );
-                        }
+                        createFlag = true;
+                        this.props.changeFormFieldValue(
+                            this.props.model, 
+                            key, 
+                            {value: this.state.dateKeys.includes(key) 
+                                ? moment(this.props.models[this.props.model].createdItem[0][key]).format('DD-MM-YYYY HH:mm') 
+                                : this.props.models[this.props.model].createdItem[0][key]
+                            }
+                        );
                     }
                 }
             }
             if (createFlag) {
-                this.setState({update: true, lastRequestType: 'add', isFormSubmited: false});
+                this.setState({update: true, lastRequestType: 'add'});
             }
             if (updateFlag) {
-                this.setState({lastRequestType: 'update', isFormSubmited: false});
+                this.setState({lastRequestType: 'update'});
             }
             if (deleteFlag) {
-                this.setState({lastRequestType: null, isFormSubmited: false, update: false}, () => {
+                this.setState({lastRequestType: null, update: false}, () => {
                     this.props.resetFormFields(this.props.model);
                 });
             }
@@ -120,7 +105,6 @@ class AdminForm extends Component {
                     this.props.forms[this.props.model].start_date.value !== '')
                 ) {
                     this.props.changeFormFieldValue(
-                        {target: {value: null}}, 
                         this.props.model, 
                         'expiration_date', 
                         {value: moment(this.props.forms[this.props.model].start_date.value, 'DD-MM-YYYY HH:mm')
@@ -136,7 +120,6 @@ class AdminForm extends Component {
                     this.props.forms[this.props.model].expiration_date.value !== '')
                 ) {
                     this.props.changeFormFieldValue(
-                        {target: {value: null}}, 
                         this.props.model, 
                         'start_date', 
                         {value: moment(this.props.forms[this.props.model].expiration_date.value, 'DD-MM-YYYY HH:mm')
@@ -198,7 +181,8 @@ class AdminForm extends Component {
         });
     }
 
-    onResetButtonClickHandler = () => {
+    onResetButtonClickHandler = (event) => {
+        event.preventDefault();
         this.setState({
             isFormSubmited: false,
             isFormDataValid: true,
@@ -209,10 +193,11 @@ class AdminForm extends Component {
 
     onClearFieldButtonClickHandler = (event, key) => {
         event.preventDefault();
-        this.props.changeFormFieldValue({target: {value: ''}}, this.props.model, key, {value: null}, true);
+        this.props.changeFormFieldValue(this.props.model, key, {value: ''}, true);
     }
 
-    onCloseButtonClickHandler = () => {
+    onCloseButtonClickHandler = (event) => {
+        event.preventDefault();
         this.setState({isModalOpen: false}, () => {
             this.props.resetFormFields(this.props.model);
             if (this.props.refreshAfterClose) {
@@ -225,12 +210,18 @@ class AdminForm extends Component {
         this.props.resetFormFields(this.props.model);
         this.onReloadFieldsDataHandler();
         if (this.props.update) {
+            this.setState({lastRequestType: 'update'});
+            this.props.setUpdatedItem(this.props.model, this.props.update);
             for (const key in this.props.update) {
-                let value = this.props.update[key];
-                if (this.state.dateKeys.includes(key)) {
-                    value = moment(this.props.update[key]).format('DD-MM-YYYY HH:mm');
-                }
-                this.props.changeFormFieldValue({target: {value: null}}, this.props.model, key, {value}, false);
+                this.props.changeFormFieldValue(
+                    this.props.model, 
+                    key, 
+                    {value: this.state.dateKeys.includes(key) && this.props.update[key] !== null
+                        ? moment(this.props.update[key]).format('DD-MM-YYYY HH:mm')
+                        : this.props.update[key] ? this.props.update[key] : ''
+                    }, 
+                    false
+                );
             }
         }
     }
@@ -281,9 +272,9 @@ class AdminForm extends Component {
         let isPasswordFieldTouched = false;
         let formDataError = !this.state.isFormDataValid;
         let fetchError = false;
-        let createError = !this.state.update && this.state.isFormSubmited && this.props.models[this.props.model].error.createError;
-        let updateError = this.state.update && this.state.isFormSubmited && this.props.models[this.props.model].error.updateError;
-        let deleteError = this.state.lastRequestType === 'delete' && this.state.isFormSubmited && this.props.models[this.props.model].error.deleteError;
+        let createError = !this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.createError;
+        let updateError = !!this.state.update && this.state.isFormSubmited && !!this.props.models[this.props.model].error.updateError;
+        let deleteError = this.state.lastRequestType === 'delete' && this.state.isFormSubmited && !!this.props.models[this.props.model].error.deleteError;
         let authError = this.state.isFormSubmited && !!this.props.auth.error;
         let messageHeader = null;
         let messageContent = null;
@@ -421,10 +412,11 @@ class AdminForm extends Component {
                                             readOnly={formField.config.restrictions.readOnly}
                                             text={option.text}
                                             value={formField.value}
-                                            onChange={(event, {value}) => this.props.changeFormFieldValue(event, this.props.model, formField.key, {value})}
-                                            onBlur={(event) => this.props.changeFormFieldValue(event, this.props.model, formField.key, {
-                                                value: formField.elementType === 'select' ? formField.value : null
-                                            })}
+                                            onChange={(event, {value}) => this.props.changeFormFieldValue(this.props.model, formField.key, {value})}
+                                            onBlur={() => formField.elementType === 'select' 
+                                                ? this.props.changeFormFieldValue(this.props.model, formField.key, {value:  formField.value})
+                                                : null
+                                            }
                                         />
                                     </Form.Field>
                                      <Form.Field 
@@ -455,13 +447,19 @@ class AdminForm extends Component {
                         </Message>
                         <Message
                             positive
-                            hidden={!this.state.lastRequestType || this.state.lastRequestType === 'delete' || !this.props.models[this.props.model].createdItem[1]}
+                            hidden={
+                                !this.state.isFormSubmited || !this.state.lastRequestType || this.state.lastRequestType === 'delete' ||
+                                !(this.props.models[this.props.model].createdItem[0] || this.props.models[this.props.model].updatedItem)
+                            }
                             header={messageHeader}
                             content={messageContent}
                         />
                         <Message
                             negative
-                            hidden={!this.state.lastRequestType || this.state.lastRequestType === 'delete' || this.props.models[this.props.model].createdItem[1]}
+                            hidden={
+                                !this.state.isFormSubmited || !this.state.lastRequestType || this.state.lastRequestType === 'delete' ||
+                                (!!this.props.models[this.props.model].createdItem[0] || !!this.props.models[this.props.model].updatedItem)
+                            }
                             header={messageHeader}
                             content={messageContent}
                         />
@@ -489,7 +487,7 @@ class AdminForm extends Component {
                             <Form.Field 
                                 disabled={this.state.update && isFieldsNotTouched}
                             >
-                                <Button 
+                                <Button
                                     fluid 
                                     positive
                                     onClick={() => this.props.model === 'users' && isPasswordFieldTouched 
@@ -555,7 +553,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         resetFormFields: (model) => dispatch(adminActionCreator.resetFormFields(model)),
-        changeFormFieldValue: (event, model, formFieldKey, { value }, touched) => dispatch(adminActionCreator.changeFormFieldValue(event, model, formFieldKey, value, touched)),
+        setUpdatedItem: (model, updatedItem) => dispatch(adminActionCreator.setUpdatedItem(model, updatedItem)),
+        changeFormFieldValue: (model, formFieldKey, {value}, touched) => dispatch(adminActionCreator.changeFormFieldValue(model, formFieldKey, value, touched)),
         loginUser: (loginData) => dispatch(authActionCreator.loginRequest(loginData)),
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
         createData: (accessToken, model, dataObj) => dispatch(adminActionCreator.createDataRequest(accessToken, model, dataObj)),

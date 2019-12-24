@@ -23,7 +23,7 @@ export default (db) => {
                     return;
                 }).then(() => {
                     res.status(200).json({
-                        message: 'Authentication successful',
+                        message: 'Authentication successful.',
                         access_token: accessToken,
                         access_token_iat: tokensController.getIatTime(accessToken),
                         access_token_exp: tokensController.getExpTime(accessToken),
@@ -33,10 +33,10 @@ export default (db) => {
                         user_id: userId
                     });
                 }).catch((err) => {
-                    errorWrapper(err, res, null);
+                    errorWrapper(err, res, 'Authentication failed.');
                 });
             }, (err) => {
-                errorWrapper(err, res, 'Authentication failed');
+                errorWrapper(err, res, 'Authentication failed.');
             });
     };
 };

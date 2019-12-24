@@ -16,7 +16,7 @@ class SideBar extends Component {
         }
     }
 
-    render () {
+    render() {
         return (
             <Sidebar
                 id={styles.sideBar}

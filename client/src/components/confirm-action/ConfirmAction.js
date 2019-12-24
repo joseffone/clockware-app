@@ -38,9 +38,9 @@ class ConfirmAction extends Component {
         return (
             <Dimmer.Dimmable
                 as={Modal}
-                size='small'
                 closeOnDimmerClick={false}
                 dimmed={this.props.acting}
+                size='small'
                 {...this.props}
             >
                 <Dimmer
@@ -52,14 +52,13 @@ class ConfirmAction extends Component {
                 <Header icon={icon} content={header} />
                 <Modal.Content><p>{content}</p></Modal.Content>
                 <Modal.Actions>
-                    {this.state.isActionConfirmed && !this.props.acting ?
-                        <Button 
+                    {this.state.isActionConfirmed && !this.props.acting 
+                        ? <Button 
                             color='blue'
                             content='OK'
                             onClick={() => this.setState({isActionConfirmed: false}, () => this.props.onCommit())}
                         />
-                    :
-                        <div>
+                        : <div>
                             <Button 
                                 negative
                                 content='No'

@@ -222,7 +222,7 @@ class AdminActionMenu extends Component {
                             {
                                 errCode: 403,
                                 header: 'No access to delete data',
-                                content: 'There are restrictions for your account to delete data from this register.'
+                                content: 'Your account may have restrictions on deleting data from this register or you are trying to delete an active user account, which is not allowed.'
                             },
                             {
                                 errCode: 404,

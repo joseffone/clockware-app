@@ -11,10 +11,9 @@ clientActionCreator.resetFormFields = (formKey) => {
     };
 };
 
-clientActionCreator.changeFormFieldValue = (event, formKey, formFieldKey, value = null, touched = true) => {
+clientActionCreator.changeFormFieldValue = (formKey, formFieldKey, value = null, touched = true) => {
     return {
         type: actionTypes.CLIENT_CHANGE_FORM_FIELD_VALUE,
-        event,
         formKey,
         formFieldKey,
         value,

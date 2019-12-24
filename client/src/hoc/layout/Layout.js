@@ -18,6 +18,10 @@ class Layout extends Component {
             (this.props.location.pathname !== this.props.auth.pathToAutoRedirect && 
             this.props.location.pathname === '/admin')) {
             this.props.history.replace(this.props.auth.pathToAutoRedirect);
+            if (this.props.global.ui.isSideBarOpen) {
+                this.props.toggleSideBar();
+                this.props.toggleSideBarButtonPress();
+            }
         }
     }
 
@@ -30,7 +34,7 @@ class Layout extends Component {
                     className={styles.layout}
                     fireOnMount
                     loading={this.props.auth.isLoading}
-                    onUpdate={(e, { width }) => this.props.onChangeDisplayViewHandler(width <= Responsive.onlyMobile.maxWidth)}
+                    onUpdate={(e, {width}) => this.props.onChangeDisplayViewHandler(width <= Responsive.onlyMobile.maxWidth)}
                 >
                     {this.props.children}
                 </Responsive>
@@ -41,14 +45,17 @@ class Layout extends Component {
 
 const mapStateToProps = state => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        global: state.global
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         onRefreshTokensHandler: (refreshToken) => dispatch(authActionCreator.refreshTokensRequest(refreshToken)),
-        onChangeDisplayViewHandler: (mobile) => dispatch(globalActionCreator.changeDisplayView(mobile))
+        onChangeDisplayViewHandler: (mobile) => dispatch(globalActionCreator.changeDisplayView(mobile)),
+        toggleSideBar: () => dispatch(globalActionCreator.toggleSidebar()),
+        toggleSideBarButtonPress: () => dispatch(globalActionCreator.toggleSidebarButtonPress())
     };
 };
 

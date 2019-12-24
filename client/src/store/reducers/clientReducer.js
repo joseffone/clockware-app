@@ -126,8 +126,8 @@ const clientReducer = (state = initState, action) => {
                 forms: rewriteObjectProps(state.forms, {
                     [action.formKey]:  rewriteObjectProps(state.forms[action.formKey], {
                         [action.formFieldKey]: rewriteObjectProps(state.forms[action.formKey][action.formFieldKey], {
-                            value: action.value || action.event.target.value,
-                            isValid: validateInput(action.value || action.event.target.value || '', state.forms[action.formKey][action.formFieldKey].config.restrictions),
+                            value: action.value || '',
+                            isValid: validateInput(action.value || '', state.forms[action.formKey][action.formFieldKey].config.restrictions),
                             touched: action.touched
                         })
                     })

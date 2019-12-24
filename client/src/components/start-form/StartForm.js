@@ -149,7 +149,7 @@ class StartForm extends Component {
                         </Header>
                     }
                     <Form
-                        size={!this.props.sidebarView && 'large'}
+                        className={!this.props.sidebarView ? 'large' : ''}
                         onSubmit={this.onFormSubmitHandler}
                     >
                         {formFieldsArray.map(formField => {
@@ -174,7 +174,7 @@ class StartForm extends Component {
                                         placeholder={formField.config.placeholder}
                                         text={text}
                                         value={formField.value}
-                                        onChange={(event, {value}) => this.props.changeFormFieldValue(event, 'clientStartForm', formField.key, {value})}
+                                        onChange={(event, {value}) => this.props.changeFormFieldValue('clientStartForm', formField.key, {value})}
                                         onClose={this.onDatePickerCloseHandler}
                                     />
                                 </Form.Field>
@@ -212,7 +212,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        changeFormFieldValue: (event, formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormFieldValue(event, formKey, formFieldKey, value, touched)),
+        changeFormFieldValue: (formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormFieldValue(formKey, formFieldKey, value, touched)),
         changeFormFieldConfig: (formKey, formFieldKey, newConfig) => dispatch(clientActionCreator.changeFormFieldConfig(formKey, formFieldKey, newConfig)), 
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
         setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
