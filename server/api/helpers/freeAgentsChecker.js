@@ -30,14 +30,14 @@ export default (db, dataObj) => {
                 }
             }).then((covItems) => {
                 if (covItems.length !== 0) {
-                    const freeAgentsIds = covItems.map((covItem) => {
-                        return covItem.agent_id;
-                    });
+                    const freeAgentsIds = covItems.map(covItem => covItem.agent_id);
                     //pass an array containing free agents ids
                     return resolve(freeAgentsIds);
                 }
                 //free agents are not found so call reject
-                reject();
+                const error = new Error('No free agents available');
+                error.status = 404;
+                throw error;
             }).catch((err) => {
                 reject(err);
             });

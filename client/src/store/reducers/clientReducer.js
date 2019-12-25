@@ -321,6 +321,11 @@ const clientReducer = (state = initState, action) => {
                             currentPage: action.flag ? 1 : state.list.params.pagination.currentPage
                         })
                     })
+                }),
+                data: rewriteObjectProps(state.data, {
+                    error: rewriteObjectProps(state.data.error, {
+                        fetchError: null
+                    })
                 })
             });
 

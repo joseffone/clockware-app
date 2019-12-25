@@ -560,7 +560,7 @@ const adminReducer = (state = initState, action) => {
                                                     rank: filter[Object.keys(filter)[0]].rank - 1,
                                                     target: null
                                                 })
-                                            })
+                                            });
                                         }
                                         return filter;
                                     }),
@@ -620,13 +620,13 @@ const adminReducer = (state = initState, action) => {
                                                     [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
                                                         rank: filter[Object.keys(filter)[0]].rank + 1
                                                     })
-                                                })
+                                                });
                                             }
                                             return rewriteObjectProps(filter, {
                                                 [Object.keys(filter)[0]]: rewriteObjectProps(filter[Object.keys(filter)[0]], {
                                                     target: null
                                                 })
-                                            })
+                                            });
                                         }
                                         if (Object.keys(filter)[0] === action.filterKey) {
                                             return newFilter;

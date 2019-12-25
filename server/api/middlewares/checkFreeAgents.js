@@ -16,7 +16,7 @@ export default (db) => {
                 req.query = {where: {id: freeAgentsIds}};
                 next();
             }, (err) => {
-                errorWrapper(err, res, 'No free agents available');
+                errorWrapper(err, res, null);
             });
 
     };

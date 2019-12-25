@@ -12,7 +12,7 @@ export default () => {
             isBodyValid = isBodyValid && req.body[key];
         }
         if (!isBodyValid) {
-            const error = new Error('The body of the received request is invalid.');
+            const error = new Error('The body of the received request is invalid');
             error.status = 400;
             return errorWrapper(error, res, null);
         }

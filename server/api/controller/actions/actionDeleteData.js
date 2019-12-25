@@ -16,7 +16,7 @@ export default (db, modelName) => {
             req.query = req.query.id ? {...req.query} : {id: ''};
             req.params.id = req.params.id ? req.params.id : '';
             if (req.params.id.toString() === req.userData.id.toString() || req.query.id.includes(req.userData.id.toString())) {
-                const error = new Error('Deleting active user is not allowed.');
+                const error = new Error('Deleting active user is not allowed');
                 error.status = 403;
                 return errorWrapper(error, res, null);
             }

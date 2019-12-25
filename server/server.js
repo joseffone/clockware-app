@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import bodyParser from 'body-parser';
 import express from 'express';
+import path from 'path';
 import db from './api/config/db';
 import router from './api/router/router';
 import dataPreset from './api/config/dataPreset';
@@ -26,6 +27,12 @@ app.use((req, res, next) => {
 
 router(app, db);
 
+if (process.env.NODE_ENV === 'production') {
+    const clientStaticFiles = express.static(path.join(__dirname, '../../client/build'))
+    app.use(clientStaticFiles);
+    app.use('/*', clientStaticFiles);
+}
+
 app.use((req, res, next) => {
     const error = new Error('Not found.');
     error.status = 404;
@@ -41,7 +48,7 @@ app.use((error, req, res, next) => {
     });
 });
 
-app.set('port', process.env.SERVER_PORT);
+app.set('port', process.env.PORT || 3001);
 
 app.listen(app.get('port'), () => {
     console.log(`Listening on ${app.get('port')}`);

@@ -16,7 +16,7 @@ export default {
             checkAccess(req.userData, 'read', modelName, db).then(() => {
                 actionReadData(db, modelName)(req, res);
             }, (err) => {
-                errorWrapper(err, res, 'No access to READ data.');
+                errorWrapper(err, res, 'No access to READ data');
             });
         };
     },
@@ -28,7 +28,7 @@ export default {
                 }
                 actionCreateData(db, modelName)(req, res);
             }, (err) => {
-                errorWrapper(err, res, 'No access to CREATE data.');
+                errorWrapper(err, res, 'No access to CREATE data');
             });
         };
     },
@@ -37,7 +37,7 @@ export default {
             checkAccess(req.userData, 'update', modelName, db).then(() => {
                 actionUpdateData(db, modelName)(req, res);
             }, (err) => {
-                errorWrapper(err, res, 'No access to UPDATE data.');
+                errorWrapper(err, res, 'No access to UPDATE data');
             });
         };
     },
@@ -46,7 +46,7 @@ export default {
             checkAccess(req.userData, 'delete', modelName, db).then(() => {
                 actionDeleteData(db, modelName)(req, res);
             }, (err) => {
-                errorWrapper(err, res, 'No access to DELETE data.');
+                errorWrapper(err, res, 'No access to DELETE data');
             });
         };
     },
@@ -55,7 +55,7 @@ export default {
             checkAccess(req.userData, 'create', 'orders', db).then(() => {
                 actionSendEmail()(req, res);
             }, (err) => {
-                errorWrapper(err, res, 'No access to EMAIL data.');
+                errorWrapper(err, res, 'No access to EMAIL data');
             });
         };
     },

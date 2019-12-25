@@ -18,6 +18,9 @@ class StartForm extends Component {
 
     componentDidMount () {
         this.onReloadFieldsDataHandler();
+        if (!this.props.sidebarView) {
+            this.props.resetFormFields('clientStartForm');
+        }
     }
 
     componentDidUpdate (prevProps) {
@@ -168,7 +171,7 @@ class StartForm extends Component {
                                         inputType={formField.config.type}
                                         icon={formField.config.icon}
                                         iconPosition={formField.config.iconPosition}
-                                        loading={loading}
+                                        loading={loading && !this.props.sidebarView}
                                         mobile={this.props.global.ui.mobile}
                                         options={options}
                                         placeholder={formField.config.placeholder}
@@ -213,7 +216,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         changeFormFieldValue: (formKey, formFieldKey, {value}, touched) => dispatch(clientActionCreator.changeFormFieldValue(formKey, formFieldKey, value, touched)),
-        changeFormFieldConfig: (formKey, formFieldKey, newConfig) => dispatch(clientActionCreator.changeFormFieldConfig(formKey, formFieldKey, newConfig)), 
+        changeFormFieldConfig: (formKey, formFieldKey, newConfig) => dispatch(clientActionCreator.changeFormFieldConfig(formKey, formFieldKey, newConfig)),
+        resetFormFields: (formKey) => dispatch(clientActionCreator.resetFormFields(formKey)),
         fetchData: (accessToken, model) => dispatch(adminActionCreator.fetchDataRequest(accessToken, model)),
         setReloadDataTrigger: (flag) => dispatch(clientActionCreator.setReloadDataTrigger(flag)),
         hideStartForm: () => dispatch(clientActionCreator.hideStartForm()),

@@ -61,10 +61,15 @@ class ClientView extends Component {
                     {this.props.client.ui.isStartPageShown 
                         ? <StartForm />
                         : <ClientContent
-                                empty={!this.props.client.ui.reloadDataTrigger && this.props.client.list.dataSet.length === 0}
+                                empty={
+                                    !this.props.client.ui.reloadDataTrigger && this.props.client.data.error.fetchError 
+                                        ? this.props.client.data.error.fetchError.response.data.error.message === 'No free agents available'
+                                        : false
+                                }
                                 error={
-                                    !this.props.client.ui.reloadDataTrigger && 
-                                    (this.props.client.data.error.fetchError || this.props.admin.ui.fetchErrorsCounter.length > 0)
+                                    !this.props.client.ui.reloadDataTrigger && this.props.client.data.error.fetchError
+                                        ? this.props.client.data.error.fetchError.response.data.error.message !== 'No free agents available'
+                                        : this.props.admin.ui.fetchErrorsCounter.length > 0 ? true : false
                                 }
                                 mobile={this.props.global.ui.mobile}
                                 sbOpen={this.props.global.ui.isSideBarOpen}

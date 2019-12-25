@@ -54,9 +54,9 @@ export default (db, modelName) => {
                                 .then((t) => {
                                     return fetchedElem[0].save({paranoid: false, transaction: t});
                                 }, (orders) => {
-                                    errMessage = 'Order updating terminated. Chosen agent is already reserved for provided time interval.';
+                                    errMessage = 'Order updating terminated. Chosen agent is already reserved for provided time interval';
                                     if (!orders) {
-                                        errMessage = 'Request contains invalid data.';
+                                        errMessage = 'Request contains invalid data';
                                     }
                                     const error = new Error(errMessage);
                                     error.status = 404;
