@@ -3,6 +3,7 @@
 import sendEmail from '../../helpers/emailSender';
 import tokensController from '../../helpers/tokensController';
 import errorWrapper from '../../helpers/errorWrapper';
+import moment from 'moment';
 
 export default () => {
     return (req, res) => {
@@ -29,8 +30,8 @@ export default () => {
                             <li><b>Clock type:</b> ${req.body.clock_type}</li>
                             <li><b>City:</b> ${req.body.city_name}</li>
                             <li><b>Watchmaker:</b> ${req.body.agent_first_name} ${req.body.agent_last_name}</li>
-                            <li><b>Start date:</b> ${req.body.start_date}</li>
-                            <li><b>Exp. date:</b> ${req.body.expiration_date}</li>
+                            <li><b>Start date:</b> ${moment(req.body.start_date).format('DD-MM-YYYY HH:mm')}</li>
+                            <li><b>Exp. date:</b> ${moment(req.body.expiration_date).format('DD-MM-YYYY HH:mm')}</li>
                         </ul>
                         <p>Everything is correct? If it is,&nbsp;<a href='${req.body.link}/${confirmToken}'>confirm</a>&nbsp;reservation.</p>
                     `
