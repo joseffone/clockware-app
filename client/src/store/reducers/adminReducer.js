@@ -636,7 +636,10 @@ const adminReducer = (state = initState, action) => {
                                     .sort((objA, objB) => Object.values(objA)[0].rank - Object.values(objB)[0].rank),
                                 search: rewriteObjectProps(state.lists[action.model].params.search, {
                                     value: ''
-                                }) 
+                                }),
+                                pagination: rewriteObjectProps(state.lists[action.model].params.pagination, {
+                                    currentPage: 1
+                                })
                             })
                         })
                     })
