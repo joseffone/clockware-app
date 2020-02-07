@@ -312,7 +312,7 @@ export const search = (text, dataSet, key) => {
     const escapeRegExp = (string) => {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     };
-    const re = new RegExp(escapeRegExp(text.toLowerCase(), 'i'));
+    const re = new RegExp(escapeRegExp(text.toLowerCase()), 'i');
     let source = [...dataSet];
     if (!key) {
         source = dataSet.map(item => {
