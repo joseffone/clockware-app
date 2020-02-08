@@ -31,12 +31,25 @@ DB_USER=username
 DB_PASS=password
 DB_PORT=3306
 
-JWT_ACCESS_KEY=your_secret_key1
-JWT_REFRESH_KEY=your_secret_key2
+TIMEZONE='+03:00'
+MOMENT_TIMEZONE='Europe/Kiev'
+
+JWT_ACCESS_KEY=?????
+JWT_REFRESH_KEY=?????
+JWT_CONFIRM_KEY=?????
+JWT_ACCESS_EXP_IN='10m'
+JWT_REFRESH_EXP_IN='24h'
+JWT_CONFIRM_EXP_IN='1h'
+
 BCRYPT_SALT_ROUNDS=10
 
-SERVER_PORT=3001
-TIMEZONE="+03:00"
+EMAIL=?????@gmail.com
+EMAIL_REFRESH_TOKEN=?????
+EMAIL_CLIENT_ID=?????.apps.googleusercontent.com
+EMAIL_CLIENT_SECRET=?????
+EMAIL_ACCESS_URL=?????
+
+PORT=3001
 ```
 
 **Шаг 5** - Запустите сервер
