@@ -16,7 +16,7 @@
     "moment-timezone": "^0.5.27",
     "mysql2": "^1.6.1",
     "nodemailer": "^6.4.1",
-    "sequelize": "^4.38.0"
+    "sequelize": "^5.15.1"
   },
   "devDependencies": {
     "babel-register": "^6.26.0",
